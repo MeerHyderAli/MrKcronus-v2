@@ -1,0 +1,788 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   MR.KCRONUS v2 — GLOBAL BRAND FOUNDATION
+   Tailwind v4 CSS-first architecture. No tailwind.config file by design.
+   ========================================================================== */
+
+:root {
+  /* ---- Palette ------------------------------------------------------- */
+  /* Obsidian is unconditional. This brand site never inverts. */
+  --obsidian: #050505;
+  --ivory: #f5f5f0;
+  --stone: #5f5f5a;
+  --gold: #a89b7a;
+
+  /* Tonal derivations of the four tokens above. Not new colours. */
+  --surface: #0b0b0b;
+  --rule: rgba(245, 245, 240, 0.14);
+  /* Corrected in Build 8. Previously rgba(95, 95, 200, 0.28): the blue
+     channel was 200, which is not in the Stone family and is not a
+     permitted colour in this palette. Stone #5F5F5A is rgb(95, 95, 90).
+     Alpha is unchanged. The token is currently unused, so no computed style
+     could shift; see docs/VISUAL_SYSTEM.md section 16. */
+  --rule-stone: rgba(95, 95, 90, 0.28);
+
+  /* ---- Editorial surfaces (Build 12B) ---------------------------------
+     The site now alternates between light architectural spreads and dark
+     cinematic chambers rather than being uniformly Obsidian.
+
+     --surface-dark deliberately REUSES --obsidian rather than repeating
+     #050505: the dark ground is one value, named once. --surface-charcoal is
+     the only genuinely new dark tone, reserved for surfaces that need to sit
+     above Obsidian without reading as a separate brand colour. */
+  --surface-ivory: #f3f0e8;
+  --surface-stone: #e6e1d7;
+  --surface-stone-deep: #d4cec1;
+  --surface-dark: var(--obsidian);
+  --surface-charcoal: #111111;
+
+  /* ---- Vitrine tile (Build 13) ------------------------------------------
+     Every product and Archive asset in the approved corpus carries an opaque
+     near-black ground (verified: corner rgb(8,8,8) to rgb(11,11,10), no
+     alpha). Placed directly on ivory each one renders as a black rectangle,
+     so approved imagery cannot sit on a light surface without a dark tile.
+
+     The vitrine is that tile. It reuses the existing --surface value rather
+     than introducing a colour: --surface has been declared and unused since
+     Build 6. Naming the role explicitly keeps the reason attached to the
+     value, and documents that it is a workaround for the asset corpus rather
+     than a brand colour or an art-direction choice.
+
+     Ivory on #0b0b0b measures 18.6:1. */
+  --surface-vitrine: #0b0b0b;
+
+  /* ---- Light-surface ink (Build 12B) ----------------------------------
+     Warm darks, not neutral grey and never pure black, so the light surfaces
+     belong to the same brand as the dark ones.
+
+     Every ratio below is measured WCAG 2.1 contrast against the stated
+     surface, not estimated:
+       ink        #111111  16.58:1 on ivory    14.49:1 on stone
+       ink-soft   #4a4741   8.13:1 on ivory     7.10:1 on stone
+       ink-muted  #625e56   5.67:1 on ivory     4.95:1 on stone
+
+     ink-muted was darkened from the #777269 first proposed for this build:
+     that value measured 4.19:1 on ivory and 3.4:1 on stone, which fails AA for
+     the 11px uppercase metadata it is used for. #625e56 clears AA on both.
+
+     --rule-ink is a hairline, so it is decorative and carries no text-contrast
+     obligation. Stone-deep is a supporting tone only: at #d4cec1 Stone
+     metadata falls to 4.10:1, so it is NOT approved for small text. */
+  --ink: #111111;
+  --ink-soft: #4a4741;
+  --ink-muted: #625e56;
+  --rule-ink: rgba(17, 17, 17, 0.18);
+
+  /* ---- Semantic surface roles -----------------------------------------
+     These are the only colour references the components use. A surface
+     remaps them; nothing else changes. Dark is the default so that any
+     section without a data-surface attribute keeps the established look and
+     the locked Hero, Architect, Sigil, Join Archive and Footer need no class
+     at all. */
+  --surface-bg: var(--surface-dark);
+  --surface-ink: var(--ivory);
+  --surface-ink-soft: var(--stone);
+  --surface-muted: var(--stone);
+  --surface-rule: var(--rule);
+  --surface-focus: var(--gold);
+
+  /* ---- Typography ---------------------------------------------------- */
+  --font-display: var(--font-bodoni), "Times New Roman", serif;
+  --font-meta: var(--font-inter), -apple-system, "Segoe UI", sans-serif;
+
+  /* Bodoni Moda is a high-contrast didone. On Obsidian its hairlines
+     disappear at weight 400, so the display range starts at 500.
+     Display sizes only — never below 1.5rem. */
+  --weight-display: 560;
+  --weight-display-strong: 600;
+
+  /* ---- Type scale (Build 13 Phase 1) ------------------------------------
+     The previous scale topped out at 2.9rem. Measured on the 1916 x 846
+     capture, that rendered the largest statement on the site at 46px - which
+     reads as a caption on a large display, not as a statement. The page had
+     no tier above it, so nothing could be given real presence.
+
+     Three tiers above the body scale, sized for a 1440 x 900 primary and a
+     1920 wide bonus:
+       title      104px @1920   THE ARCHIVE IS OPEN, the Hero statement
+       statement   88px @1920   Philosophy and section statements
+       numeral     64px @1920   the six collection ordinals
+  */
+  --type-title: clamp(2rem, 5.8vw, 6.5rem);
+  --type-statement: clamp(2.25rem, 5.4vw, 5.5rem);
+  --type-numeral: clamp(2rem, 5vw, 4rem);
+
+  /* ---- Rhythm -------------------------------------------------------- */
+  --space-unit: 0.5rem;
+  --measure: 62ch;
+
+  /* ---- Motion -------------------------------------------------------- */
+  /* Deliberately slow and weighted. No bounce, no spring, no playful ease. */
+  --ease-archive: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-reveal: 900ms;
+  --dur-micro: 220ms;
+
+  /* ---- Motion language: DRAPE (Build 13) -------------------------------
+     One governing idea: duration scales with perceived mass. Metadata moves
+     fast, imagery moves slowly, a whole scene resolves last. Every value
+     below is derived from that single rule, which is what keeps nine
+     differently-composed sections reading as one system.
+
+     THREE levels, and only three.
+
+       L1 MICRO          hover, colour, underline, small state
+       L2 CHOREOGRAPHY   section elements: type, imagery, masks, rules
+       L3 CINEMATIC      full-scene and veil transitions
+
+     EASING — three curves, no more.
+       archive  exponential-out, the default. Fast commitment, long settle.
+       editorial  a longer tail for type and imagery. The expensive ease.
+       drape  symmetric, reversible. Reserved for hover, where a transition
+               must read the same going out and coming back.
+
+     No spring and no bounce anywhere: fabric does not bounce. No linear,
+     no bare ease-in, which arrives too abruptly and reads cheap. */
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-drape: cubic-bezier(0.62, 0, 0.38, 1);
+
+  /* L1 */
+  --dur-firm: 420ms;
+  /* L2 */
+  --dur-type: 1200ms;
+  --dur-image: 1400ms;
+  /* L3 */
+  --dur-veil: 1900ms;
+  --dur-scene: 2400ms;
+
+  /* ---- Parallax travel (Build 13) --------------------------------------
+     Maximum displacement in px, not a ratio, so the travel is a known
+     quantity rather than a function of element height. Foreground, mid and
+     background are three rates and never more: a fourth depth plane would
+     read as gimmick rather than depth.
+
+     The Drift primitive halves all three below 64rem, and disables them
+     entirely under prefers-reduced-motion. */
+  --parallax-slow: 60px;
+  --parallax-mid: 110px;
+  --parallax-fast: 180px;
+}
+
+@theme inline {
+  --color-obsidian: var(--obsidian);
+  --color-ivory: var(--ivory);
+  --color-stone: var(--stone);
+  --color-gold: var(--gold);
+  --color-surface: var(--surface);
+  --color-vitrine: var(--surface-vitrine);
+  --color-rule: var(--rule);
+
+  --font-display: var(--font-display);
+  --font-meta: var(--font-meta);
+
+  --ease-archive: var(--ease-archive);
+  --ease-editorial: var(--ease-editorial);
+  --ease-drape: var(--ease-drape);
+}
+
+/* ==========================================================================
+   SURFACE SCOPES  (Build 12B)
+
+   The whole light/dark editorial system is these five blocks. A section
+   declares data-surface and every rule, hairline, metadata colour and focus
+   ring beneath it remaps itself. No component decides its own colours, and no
+   new utility class is introduced.
+
+   Attribute selectors rather than utility classes are deliberate: one
+   mechanism, zero new surface-named CSS classes to keep in sync, and the
+   surface a section sits on stays legible in the markup.
+
+   Declared after :root at equal specificity, so these win for the section and
+   everything inside it. Anything not scoped keeps the dark default.
+   ========================================================================== */
+
+[data-surface="dark"] {
+  background-color: var(--surface-dark);
+  color: var(--ivory);
+  --surface-ink: var(--ivory);
+  --surface-ink-soft: var(--stone);
+  --surface-muted: var(--stone);
+  --surface-rule: var(--rule);
+  --surface-focus: var(--gold);
+  color-scheme: dark;
+}
+
+[data-surface="charcoal"] {
+  background-color: var(--surface-charcoal);
+  color: var(--ivory);
+  --surface-ink: var(--ivory);
+  --surface-ink-soft: var(--stone);
+  --surface-muted: var(--stone);
+  --surface-rule: var(--rule);
+  --surface-focus: var(--gold);
+  color-scheme: dark;
+}
+
+[data-surface="ivory"] {
+  background-color: var(--surface-ivory);
+  color: var(--ink);
+  --surface-ink: var(--ink);
+  --surface-ink-soft: var(--ink-soft);
+  --surface-muted: var(--ink-muted);
+  --surface-rule: var(--rule-ink);
+  /* Gold measures 2.42:1 on ivory, so it cannot carry a focus ring here.
+     Ink measures 16.58:1. */
+  --surface-focus: var(--ink);
+  color-scheme: light;
+}
+
+[data-surface="stone"] {
+  background-color: var(--surface-stone);
+  color: var(--ink);
+  --surface-ink: var(--ink);
+  --surface-ink-soft: var(--ink-soft);
+  --surface-muted: var(--ink-muted);
+  --surface-rule: var(--rule-ink);
+  --surface-focus: var(--ink);
+  color-scheme: light;
+}
+
+[data-surface="stone-deep"] {
+  background-color: var(--surface-stone-deep);
+  color: var(--ink);
+  --surface-ink: var(--ink);
+  --surface-ink-soft: var(--ink);
+  --surface-muted: var(--ink-soft);
+  --surface-rule: rgba(17, 17, 17, 0.22);
+  --surface-focus: var(--ink);
+  color-scheme: light;
+}
+
+* {
+  /* Surface-aware: the default hairline is warm on a light ground and ivory on
+     a dark one. Any element that does not set its own border colour follows
+     the surface it sits on. */
+  border-color: var(--surface-rule);
+  /* Brand invariant: zero border radius, everywhere, always. */
+  border-radius: 0;
+}
+
+/* ---- Base ------------------------------------------------------------- */
+
+html {
+  background-color: var(--obsidian);
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  /* Keeps in-page targets (including the skip link) clear of the fixed nav */
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background-color: var(--obsidian);
+  color: var(--ivory);
+  font-family: var(--font-meta);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+/* ---- Display typography ---------------------------------------------- */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  line-height: 0.92;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* ---- Meta / institutional typography ---------------------------------
+   Uppercase, wide tracking, small. This is the archive voice.
+   Inter is never used as a general-purpose interface face. */
+
+.meta {
+  font-family: var(--font-meta);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.meta-stone {
+  /* Surface-aware. On dark this resolves to --stone exactly as before. On a
+     light surface it becomes --ink-muted, which is warm rather than neutral
+     grey and measures 5.67:1 on ivory and 4.95:1 on stone - both AA at this
+     size. Stone itself would pass too, but it reads cooler than the new
+     surfaces deserve. */
+  color: var(--surface-muted);
+}
+
+/* ---- Body copy ------------------------------------------------------- */
+
+.prose-archive {
+  max-width: var(--measure);
+  line-height: 1.7;
+  color: var(--surface-ink);
+}
+
+/* ---- Focus -----------------------------------------------------------
+   Visible on every interactive element. Never removed. The colour follows the
+   surface: gold on dark, where it has carried this role since Build 2 and
+   measures 11.6:1 against Obsidian; ink on light, where gold would be only
+   2.42:1 and fail. */
+
+:focus-visible {
+  outline: 2px solid var(--surface-focus);
+  outline-offset: 3px;
+}
+
+/* ---- Skip link ------------------------------------------------------- */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--obsidian);
+  color: var(--ivory);
+  outline: 2px solid var(--gold);
+  outline-offset: -2px;
+}
+
+/* ---- Architectural rules ---------------------------------------------
+   Hairlines and diamond terminators. Never boxes, never rounded corners. */
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--surface-rule);
+}
+
+/* ---- Final statement --------------------------------------------------
+   THE ARCHIVE IS OPEN. A statement, not a marketing headline: positive
+   tracking, uppercase, restrained scale. Declared here rather than as
+   utilities because this file is unlayered and would otherwise override
+   Tailwind's layered tracking utilities. */
+
+.title-statement {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: var(--type-title);
+  line-height: 0.94;
+  /* Was 0.15em, which at the new size pushed the line past 1200px. */
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  /* A tracked didone line at 104px runs very wide. Capping the measure forces
+     it to break into two commanding lines instead of one thin ribbon - the
+     705 x 37px single line is exactly what the capture showed. */
+  max-width: 13ch;
+}
+
+/* ---- Archive invitation -----------------------------------------------
+   A real link. An invitation, not ecommerce UI: no fill, no radius,
+   no shadow. A hairline underline draws from the left on hover and focus. */
+
+.cta-invitation {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0 0.25rem;
+  position: relative;
+  font-family: var(--font-meta);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--surface-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.cta-invitation::after {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  right: 0.25rem;
+  bottom: 0.85rem;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-micro) var(--ease-archive);
+}
+
+.cta-invitation:hover::after,
+.cta-invitation:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ---- Mobile menu layer ------------------------------------------------
+   Opacity and transform only. Neutralised by the reduced-motion block. */
+
+.menu-layer {
+  animation: menu-layer-in var(--dur-micro) var(--ease-archive) both;
+}
+
+@keyframes menu-layer-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Selection ------------------------------------------------------- */
+
+::selection {
+  background-color: var(--gold);
+  color: var(--obsidian);
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   A deliberate simplification, not a removal. Content stays reachable and
+   legible. Scroll-linked camera movement is disabled in the client layer;
+   these rules remove what remains in CSS.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   BUILD 7 — VISUAL SYSTEM PRIMITIVES
+   Strictly additive. Nothing above this line was modified, moved or removed,
+   and nothing below is consumed by an existing component.
+
+   These are capabilities for FUTURE pages. They are deliberately not applied
+   to the approved Hero, ArchitectSection, SigilSection, Navigation or Footer.
+
+   Full rationale, usage caps and the photography gap: docs/VISUAL_SYSTEM.md
+   ========================================================================== */
+
+/* ---- Interaction intensity ---------------------------------------------
+   Multipliers where 1 is maximum presence. Selected by a data attribute on a
+   page or section root. Nothing currently reads these; they state direction
+   so that intensity varies by context while the identity stays fixed.
+
+   These must never be used to reduce text contrast. Where atmosphere is low,
+   legibility is maintained with contrast, never by brightening the ground. */
+
+:root {
+  --intensity-imagery: 1;
+  --intensity-atmosphere: 1;
+  --intensity-motion: 1;
+  --intensity-motif: 0.85;
+  --intensity-type: 1;
+  --intensity-space: 1;
+  --intensity-transition: 1;
+}
+
+[data-intensity="home"] {
+  --intensity-imagery: 1;
+  --intensity-atmosphere: 1;
+  --intensity-motion: 1;
+  --intensity-motif: 0.85;
+  --intensity-type: 1;
+  --intensity-space: 1;
+  --intensity-transition: 1;
+}
+
+[data-intensity="archive"] {
+  --intensity-imagery: 0.95;
+  --intensity-atmosphere: 1;
+  --intensity-motion: 0.85;
+  --intensity-motif: 1;
+  --intensity-type: 0.95;
+  --intensity-space: 1;
+  --intensity-transition: 1;
+}
+
+[data-intensity="lookbook"] {
+  --intensity-imagery: 1;
+  --intensity-atmosphere: 0.7;
+  --intensity-motion: 0.7;
+  --intensity-motif: 0.35;
+  --intensity-type: 0.9;
+  --intensity-space: 0.85;
+  --intensity-transition: 0.8;
+}
+
+[data-intensity="shop"] {
+  --intensity-imagery: 0.8;
+  --intensity-atmosphere: 0.35;
+  --intensity-motion: 0.45;
+  --intensity-motif: 0.25;
+  --intensity-type: 0.8;
+  --intensity-space: 0.7;
+  --intensity-transition: 0.55;
+}
+
+[data-intensity="product"] {
+  --intensity-imagery: 0.95;
+  --intensity-atmosphere: 0.45;
+  --intensity-motion: 0.4;
+  --intensity-motif: 0.25;
+  --intensity-type: 0.85;
+  --intensity-space: 0.75;
+  --intensity-transition: 0.55;
+}
+
+[data-intensity="story"] {
+  --intensity-imagery: 0.85;
+  --intensity-atmosphere: 0.75;
+  --intensity-motion: 0.55;
+  --intensity-motif: 0.55;
+  --intensity-type: 0.9;
+  --intensity-space: 0.95;
+  --intensity-transition: 0.75;
+}
+
+[data-intensity="about"] {
+  --intensity-imagery: 0.7;
+  --intensity-atmosphere: 0.55;
+  --intensity-motion: 0.4;
+  --intensity-motif: 0.3;
+  --intensity-type: 0.85;
+  --intensity-space: 1;
+  --intensity-transition: 0.65;
+}
+
+[data-intensity="cart"] {
+  --intensity-imagery: 0.55;
+  --intensity-atmosphere: 0.3;
+  --intensity-motion: 0.3;
+  --intensity-motif: 0.15;
+  --intensity-type: 0.8;
+  --intensity-space: 0.7;
+  --intensity-transition: 0.45;
+}
+
+/* ---- Archival border ----------------------------------------------------
+   A hairline bounding box for an archival panel, record or document.
+   Distinct from .rule, which is a horizontal divider on an <hr>.
+
+   .archival-border--datum adds an inset inner rule: the double frame of a
+   classified file. Cap: one per view. Never on an interactive control. */
+
+.archival-border {
+  position: relative;
+  border: 1px solid var(--surface-rule);
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.archival-border--datum::after {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border: 1px solid var(--surface-rule);
+  border-radius: 0;
+  pointer-events: none;
+}
+
+/* ---- Vertical metadata ---------------------------------------------------
+   Rotated editorial labels, set with writing-mode rather than
+   transform: rotate(). Writing-mode keeps the text semantically correct,
+   screen-reader legible, and free of the inline transform that Motion writes
+   onto transform - so it cannot be silently overwritten by scroll animation.
+
+   Base colour is Ivory, not Stone: Stone sits near 3.2:1 on Obsidian, which
+   is fine for decoration but fails AA at this size. Use --stone only where
+   the label carries no information. --accent is the single sanctioned use of
+   Antique Gold in this primitive, and only where gold means something.
+
+   Below 48rem the label falls back to horizontal and legible size, because a
+   rotated label on a narrow screen is neither readable nor accessible. */
+
+.meta-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  white-space: nowrap;
+  font-family: var(--font-meta);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--surface-ink);
+}
+
+.meta-vertical--stone {
+  color: var(--surface-muted);
+}
+
+.meta-vertical--accent {
+  color: var(--gold);
+}
+
+@media (max-width: 47.99rem) {
+  .meta-vertical {
+    writing-mode: horizontal-tb;
+    white-space: normal;
+    font-size: 0.6875rem;
+  }
+}
+
+/* ---- Image framing line --------------------------------------------------
+   A hairline over an image edge, drawn with a pseudo-element so it never
+   alters the image box or its aspect ratio.
+
+   .image-frame--outset places the line just outside the image instead.
+   No fill, no radius, no shadow, no card appearance. pointer-events: none
+   guarantees it can never intercept a click or focus.
+
+   Cap: selected hero, editorial or artefact imagery only. Never every image. */
+
+.image-frame {
+  position: relative;
+  display: block;
+}
+
+.image-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--surface-rule);
+  border-radius: 0;
+  pointer-events: none;
+}
+
+.image-frame--outset::before {
+  inset: -0.5rem;
+}
+
+/* ==========================================================================
+   BUILD 13 — MOTION LANGUAGE + EDITORIAL PRIMITIVES
+
+   Strictly additive. Nothing above this line was modified, moved or removed,
+   and nothing here is consumed by a locked component until Build 13 phases
+   opt in.
+
+   Full rationale: docs/VISUAL_SYSTEM.md, Build 13 section
+   ========================================================================== */
+
+/* ---- Vitrine -------------------------------------------------------------
+   The dark tile that approved imagery sits on when the page around it is
+   light. Exists because every product and Archive asset in the corpus has an
+   opaque near-black ground and no alpha, so on ivory it renders as a black
+   rectangle. See --surface-vitrine.
+
+   This is a workaround for the asset corpus, not a brand colour. When
+   transparent-ground or light-ground product renders are supplied, the tile
+   becomes unnecessary and these should be reconsidered rather than extended. */
+
+.vitrine {
+  background-color: var(--surface-vitrine);
+  color: var(--ivory);
+  --surface-ink: var(--ivory);
+  --surface-ink-soft: var(--stone);
+  --surface-muted: var(--stone);
+  --surface-rule: var(--rule);
+  --surface-focus: var(--gold);
+  color-scheme: dark;
+}
+
+/* ---- Editorial display ---------------------------------------------------
+   Statement-scale Bodoni. The existing .display is the hero and title scale;
+   this is the mid scale for Philosophy and section statements, which must sit
+   between the two. Same family, same weights, same zero-radius discipline. */
+
+.display-editorial {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: var(--type-statement);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  /* Same reason as .title-statement: an uncapped 88px line is 2100px long. */
+  max-width: 20ch;
+}
+
+/* ---- Solid call to action ------------------------------------------------
+   The one filled control on the site. Ink on ivory reads 17.32:1; on hover it
+   inverts to an outlined control, which also measures 16.58:1 in both
+   directions. A filled button that stays filled on hover reads as ecommerce;
+   the inversion is what makes it editorial.
+
+   Contrast is held constant across both states deliberately, so the fill can
+   never be the thing that fails AA.
+
+   Touch devices get no sticky state; the hover block is guarded. */
+
+.cta-solid {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.75rem;
+  background-color: var(--ink);
+  color: var(--ivory);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  font-family: var(--font-meta);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  transition:
+    background-color var(--dur-firm) var(--ease-drape),
+    color var(--dur-firm) var(--ease-drape),
+    border-color var(--dur-firm) var(--ease-drape);
+}
+
+@media (hover: hover) {
+  .cta-solid:hover,
+  .cta-solid:focus-visible {
+    background-color: transparent;
+    color: var(--ink);
+  }
+}
+
+/* On a dark surface the inversion must invert the other way: outlined ivory
+   becoming filled ink reads correctly, filled ivory becoming outlined ink
+   would be invisible against the dark ground. */
+.vitrine .cta-solid,
+[data-surface="dark"] .cta-solid,
+[data-surface="charcoal"] .cta-solid {
+  background-color: var(--ivory);
+  color: var(--ink);
+  border-color: var(--ivory);
+}
+
+@media (hover: hover) {
+  .vitrine .cta-solid:hover,
+  .vitrine .cta-solid:focus-visible,
+  [data-surface="dark"] .cta-solid:hover,
+  [data-surface="dark"] .cta-solid:focus-visible,
+  [data-surface="charcoal"] .cta-solid:hover,
+  [data-surface="charcoal"] .cta-solid:focus-visible {
+    background-color: transparent;
+    color: var(--ivory);
+  }
+}
