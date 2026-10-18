@@ -104,9 +104,27 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
       </button>
 
       {open ? (
+        /* The panel is a MODAL DIALOG, and it now says so.
+
+           It is a full-viewport overlay that traps focus and locks the page
+           behind it, which is the definition of a modal. It was previously a
+           bare <div>: focus management was already correct, but nothing
+           announced that a dialog had opened, nothing named it, and nothing
+           told assistive technology that the page underneath was unavailable.
+
+           role="dialog" + aria-modal="true" gives assistive technology the
+           modal semantics; aria-label names the thing that opened. The
+           underlying page is marked inert for the duration, so browse-mode
+           screen-reader users are taken out of the page behind the panel
+           instead of being able to wander into it with Tab locked.
+
+           The <nav> inside keeps its own label, so the landmark is unchanged. */
         <div
           ref={panelRef}
           id={panelId}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site menu"
           className="menu-layer fixed inset-0 z-[60] bg-obsidian md:hidden"
         >
           <nav

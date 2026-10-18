@@ -70,19 +70,35 @@ export default function AboutSection() {
             </Reveal>
 
             <Reveal pattern="rise" delay={0.24} className="mt-10">
-              <dl className="grid grid-cols-2 gap-x-6 border-y border-[--surface-rule] sm:grid-cols-3">
+              {/* ORDERED LIST, NOT A DEFINITION LIST.
+
+                  This was a <dl> whose children were <div> wrappers holding a
+                  bare <span> plus a lone <dt> — no <dd> anywhere. A definition
+                  list asserts term/description pairs, and this data has no
+                  description to pair: COLLECTION carries only `order`, `name`
+                  and `slug`. There is nothing being defined.
+
+                  What it actually is, and what it now says: the six designs in
+                  canonical order. `order` ("01".."06") is a real ordinal that
+                  the Universe canon owns rather than derives, so <ol> states
+                  the sequence instead of implying a taxonomy that does not
+                  exist. Layout is untouched — the grid sits on the <ol>, the
+                  row classes on the <li>, and Tailwind's preflight already
+                  neutralises list markers and default padding, exactly as it
+                  did for the <dl>. */}
+              <ol className="grid grid-cols-2 gap-x-6 border-y border-[--surface-rule] sm:grid-cols-3">
                 {COLLECTION.map((design) => (
-                  <div
+                  <li
                     key={design.slug}
                     className="flex items-baseline gap-2 border-t border-[--surface-rule] py-3"
                   >
                     <span className="display text-[0.95rem] leading-none text-ink-muted">
                       {design.order}
                     </span>
-                    <dt className="meta text-ink">{design.name}</dt>
-                  </div>
+                    <span className="meta text-ink">{design.name}</span>
+                  </li>
                 ))}
-              </dl>
+              </ol>
             </Reveal>
 
             <Reveal pattern="rise" delay={0.36} className="mt-10">

@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { COLLECTION } from "@/components/collection/collectionData";
 import { DUR, EASE, STAGGER } from "@/components/motion/vocabulary";
 import Flow from "@/components/motion/Flow";
+import CollectionColourways from "./CollectionColourways";
 import Section from "./Section";
 
 /**
@@ -15,10 +16,15 @@ import Section from "./Section";
  *
  * WHY IT IS A PRINTED INDEX AND NOT A NAVIGATION
  * A row of six names with hover states looks like a menu. These are not
- * products and there is no /shop, /product or /cart route, so giving them
- * hover affordance or a pointer cursor would advertise a destination that does
- * not exist. The rows are static type. The motion comes from the entrance and
- * from the sequence below.
+ * products and there is no /shop, /product or /cart route, so the rows
+ * themselves are static type and carry no link affordance: no pointer cursor, no
+ * hover state, nothing that would advertise a destination which does not exist.
+ *
+ * WHAT SITS BENEATH EACH ROW
+ * A colourway selector, added with the Drop 1 canon amendment. It names a colour
+ * and nothing else: no price, no availability, no purchase control, and it does
+ * not lead anywhere. It is a control, not a link, which is why it does not
+ * contradict the rule above. See CollectionColourways.tsx.
  *
  * WHY NO CODE COLUMN
  * See collectionData.ts. Five of the six garments carry a legible code inside
@@ -53,7 +59,7 @@ export default function CollectionManifest() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: DUR.reveal, ease: EASE.archive }}
         >
-          Six designs
+          Drop 1 · Six designs
         </motion.p>
 
         <motion.h2
@@ -87,6 +93,12 @@ export default function CollectionManifest() {
               <span className="display col-span-9 text-[clamp(1.05rem,1.7vw,1.55rem)] leading-tight text-ink md:col-span-10">
                 {design.name}
               </span>
+              {/* The selector sits BENEATH the existing numeral/name row. The
+                  grid above is already fully consumed (3 + 9 of 12), so nothing
+                  about the index's own layout changes. */}
+              <div className="col-span-12">
+                <CollectionColourways slug={design.slug} />
+              </div>
             </motion.li>
           ))}
         </ol>

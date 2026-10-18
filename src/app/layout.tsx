@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, Inter } from "next/font/google";
 import Nav from "@/components/nav/Nav";
 import Footer from "@/components/layout/Footer";
@@ -66,6 +66,33 @@ export const metadata: Metadata = {
     address: false,
     email: false,
   },
+};
+
+/**
+ * VIEWPORT
+ *
+ * Declared separately from `metadata` because Next owns this key: putting
+ * `viewport` inside the metadata object is ignored, and a hand-written
+ * <meta viewport> in the tree would be emitted twice. This export is the
+ * supported API for the installed Next 16 App Router and emits exactly one tag.
+ *
+ * `viewportFit: "cover"` lets the layout extend under a display notch or a
+ * rounded corner, which is what makes the safe-area insets Nav.tsx reads
+ * meaningful. Without it the browser letterboxes to the safe area and those
+ * insets are always zero, so the header could still sit under a cutout.
+ *
+ * `themeColor` is scoped to the default (light) scheme because MR.KCRONUS
+ * presents an editorial page that can legitimately be viewed either way; the
+ * dark variant is declared for dark mode below rather than forced everywhere.
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3f0e8" },
+    { media: "(prefers-color-scheme: dark)", color: "#050505" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

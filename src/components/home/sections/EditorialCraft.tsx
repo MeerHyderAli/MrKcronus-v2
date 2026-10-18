@@ -88,16 +88,27 @@ export default function EditorialCraft() {
               is the only vocabulary the approved corpus actually supports,
               and it replaces a frame that carried nothing at all. */}
           <Reveal pattern="rise" delay={0.36} className="mt-12">
-            <dl className="border-b border-[--surface-rule]">
+            {/* THIS WAS A <dl> WITH NO <dd>, AND IS NOW AN <ol>.
+
+               A definition list asserts term/description pairs. Each entry here
+               is a single index term with no description at all, so five bare
+               <dt>s and zero <dd>s told assistive technology a definition list
+               existed and then supplied no definitions. AboutSection.tsx fixed
+               exactly this mistake in its own index; the same fix had not been
+               applied here.
+
+               These are an ordered INDEX of vocabulary, not definitions, so an
+               ordered list is the honest structure. */}
+            <ol className="border-b border-[--surface-rule]">
               {TERMS.map((term) => (
-                <div
+                <li
                   key={term}
                   className="border-t border-[--surface-rule] py-4"
                 >
-                  <dt className="meta text-ink">{term}</dt>
-                </div>
+                  <span className="meta text-ink">{term}</span>
+                </li>
               ))}
-            </dl>
+            </ol>
           </Reveal>
 
           <Reveal pattern="rise" delay={0.48} className="mt-12">

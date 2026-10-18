@@ -74,9 +74,21 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
     src: "/assets/archive/The%20Architect.jpg",
     width: 825,
     height: 1024,
+    /* NOT the garment. The house wordmark and the words THE ARCHITECT sit
+       above an intact but cracked numeral clock face, and a hooded figure is
+       framed INSIDE that face rather than beneath it. That intact framing is
+       what separates this plate from The Fracture below, and it is stated
+       first because the two plates share a ruined city and a lone figure and
+       were previously described in near-identical words.
+
+       The cracked clock here is ARCHIVE PLATE imagery, not garment canon. The
+       001 colourway is a crescent moon and star on the front and a cathedral
+       corridor on the back - see collectionData.ts and AGENTS.md, Artwork
+       canon. Do not read this plate's clock across into the garment. */
     alt:
-      "Archive plate: a hooded figure framed inside a cracked numeral clock " +
-      "face above a ruined city, with a lone figure standing on a wet road below.",
+      "Archive plate: the house wordmark above an intact but cracked numeral " +
+      "clock face, with a hooded figure framed inside the face and a ruined " +
+      "city beneath it.",
     lightPeak: 0.1,
   },
   {
@@ -85,9 +97,13 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
     src: "/assets/archive/The%20Fracture.jpg",
     width: 825,
     height: 1024,
+    /* The clock here is SHATTERING - broken into separate fragments thrown
+       outward - where The Architect's clock stays whole inside its rim. That
+       single distinction is what these two plates turn on. */
     alt:
-      "Archive plate: a numeral clock face shattering into fragments above a " +
-      "ruined city, with a lone figure standing on a wet road below.",
+      "Archive plate: a numeral clock face breaking apart into scattered " +
+      "fragments above a ruined city, with a lone figure standing on a wet " +
+      "road below.",
     lightPeak: 0.11,
   },
   {

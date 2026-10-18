@@ -60,6 +60,29 @@ import { getLevelEntries, getUniverseLevel } from "@/components/universe/univers
  * only. Gold still appears here exactly once and for an unrelated, necessary
  * reason: as the focus ring, via the existing --surface-focus token.
  *
+ * THE CROSSING MUST END WITH THE SECTION FILLING THE SCREEN
+ *
+ * The offset is ["start end", "start start"], which maps progress 0 to the
+ * section's top reaching the viewport bottom and progress 1 to the section's top
+ * reaching the viewport top. The second endpoint is the whole point: at progress
+ * 1 the section's top sits at zero, so the section fills the frame exactly at the
+ * moment the crossing resolves.
+ *
+ * It used to be ["start 0.8", "end 0.2"]. That pair spreads progress across
+ * 0.6vh + the section's own height, which is longer than the section, so the
+ * section only ever covered the viewport across a narrow slice of the range -
+ * and then RETREATED as the portal was still resolving. Measured at 800x670,
+ * coverage ran 20% -> 92% -> 20% while the portal filled. A crossing that gives
+ * the screen back before it has finished is not a crossing.
+ *
+ * The stage height is the second half of the same problem. At 92svh on a compact
+ * viewport the section was shorter than the screen, so no amount of travel could
+ * make the portal cover it: the portal is bounded by its own section box. 100svh
+ * removes the clamp. Desktop stays at 112svh, which already exceeds the viewport.
+ *
+ * Nothing here needs a pin to achieve this, and adding one would take a third
+ * pinned track away from the Hero and Movement B.
+ *
  * NOTHING IS ASSUMED ABOUT LEVEL 01
  *
  * The chapter label is read from the universe model rather than typed here, and
@@ -119,7 +142,7 @@ export default function Gateway() {
 
   const { scrollYProgress } = useScroll({
     target: trackRef,
-    offset: ["start 0.8", "end 0.2"],
+    offset: ["start end", "start start"],
   });
 
   /* Mobile halves the travel rather than removing the movement, per
@@ -157,34 +180,63 @@ export default function Gateway() {
   const nearScale = useTransform(scrollYProgress, [0, 1], [1.15, 2.05]);
   const nearY = useTransform(scrollYProgress, [0, 1], [-6 * travel, 30 * travel]);
 
-  /* ---- THE CHAPTER ------------------------------------------------------ */
-  const labelOpacity = useTransform(scrollYProgress, [0.16, 0.32], [0, 1]);
-  const labelY = useTransform(scrollYProgress, [0.16, 0.36], [16 * travel, 0]);
-  const titleOpacity = useTransform(scrollYProgress, [0.24, 0.44], [0, 1]);
-  const titleY = useTransform(scrollYProgress, [0.24, 0.52], [28 * travel, 0]);
+  /* ---- THE CHAPTER ------------------------------------------------------
+     Arrive early and hold. Measured at 912x670, the type used to arrive across
+     p 0.16-0.44 and leave across p 0.62-0.80 while the ivory plane was already
+     fully opaque from p 0.68. That put 67%-opacity IVORY type on an IVORY
+     plane for roughly 80px of scroll: unreadable, and the exact failure this
+     file claimed could not happen. */
+  const labelOpacity = useTransform(scrollYProgress, [0.12, 0.26], [0, 1]);
+  const labelY = useTransform(scrollYProgress, [0.12, 0.30], [16 * travel, 0]);
+  const titleOpacity = useTransform(scrollYProgress, [0.20, 0.36], [0, 1]);
+  const titleY = useTransform(scrollYProgress, [0.20, 0.44], [28 * travel, 0]);
   /* A wipe up from the floor, delivered as a style MotionValue. This is the
      form the Hero already uses for its wordmark; the inset() form does not
      interpolate through whileInView variants. */
   const titleReveal = useTransform(
     scrollYProgress,
-    [0.24, 0.56],
+    [0.20, 0.48],
     ["inset(0% 0% 100% 0%)", "inset(0% 0% 0% 0%)"],
   );
-  /* Type clears before the ivory arrives, so it is never mid-transition
-     between ivory-on-dark and ink-on-ivory - a contrast problem rather than a
-     stylistic one. */
-  const typeFade = useTransform(scrollYProgress, [0.62, 0.8], [1, 0]);
+
+  /* ---- THE TYPE CROSS-FADE ----------------------------------------------
+     The chapter does not disappear any more. It changes ground.
+
+     The IVORY copy is legible only while the corridor behind it is dark, so it
+     must be gone before the ivory plane starts washing the centre of the
+     frame. It leaves across p 0.62-0.74, while portalOpacity is still only
+     0.33 and the ground is still dark enough to read.
+
+     The INK copy arrives across p 0.86-0.96, by which point the plane is
+     fully opaque and filling the frame, so ink on ivory is the only correct
+     pairing. Because it holds at 1 and scrollYProgress clamps at 1, the ink
+     copy then travels up WITH the section as the ivory floor scrolls away
+     toward the Collection. That is what removes the blank interval: the
+     previous version spent p 0.90-1.00 plus the Manifest's own top padding -
+     measured at 179px of scroll - with nothing at all on screen. */
+  const typeIvoryFade = useTransform(scrollYProgress, [0.62, 0.74], [1, 0]);
+  const typeInkFade = useTransform(scrollYProgress, [0.86, 0.96], [0, 1]);
 
   /* ---- THE LIGHT EVENT -------------------------------------------------- */
-  const poolOpacity = useTransform(scrollYProgress, [0.32, 0.56, 0.84], [0, 0.26, 0]);
-  const poolScale = useTransform(scrollYProgress, [0.32, 0.86], [0.72, 1.12]);
+  const poolOpacity = useTransform(scrollYProgress, [0.30, 0.54, 0.82], [0, 0.26, 0]);
+  const poolScale = useTransform(scrollYProgress, [0.30, 0.82], [0.72, 1.12]);
 
   /* ---- THE IVORY PORTAL -------------------------------------------------
      The Collection's own ground, approached down the same perspective until it
      fills the frame at z 0. It is the destination the Hero's CTA already
-     pointed at, so the section resolves rather than announces. */
-  const portalZ = useTransform(scrollYProgress, [0.52, 0.9], [-900 * travel, 0]);
-  const portalOpacity = useTransform(scrollYProgress, [0.5, 0.68], [0, 1]);
+     pointed at, so the section resolves rather than announces.
+
+     OPAQUITY AND ARRIVAL NOW END TOGETHER, AT 0.90. They previously resolved at
+     0.68 and 0.90 respectively, which meant the plane was a fully opaque
+     725x542 white RECTANGLE floating in black with dark margins on all four
+     sides for 147px of scroll - measured, not inferred. A plane inside
+     perspective:1100px shrinks as z goes negative, so it only fills the frame
+     at z 0. Fading it in before it has arrived is what made it read as a card
+     rather than a floor. Holding opacity back until 0.62 also keeps the ivory
+     from washing the centre of the frame while the chapter type is still on
+     it: at p 0.68 the ground is only 17% ivory, not 100%. */
+  const portalZ = useTransform(scrollYProgress, [0.46, 0.90], [-900 * travel, 0]);
+  const portalOpacity = useTransform(scrollYProgress, [0.62, 0.90], [0, 1]);
 
   /* ---- REDUCED MOTION ----------------------------------------------------
      Present, not performed. One field, one pool of light, the chapter named.
@@ -225,7 +277,7 @@ export default function Gateway() {
     );
   }
 
-  const stageHeight = compact ? "92svh" : "112svh";
+  const stageHeight = compact ? "100svh" : "112svh";
 
   /* PLANE RASTER SIZE
      The corridor must keep THREE planes at every breakpoint - that is the
@@ -335,32 +387,62 @@ export default function Gateway() {
           </motion.div>
         </div>
 
-        {/* The chapter. Establishes Level 01 and then clears before the ivory
-            arrives, so contrast is never ambiguous. The container fades as one
-            group; the children keep their own staggered arrivals inside it. */}
-        <motion.div
-          className="relative z-10 mx-auto flex h-full max-w-[104rem] flex-col items-center justify-center px-5 text-center md:px-10 lg:px-14"
-          style={{ opacity: typeFade }}
-        >
-          <motion.p className="meta meta-stone" style={{ opacity: labelOpacity, y: labelY }}>
-            {level.label}
-          </motion.p>
+        {/* THE CHAPTER, IN TWO GROUNDS.
 
-          <motion.h2
-            id="gateway-heading"
-            className="display-editorial mt-6"
-            style={{ opacity: titleOpacity, y: titleY, clipPath: titleReveal }}
-          >
-            The first chapter
-          </motion.h2>
+            One set of words, rendered twice and cross-faded, because the ground
+            behind them changes from obsidian to ivory inside a single crossing
+            and the only correct colour changes with it. The ivory copy is the
+            one that arrives and is read; the ink copy is the one that persists
+            past the handoff so the floor never carries nothing.
 
-          <motion.p
-            className="meta meta-stone mt-7"
-            style={{ opacity: labelOpacity, y: labelY }}
+            The two layers are stacked, not sequential, so the chapter does not
+            shift position when it changes ground. The ivory layer is
+            aria-hidden: the words are identical, and exposing both would
+            announce the chapter twice. The id the section's aria-labelledby
+            points at lives on the ink layer, which is the copy still on screen
+            once the crossing has resolved. */}
+        <div className="relative z-10 mx-auto h-full w-full max-w-[104rem] px-5 text-center md:px-10 lg:px-14">
+          <motion.div
+            aria-hidden="true"
+            className="absolute inset-0 flex flex-col items-center justify-center"
+            style={{ opacity: typeIvoryFade }}
           >
-            {entries.length} entries
-          </motion.p>
-        </motion.div>
+            <motion.p className="meta meta-stone" style={{ opacity: labelOpacity, y: labelY }}>
+              {level.label}
+            </motion.p>
+            <motion.p
+              className="display-editorial mt-6"
+              style={{ opacity: titleOpacity, y: titleY, clipPath: titleReveal }}
+            >
+              The first chapter
+            </motion.p>
+            <motion.p
+              className="meta meta-stone mt-7"
+              style={{ opacity: labelOpacity, y: labelY }}
+            >
+              {entries.length} entries
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            className="absolute inset-0 flex flex-col items-center justify-center"
+            style={{ opacity: typeInkFade }}
+          >
+            {/* Set in ink explicitly rather than inherited. This section
+                declares data-surface="dark", so the inherited colour is
+                --ivory, which is exactly the colour that must not survive the
+                crossing. */}
+            <p className="meta mt-0" style={{ color: "var(--ink-muted)" }}>
+              {level.label}
+            </p>
+            <h2 id="gateway-heading" className="display-editorial mt-6" style={{ color: "var(--ink)" }}>
+              The first chapter
+            </h2>
+            <p className="meta mt-7" style={{ color: "var(--ink-muted)" }}>
+              {entries.length} entries
+            </p>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

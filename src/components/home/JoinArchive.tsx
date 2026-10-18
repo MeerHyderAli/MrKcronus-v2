@@ -94,7 +94,17 @@ export default function JoinArchive() {
             className="lg:col-span-5 lg:col-start-8"
           >
             <form
-              noValidate={false}
+              /* NAMED, AND NO LONGER CARRYING DEAD ATTRIBUTES.
+
+                 aria-labelledby points at the section's own h2. A form with no
+                 accessible name is announced as just "form", and the visible
+                 "Email Address" label describes the FIELD, not the form, so a
+                 screen-reader user had nothing to tell these two controls apart
+                 from any other form on the page.
+
+                 noValidate={false} was the default value written out longhand;
+                 it asserted nothing and has been removed. */
+              aria-labelledby="join-archive-heading"
               onSubmit={(event) => {
                 event.preventDefault();
                 setStatus(

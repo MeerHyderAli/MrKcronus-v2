@@ -21,9 +21,15 @@ const LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="mt-24 border-t border-[--rule] md:mt-40">
+    /* The margin above the rule was md:mt-40 on top of JoinArchive's own
+       lg:py-32, which measured as a 288px band of unbroken #050505 between the
+       last section hairline and the footer border. The rule now sits directly
+       above the footer's own padding, and the single mt-14 is the whole gap. */
+    <footer className="border-t border-[--rule]">
       <div className="mx-auto max-w-[104rem] px-5 py-14 md:px-10 md:py-20 lg:px-14">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
+        {/* items-center so the short logo column is optically centred against
+            the taller link column instead of hanging at the top of its cell. */}
+        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-5">
             <div className="flex items-center gap-4">
               <Symbol height={30} />
@@ -32,13 +38,19 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Footer" className="md:col-span-3">
-            <h2 className="meta meta-stone mb-5">MR.KCRONUS</h2>
+            {/* The footer sits on Obsidian, where meta-stone's --surface-muted
+                resolves to Stone at 3.17:1 — below AA for 11px text, and not
+                raisable against any dark ground (even pure black caps Stone at
+                3.17:1). text-ivory/55 is the same treatment Nav.tsx already
+                uses: an existing brand token with an alpha modifier, 5.81:1,
+                and still dimmer than the gold active state. */}
+            <h2 className="meta text-ivory/55 mb-5">MR.KCRONUS</h2>
             <ul className="flex flex-col gap-3">
               {LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="meta text-stone transition-colors duration-200 ease-archive hover:text-ivory"
+                    className="meta text-ivory/55 transition-colors duration-200 ease-archive hover:text-ivory"
                   >
                     {link.label}
                   </Link>
@@ -47,15 +59,20 @@ export default function Footer() {
             </ul>
           </nav>
 
-          <div className="md:col-span-4 md:text-right">
-            <h2 className="meta meta-stone mb-5">SOCIAL</h2>
-            <p className="meta text-stone">NO VERIFIED ACCOUNT</p>
-          </div>
+          {/* SOCIAL WAS CUT, NOT REWRITTEN.
+
+              This previously read "NO VERIFIED ACCOUNT". Not inventing a social
+              URL was correct; printing the absence of one was not - it is
+              production language on a finished page, and it left the closing
+              frame with a third of its width carrying nothing but a refusal.
+              Nothing has been supplied to replace it with, and inventing a
+              handle would be fabrication. The column is removed rather than
+              filled, and the link column is allowed to breathe. */}
         </div>
 
         <hr className="rule mt-14 md:mt-20" />
 
-        <p className="meta meta-stone mt-6">© MR.KCRONUS</p>
+        <p className="meta text-ivory/55 mt-6">© MR.KCRONUS</p>
       </div>
     </footer>
   );

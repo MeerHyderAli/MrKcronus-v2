@@ -47,7 +47,7 @@ export default function Nav() {
 // rather than introducing a new colour, measures 5.81:1, and stays dimmer than
 // the active gold at 7.63:1, so the active state still reads as the brighter.
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-[--surface-rule] bg-obsidian">
+    <header className="nav-bar fixed inset-x-0 top-0 z-50 border-b border-[--surface-rule] bg-obsidian">
       <div className="mx-auto flex h-16 max-w-[104rem] items-center justify-between px-5 md:h-20 md:px-10 lg:px-14">
         <Link
           href="/"

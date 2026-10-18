@@ -85,9 +85,21 @@ export default function ArchiveIndex() {
         <ol className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 md:grid-cols-4 md:gap-y-4">
           {ARCHIVE_PLATES.map((e) => (
             <li key={e.id}>
+              {/* Two fixes on the same anchor.
+
+                  FOCUS: these had hover:text-gold but no focus-visible colour
+                  change, so a keyboard user got a global outline and none of
+                  the affordance the pointer user sees. focus-visible now gets
+                  the same gold treatment as hover, not just the outline.
+
+                  TARGET: the hit area was the text box alone - roughly 18px
+                  tall for 10-11px uppercase type. min-h-[44px] plus inline-flex
+                  brings it to the 44px floor the rest of the house already
+                  meets on .cta-invitation. The underline-on-focus rule keeps
+                  the enlarged box visually tied to the label. */}
               <a
                 href={`#${e.id}`}
-                className="font-meta text-[0.625rem] font-medium uppercase tracking-[0.14em] text-ivory transition-colors duration-200 ease-archive hover:text-gold md:text-[0.6875rem] md:tracking-[0.2em]"
+                className="inline-flex min-h-[44px] items-center font-meta text-[0.625rem] font-medium uppercase tracking-[0.14em] text-ivory transition-colors duration-200 ease-archive hover:text-gold focus-visible:text-gold md:text-[0.6875rem] md:tracking-[0.2em]"
               >
                 {e.name}
               </a>

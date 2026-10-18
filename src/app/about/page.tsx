@@ -8,6 +8,18 @@ export const metadata: Metadata = {
 /**
  * Structural shell only. No founder biography, dates, locations,
  * manufacturing claims, sustainability claims, press or testimonials.
+ *
+ * THE PARAGRAPH WAS CUT, NOT REWRITTEN
+ *
+ * This route previously read "The statement foundation is established.
+ * Supporting material follows in a later phase." AboutSection.tsx already
+ * rules out exactly this kind of sentence on the homepage - internal
+ * production language does not belong on a finished page - and nothing honest
+ * can replace it: AGENTS.md forbids inventing founder history, dates,
+ * locations, manufacturing or sustainability claims, press and testimonials,
+ * and no such material has been supplied. The brand statement above is the
+ * approved copy and is the whole of what is known. Cutting the sentence was
+ * the only correction that did not fabricate something.
  */
 export default function AboutPage() {
   return (
@@ -23,11 +35,6 @@ export default function AboutPage() {
 
       <p className="display mt-10 max-w-[18ch] text-[clamp(1.5rem,3.5vw,2.75rem)] leading-tight text-ivory">
         A world built through symbols, architecture and form.
-      </p>
-
-      <p className="prose-archive mt-8 text-stone">
-        The statement foundation is established. Supporting material follows
-        in a later phase.
       </p>
     </section>
   );

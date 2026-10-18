@@ -786,3 +786,126 @@ body {
     color: var(--ivory);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   COLOURWAY SELECTOR
+   Added with the Drop 1 canon amendment (see AGENTS.md, Colourway Canon).
+
+   These are REPRESENTATIVE INTERFACE COLOURS ONLY. They are chosen so the five
+   swatches are distinguishable on screen. They are NOT measured, sampled or
+   verified garment colours, and no hex value here is a garment specification.
+   The authoritative colour naming is the five house colours declared in
+   collectionData.ts; these tokens only render them.
+
+   No new brand-palette colour is introduced. The control borrows the existing
+   ink and rule tokens, so it stays inside the ivory editorial system, and focus
+   reuses the existing global :focus-visible ring.
+--------------------------------------------------------------------------- */
+
+.cw-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  /* Comfortable pointer target. Height comes from the row; WIDTH is pinned
+     because dropping the visible name left an unselected chip only ~34px wide,
+     which is under the 44px floor even though it was a single line. */
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.25rem 0.7rem 0.25rem 0.45rem;
+  border: 1px solid var(--rule-ink);
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-meta);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-micro) var(--ease-archive),
+    color var(--dur-micro) var(--ease-archive);
+}
+
+.cw-swatch:hover {
+  border-color: var(--ink-soft);
+  color: var(--ink);
+}
+
+/* Selected state: a ring, a heavier label AND a check glyph, so it is never
+   communicated by colour alone. */
+.cw-swatch.is-selected {
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.cw-swatch__chip {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex: none;
+  border-radius: 0; /* the house uses no border radius anywhere */
+  /* A visible boundary on every chip, so a pale swatch is still a discrete
+     object against the ivory ground rather than a wash of surface colour. */
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.55);
+}
+
+/* Chip colours are REPRESENTATIVE INTERFACE VALUES chosen for on-screen
+   separation, not measured garments. Each is set so the chip clears the 3:1
+   non-text contrast floor (WCAG 2.2 SC 1.4.11) against the ivory surface
+   #f3f0e8. Measured against that surface:
+
+     black            #141414   16.18:1
+     deep olive       #454a32    8.09:1
+     chocolate brown  #422d25   11.29:1
+     midnight navy    #1f2536   13.40:1
+     stone beige      #8c7e68    3.48:1   <- was #cfc6b4 at 1.49:1
+
+   Stone Beige is the only chip that had to move materially; the others were
+   already clear and were darkened only slightly for consistency of edge weight.
+   These remain the five house colours by NAME, and no value here is a garment
+   specification. */
+.cw-swatch__chip[data-colour="black"] {
+  background: #141414;
+}
+.cw-swatch__chip[data-colour="deep-olive"] {
+  background: #454a32;
+}
+.cw-swatch__chip[data-colour="dark-chocolate-brown"] {
+  background: #422d25;
+}
+.cw-swatch__chip[data-colour="midnight-navy"] {
+  background: #1f2536;
+}
+.cw-swatch__chip[data-colour="stone-beige"] {
+  background: #8c7e68;
+}
+
+.cw-swatch__check {
+  color: var(--ink);
+  line-height: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   SAFE AREAS
+
+   With `viewportFit: "cover"` declared in app/layout.tsx, the fixed header can
+   extend under a display notch or a rounded corner, so it must be inset back
+   out of the unsafe regions. On every device that reports no inset these all
+   resolve to 0px and the header is pixel-identical to before.
+
+   The LEFT inset is applied rather than the right because the header spans
+   inset-x-0 and a landscape cutout on the left would otherwise clip the wordmark.
+--------------------------------------------------------------------------- */
+
+.nav-bar {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+@media (orientation: landscape) {
+  .nav-bar {
+    padding-left: max(env(safe-area-inset-left, 0px), 0.75rem);
+    padding-right: max(env(safe-area-inset-right, 0px), 0.75rem);
+  }
+}

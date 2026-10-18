@@ -65,6 +65,19 @@ import { useCompactMotion } from "@/components/motion/motionEnv";
  * garment sits here as a HERO / BRAND VISUAL only; collection-board.png remains
  * the canonical collection specification and the two are never conflated.
  *
+ * WHY THE ALT TEXT NAMES NO DESIGN
+ *
+ * The alt describes the pixels and stops there: it does not name THE
+ * ARCHITECT or any other design. That is deliberate on two counts. It is a hero
+ * brand visual, never a canonical collection specification, so asserting a
+ * design identity in its accessible name would promote it into one. And
+ * artifact-architect.png depicts the OBSOLETE cracked-clock Architect, which the
+ * approved colourway PDF contradicts - 001 is a crescent moon and star on the
+ * front and a cathedral corridor on the back. Describing the render truthfully
+ * while declining to call it the design keeps the alt accurate to the image and
+ * silent on canon the corpus cannot currently support. The asset itself was not
+ * altered; see the known discrepancy recorded in collectionData.ts.
+ *
  * DETERMINISM
  * Every value is a pure transform of scroll progress. No React state during
  * scroll, no scroll-jacking, no time-driven loop. Backwards scrolling is an
@@ -174,7 +187,7 @@ export default function Hero() {
           <Symbol height={190} className="max-w-[38vw]" />
           <Wordmark
             width={420}
-            className="max-w-[80vw]"
+            style={{ maxWidth: "80vw" }}
             decorative={false}
             label="MR.KCRONUS"
           />
@@ -190,7 +203,7 @@ export default function Hero() {
           <div className="vitrine image-frame mt-2 w-full max-w-[280px]">
             <Image
               src="/brand/artifact-architect.png"
-              alt="THE ARCHITECT: a black short-sleeve MR.KCRONUS tee printed with a cracked clock face, a hooded figure and a ruined city beneath it."
+              alt="MR.KCRONUS garment brand visual: a black short-sleeve tee printed with the house wordmark above a hooded figure framed inside a cracked clock face, above a ruined city."
               width={730}
               height={1024}
               sizes="(max-width: 1023px) 86vw, 280px"
@@ -292,7 +305,7 @@ export default function Hero() {
                 <motion.div style={{ clipPath: wordReveal }}>
                   <Wordmark
                     width={420}
-                    className="max-w-[80vw]"
+                    style={{ maxWidth: "80vw" }}
                     decorative={false}
                     label="MR.KCRONUS"
                   />
@@ -328,7 +341,7 @@ export default function Hero() {
               <div className="vitrine image-frame w-full max-w-[300px]">
                 <Image
                   src="/brand/artifact-architect.png"
-                  alt="THE ARCHITECT: a black short-sleeve MR.KCRONUS tee printed with a cracked clock face, a hooded figure and a ruined city beneath it."
+                  alt="MR.KCRONUS garment brand visual: a black short-sleeve tee printed with the house wordmark above a hooded figure framed inside a cracked clock face, above a ruined city."
                   width={730}
                   height={1024}
                   sizes="(max-width: 1023px) 86vw, 300px"

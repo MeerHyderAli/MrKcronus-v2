@@ -186,14 +186,15 @@ presents and introduces; it does not contain the full narrative.
 Approved homepage order:
 
 1. Hero
-2. Collection — Manifest / Sequence / Board
-3. Philosophy (Brand Statement)
-4. Archive Teaser
-5. Editorial / Craft
-6. Journal
-7. About
-8. Join the Archive
-9. Footer
+2. Gateway — the crossing from the Hero into the Collection  dark → ivory
+3. Collection — Manifest / Sequence / Board
+4. Philosophy (Brand Statement)
+5. Archive Teaser
+6. Editorial / Craft
+7. Journal
+8. About
+9. Join the Archive
+10. Footer
 
 ### Division of responsibility
 
@@ -345,9 +346,16 @@ Approved structure — three movements, one experience:
 
 - **Movement A — Manifest:** an ordered typographic index of the six
   designs with numerals, names and codes.
-- **Movement B — Sequence:** an approved 360vh scroll-linked cinematic
+- **Movement B — Sequence:** an approved scroll-linked cinematic
   sequence presenting each design as an object, with a distinct per-design
   mask personality. One sequence, six entries — not six chapters.
+
+  **DURATION CORRECTED.** This previously read "an approved 360vh". The shipped
+  runway is `400vh` on desktop and `300vh` on compact viewports, and 360 was
+  never what the component used. The measured behaviour is now correct at every
+  breakpoint, so the number in the prose was the thing that was wrong:
+  `CollectionSequence.tsx` has never rendered a 360vh track. Treat the two
+  figures above as the specification.
 - **Movement C — Board:** the complete `collection-board.png` shown whole.
   Never crop the board into new production files. Never derive assets from
   external documents.
@@ -450,6 +458,234 @@ of six anywhere downstream.
 
 The universe model is a typed registry with strict resolvers. It contains no
 visual behaviour. Adding an entry does not add a reveal, a page, or a route.
+
+---
+
+## Delivery Phases
+
+**RECORDED IN PHASE 1.1 AT CLIENT INSTRUCTION.** This sequence was approved in
+conversation and had never been written into the repository. It is recorded here
+so future work does not re-derive it.
+
+- **Phase 0** — Universe data model and canon.
+  `src/components/universe/universe.ts`.
+- **Phase 0.1** — Integrity-gate corrections. `npm run check:universe`.
+- **Phase 1** — ACT II, the Gateway. `src/components/home/sections/Gateway.tsx`.
+- **Phase 1.1** — Gateway coverage and handoff correction.
+  **COMPLETE, MEASURED.** See the acceptance criteria and the measured results
+  below. Its changes are in the working tree and remain **uncommitted**; no
+  commit has been made on their behalf.
+- **Phase 2** — ACT III. Relabel the Collection as Level 01 and pair each garment
+  with its corresponding character artwork.
+
+### Phase 1.1 acceptance criteria
+
+1. At least 99% viewport coverage at handoff.
+2. Portal at least 99% of viewport width and height at handoff.
+3. No blank tail during the transition.
+4. No additional pinned track. The Hero and Movement B keep both.
+5. No horizontal overflow and no console errors.
+6. Universe integrity **59/59**, typecheck, lint and build clean, all routes 200.
+
+### Phase 1.1 measured results
+
+Verified against a **production build** (`next build` then `next start`), not the
+dev server. Viewports 1024x768 and 390x844 were rendered inside same-origin
+iframes so that `svh` and the media queries resolved against those exact
+viewports.
+
+| Criterion | 912x670 | 1024x768 | 390x844 | Result |
+|---|---|---|---|---|
+| 1 — coverage at handoff | 100% | 100% | 100% | pass |
+| 2 — portal width x height | 100% x 100% | 100% x 112% | 100% x 100% | pass |
+| 3 — blank interval | 0 px | 0 px | 0 px | pass |
+| 5 — horizontal overflow | 0 px | 0 px | 0 px | pass |
+| Universe integrity | — | — | — | 59 passed, 0 failed |
+| typecheck / lint / build | — | — | — | clean / clean / clean |
+| All four routes | — | — | — | 200, zero console errors |
+
+**Criterion 4 holds.** The Gateway is still unpinned; the Hero and Movement B
+remain the page's only two pinned tracks. No pin was added to close the blank
+interval — it was closed by rescheduling the section's own content.
+
+### What actually caused the blank interval, for the record
+
+It was **not** the scroll offset and **not** the stage height. Those had already
+been corrected and were verified correct: with `offset: ["start end","start
+start"]` and a `100svh` stage, coverage ramps linearly 0 to 100% and reaches
+100% exactly at p 1.
+
+The blank was a collision **between three timings inside the section**:
+
+1. `portalOpacity` resolved at p 0.68 while `portalZ` resolved at p 0.90. A
+   plane inside `perspective: 1100px` shrinks as z goes negative, so for 147px
+   of scroll the ivory was fully opaque but only 725x542 — an opaque white
+   rectangle floating in black, not a floor arriving.
+2. `typeFade` resolved at p 0.62-0.80, so at p 0.68 the chapter was still at
+   67% opacity, **in ivory, on an opaque ivory plane**. Measured, not inferred.
+3. From p 0.90 to p 1.00, and on through the Manifest's `md:py-28`, nothing at
+   all was on screen. Measured content-free interval: **179 px**.
+
+The fix keeps the geometry and changes only the schedule: the type clears before
+the ivory can wash it, opacity and arrival now resolve together at p 0.90, and
+the chapter is re-set **in ink** as the floor lands and travels up with it into
+the Collection. The handoff now ends with the chapter name handing to the
+Manifest instead of an empty frame.
+
+### Phase 2 constraints
+
+- Preserve the six-entry canonical order.
+- **Never present a character plate as a garment.** Garment and character art are
+  distinct registers even when they depict the same entity.
+- The Sigil has no character artwork and must not be given any.
+- No phase beyond Phase 2 is defined here.
+
+---
+
+## Colourway Canon
+
+**ADDED WITH THE DROP 1 APPROVAL.** This section amends "Current Product Scope"
+and the Collection section above in one narrow, explicitly bounded respect. It
+authorises colourway *presentation* and local *selection* on the landing page
+only. **It does not authorise ecommerce.**
+
+### What this section permits
+
+- Drop 1 membership for all six designs.
+- Catalogue codes `001` to `006`.
+- Presentation of the five intended colour options per design.
+- A local, accessible colour selector in Movement A.
+- Standardized customer-facing colour names as the primary label.
+- Verified source-provided poetic names and printed colourway labels, shown
+  **secondarily only**.
+- The `Drop 1 - Six designs` label in the Collection header.
+
+### What this section continues to prohibit
+
+Until a **separately approved ecommerce phase**, the following remain forbidden
+and are **not** authorised by this exception:
+
+- Prices and discounts.
+- Cart and checkout.
+- Payment processing.
+- Inventory management and stock status or availability claims.
+- Purchase confirmation.
+- Any complete ecommerce implementation.
+
+No variant identifier is a printed brand SKU, a stock keeping unit, or a promise
+that a colour is purchasable. Selecting a colour names a colour; it does not
+complete a purchase.
+
+### Drop 1
+
+All six designs belong to **Drop 1**. Drop membership, catalogue code and
+colourway identity are three separate things and are modelled separately. Do not
+build a generalized multi-drop system unless the architecture requires it.
+
+| Design | Code |
+|---|---|
+| THE ARCHITECT | `001` |
+| THE SIGIL | `002` |
+| THE WITNESS | `003` |
+| THE FRACTURE | `004` |
+| THE ENEMY | `005` |
+| THE UNKNOWN | `006` |
+
+### The five house colours
+
+Black, Deep Olive, Dark Chocolate Brown, Midnight Navy, Stone Beige.
+
+These standardized names are always the primary customer-facing label. A poetic
+name is never promoted to primary. UI swatch tokens in `globals.css` are
+**representative interface colours only**, not measured garment specifications.
+
+### Artwork canon
+
+The supplied colourway PDFs are final and authoritative for Drop 1. Preserve the
+supplied designs without reinterpretation, redesign, or AI-generated replacement.
+
+- THE ARCHITECT `001` - crescent moon and star, front; cathedral corridor, back.
+- THE SIGIL `002` - wordmark, front; gold compass sigil, back.
+- THE WITNESS `003` - eye artwork, front; illustrated character, back.
+- THE FRACTURE `004` - wordmark, front; shattered clock and city, back.
+- THE ENEMY `005` - wordmark, front; beaked-mask figure, back.
+- THE UNKNOWN `006` - crescent moon and star, front; hooded figure and moon, back.
+
+**The cracked-clock attribution to The Architect is obsolete.** The clock belongs
+to **The Fracture**.
+
+### Known asset discrepancy — The Architect (recorded, deliberately unresolved)
+
+The colourway PDF is authoritative for 001 and has been verified sheet by sheet.
+**Two shipped assets do not match it, and have deliberately not been altered:**
+
+- `public/brand/collection-board.png`, cell (0,0), depicts THE ARCHITECT with a
+  cracked clock face, a hooded figure and a ruined city.
+- `public/brand/artifact-architect.png` depicts the same obsolete artwork and is
+  rendered as the Hero brand visual.
+
+Replacing, redrawing, regenerating or cropping approved artwork is prohibited,
+and the colourway PDF is a reference that is never cropped into a production
+asset — so an accurate render of 001 does not exist in the corpus and cannot be
+manufactured from what is here. Producing one is a **brand-supply action**, not a
+code action.
+
+Until it is reissued, the following rule holds and is enforced by
+`scripts/check-universe.mjs`:
+
+- The **data** records what 001 *is*: crescent moon and star, front; cathedral
+  corridor, back.
+- The **Hero alt text describes the pixels and names no design**, so the render
+  is described accurately while the accessible name stays silent on canon the
+  corpus cannot support.
+- The **`/archive` plate alt may still mention a clock.** `The Architect.jpg` is
+  Archive plate artwork, not the 001 print, and it genuinely contains an intact
+  cracked clock with a hooded figure framed inside it. The rule above governs the
+  *garment*, not the plate.
+
+Do not "fix" the plate alt by removing the clock. Do not "fix" the board by
+regenerating it.
+
+### Source exceptions, preserved rather than normalised
+
+- **THE ARCHITECT** - its sheets carry an unnumbered cover plus C1, C4, C5 and C6.
+  **C2 and C3 are unverified and are not represented.** Its C4 is dark chocolate
+  brown where C4 on every other design is midnight navy. These labels are
+  reproduced as supplied and are never forced into a universal sequence.
+- **THE ENEMY** - the sheets print `ORIGINAL COLOUR: BLACK` on all five pages
+  while the garments visibly render other colours. That is a **defect in the
+  source document** and must not override the colour data. It carries no poetic
+  name, because the source prints none.
+- **THE UNKNOWN** - its five sheets print **no** colourway name, number, or
+  original-colour label. Its five colours are established by **visual inspection
+  only**, and that provenance must be preserved. Missing source fields stay
+  absent; never substitute an invented value.
+
+### Numbering stays separate
+
+Drop 1, catalogue codes `001` to `006`, colourway labels printed in the PDFs,
+Archive `LEVEL 00-03`, Universe `Level 01`, and `TIMELINE 01 : COLLAPSED`.
+
+These are six distinct schemes. Do not merge them and do not invent a hierarchy
+between them.
+
+### Assets
+
+The composite colourway PDF pages are **references, not production assets**. They
+are never cropped into production files, exactly as `collection-board.png` is
+never cropped. No per-colourway production imagery exists, so the selector must
+never imply that the board image depicts the selected garment colour.
+
+### Garments are not character plates
+
+A character illustration printed on a garment does not make the garment a
+standalone character artwork plate. Collection garment designs remain
+conceptually distinct from the Archive's character plates.
+
+### Intended sequence
+
+The landing page is completed first. Ecommerce follows only after a separately
+approved phase.
 
 ---
 
