@@ -25,18 +25,40 @@ const LINKS = [
 ] as const;
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const DESKTOP_MEDIA_QUERY = "(min-width: 768px)";
 
 export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: string }) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const wasOpenRef = useRef(false);
 
   useEffect(() => {
     if (!open) return;
 
     const panel = panelRef.current;
-    const button = buttonRef.current;
+    const desktopQuery = window.matchMedia(DESKTOP_MEDIA_QUERY);
+    const closeOnDesktop = (event: MediaQueryListEvent) => {
+      if (event.matches) setOpen(false);
+    };
+
+    desktopQuery.addEventListener("change", closeOnDesktop);
+
+    // The mobile toggle is hidden at this breakpoint. If the menu was opened
+    // just before crossing it, close without acquiring a scroll lock.
+    if (desktopQuery.matches) {
+      // The open state may commit just before a resize but its effect run just
+      // after it. Defer this correction and cancel it if the effect is cleaned
+      // up first (including an unmount).
+      const closeMenu = window.setTimeout(() => setOpen(false), 0);
+      return () => {
+        window.clearTimeout(closeMenu);
+        desktopQuery.removeEventListener("change", closeOnDesktop);
+      };
+    }
+
+    wasOpenRef.current = true;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -73,9 +95,24 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
+      desktopQuery.removeEventListener("change", closeOnDesktop);
       document.body.style.overflow = previousOverflow;
-      button?.focus();
     };
+  }, [open]);
+
+  // Focus restoration is a state transition, not effect cleanup: this runs when
+  // the open dialog closes, but not when this component itself unmounts.
+  useEffect(() => {
+    if (open || !wasOpenRef.current) return;
+
+    wasOpenRef.current = false;
+    const button = buttonRef.current;
+    if (
+      !window.matchMedia(DESKTOP_MEDIA_QUERY).matches &&
+      button?.isConnected
+    ) {
+      button.focus();
+    }
   }, [open]);
 
   return (
