@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Flow from "@/components/motion/Flow";
 import Reveal from "@/components/motion/Reveal";
 import Section from "./Section";
 
@@ -45,7 +44,7 @@ export default function EditorialCraft() {
     >
       <div className="mx-auto grid max-w-[104rem] grid-cols-1 gap-12 px-5 md:px-10 lg:grid-cols-12 lg:gap-14 lg:px-14">
         {/* ---- The plate: the geometry, taken apart --------------------- */}
-        <Flow rise={-22} className="lg:col-span-7">
+        <Reveal pattern="depth" className="lg:col-span-7">
           <figure className="vitrine image-frame">
             <Image
               src="/brand/archive-plate-full.png"
@@ -104,10 +103,14 @@ export default function EditorialCraft() {
               </dl>
             </div>
           </figure>
-        </Flow>
+        </Reveal>
 
         {/* ---- Type and the set index ----------------------------------- */}
-        <Reveal pattern="rise" className="lg:col-span-4 lg:col-start-9">
+        <Reveal
+          pattern="rise"
+          delay={0.12}
+          className="lg:col-span-4 lg:col-start-9"
+        >
           <p className="meta meta-stone">Construction</p>
 
           <h2 id="craft-heading" className="display-editorial mt-5">
