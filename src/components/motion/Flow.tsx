@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useCompactMotion } from "./motionEnv";
 
@@ -48,11 +48,27 @@ import { useCompactMotion } from "./motionEnv";
  * inside [0, 1] and are non-decreasing, because Motion consumes them directly
  * as WAAPI keyframe offsets.
  *
- * REDUCED MOTION
- * A plain div with the same class and children. Motion writes no inline
- * transform at all, so content sits at its natural position and stays fully
- * visible and reachable.
+ * PROGRESSIVE ENHANCEMENT / REDUCED MOTION
+ * The server and first hydration render keep this same native div visible with
+ * no scroll-derived opacity or transform. After mount, current viewport
+ * progress is seeded before the existing Motion mapping is applied. With
+ * reduced motion, the wrapper stays static with no inline transform, and
+ * content remains fully visible and reachable.
  */
+function readViewportProgress(element: HTMLElement): number {
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const range = viewportHeight + rect.height;
+
+  if (range <= 0) return 0;
+
+  // Matches offset ["start end", "end start"]: progress 0 when the
+  // element's top reaches the viewport bottom, and 1 when its bottom leaves
+  // the viewport top. This seeds restored/direct-load scroll positions before
+  // a fade-enabled MotionValue is attached.
+  return Math.max(0, Math.min(1, (viewportHeight - rect.top) / range));
+}
+
 export default function Flow({
   children,
   className = "",
@@ -77,6 +93,24 @@ export default function Flow({
     target: ref,
     offset: ["start end", "end start"],
   });
+  const [motionReady, setMotionReady] = useState(false);
+
+  useEffect(() => {
+    if (reduced) return;
+
+    const element = ref.current;
+    if (!element) return;
+
+    // Wait one frame for layout and browser scroll restoration. The wrapper
+    // remains visible during this wait; seed before attaching opacity so a
+    // direct load mid-page does not start from Motion's default zero progress.
+    const frame = window.requestAnimationFrame(() => {
+      scrollYProgress.set(readViewportProgress(element));
+      setMotionReady(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [reduced, scrollYProgress]);
 
   const travel = compact ? rise * 0.5 : rise;
 
@@ -104,14 +138,18 @@ export default function Flow({
     );
   }
 
+  const animate = motionReady;
+
   return (
     <motion.div
       ref={ref}
       className={className}
       style={
-        scale
-          ? { y, opacity: fade ? opacity : 1, scale: scaleValue }
-          : { y, opacity: fade ? opacity : 1 }
+        animate
+          ? scale
+            ? { y, opacity: fade ? opacity : 1, scale: scaleValue }
+            : { y, opacity: fade ? opacity : 1 }
+          : undefined
       }
     >
       {children}

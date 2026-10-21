@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { DUR, EASE, type EaseName } from "./vocabulary";
 
@@ -40,10 +41,12 @@ import { DUR, EASE, type EaseName } from "./vocabulary";
  * start reading as a zoom effect, which is not this brand. Override per call
  * site only where composition demands it.
  *
- * REDUCED MOTION
- * A plain element of the same tag and class, with no animation props at all, so
- * Motion writes no inline transform whatsoever. Content renders in its natural
- * position, fully visible and reachable. Identical markup either way.
+ * PROGRESSIVE ENHANCEMENT / REDUCED MOTION
+ * The server and first hydration render use the same native tag and class with
+ * no hidden initial values. Motion is enabled only after the client has checked
+ * whether the element was already visible, so hydration cannot hide content a
+ * reader has already reached. With reduced motion, a plain tag is rendered with
+ * no animated values or inline transform.
  */
 export type RevealPattern =
   | "fade"
@@ -155,6 +158,26 @@ const PLAIN_TAGS = {
   li: "li",
 } as const;
 
+function intersectsViewport(element: HTMLElement | null): boolean {
+  if (!element || typeof window === "undefined") return false;
+
+  const rect = element.getBoundingClientRect();
+  if (rect.width <= 0 || rect.height <= 0) return false;
+
+  const visibleWidth = Math.max(
+    0,
+    Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0),
+  );
+  const visibleHeight = Math.max(
+    0,
+    Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0),
+  );
+
+  // Any visible pixels must stay visible when hydration activates motion. The
+  // configured `amount` remains the threshold for the existing whileInView.
+  return visibleWidth > 0 && visibleHeight > 0;
+}
+
 export default function Reveal({
   pattern = "rise",
   delay = 0,
@@ -185,6 +208,25 @@ export default function Reveal({
   children?: ReactNode;
 }) {
   const reduced = useReducedMotion();
+  const elementRef = useRef<HTMLElement | null>(null);
+  const [clientReady, setClientReady] = useState(false);
+  const [visibleAtActivation, setVisibleAtActivation] = useState(false);
+  const captureRef = useCallback((element: HTMLElement | null) => {
+    elementRef.current = element;
+  }, []);
+
+  useEffect(() => {
+    if (reduced) return;
+
+    // Wait one frame for layout and scroll restoration, keeping the server and
+    // hydration output visible while we establish the initial reveal state.
+    const frame = window.requestAnimationFrame(() => {
+      setVisibleAtActivation(intersectsViewport(elementRef.current));
+      setClientReady(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [amount, reduced]);
 
   if (reduced) {
     const Plain = PLAIN_TAGS[as];
@@ -193,25 +235,40 @@ export default function Reveal({
 
   const spec = PATTERNS[pattern](distance, scaleFrom);
   const Tag = MOTION_TAGS[as];
+  const animate = clientReady;
 
   /* A wipe reveals upward from the baseline, so the element has to be scaled
      about its bottom edge rather than its centre. Without this the mask
      pattern grows out of the middle of the heading and reads as a zoom. */
   const origin =
-    pattern === "mask" ? { transformOrigin: "bottom center" } : undefined;
+    animate && pattern === "mask"
+      ? { transformOrigin: "bottom center" }
+      : undefined;
 
   return (
     <Tag
+      ref={captureRef}
       className={className}
       style={origin}
-      initial={spec.from}
-      whileInView={spec.to}
-      viewport={{ once: true, amount }}
-      transition={{
-        duration: duration ?? spec.duration,
-        delay,
-        ease: EASE[ease ?? spec.ease],
-      }}
+      initial={false}
+      animate={
+        animate
+          ? visibleAtActivation
+            ? spec.to
+            : spec.from
+          : undefined
+      }
+      whileInView={animate ? spec.to : undefined}
+      viewport={animate ? { once: true, amount } : undefined}
+      transition={
+        animate
+          ? {
+              duration: duration ?? spec.duration,
+              delay,
+              ease: EASE[ease ?? spec.ease],
+            }
+          : undefined
+      }
     >
       {children}
     </Tag>
