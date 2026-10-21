@@ -27,6 +27,8 @@ const LINKS = [
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 const DESKTOP_MEDIA_QUERY = "(min-width: 768px)";
+const HIT_AREA_CLASS =
+  "relative after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-['']";
 
 export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: string }) {
   const pathname = usePathname();
@@ -179,7 +181,7 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
                       href={link.href}
                       aria-current={active ? "page" : undefined}
                       onClick={() => setOpen(false)}
-                      className={`display block text-[2.25rem] leading-none transition-opacity duration-200 ease-archive hover:opacity-70 ${
+                      className={`display block ${HIT_AREA_CLASS} text-[2.25rem] leading-none transition-opacity duration-200 ease-archive hover:opacity-70 ${
                         active ? "text-gold" : "text-ivory"
                       }`}
                     >
@@ -193,7 +195,7 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
                 <Link
                   href={enterHref}
                   onClick={() => setOpen(false)}
-                  className="display block text-[2.25rem] leading-none text-gold transition-opacity duration-200 ease-archive hover:opacity-70"
+                  className={`display block ${HIT_AREA_CLASS} text-[2.25rem] leading-none text-gold transition-opacity duration-200 ease-archive hover:opacity-70`}
                 >
                   <span className="sr-only">Item 4: </span>
                   ENTER

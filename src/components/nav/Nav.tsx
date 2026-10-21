@@ -25,6 +25,11 @@ const LINKS = [
   { href: "/about", label: "ABOUT" },
 ] as const;
 
+// Extend each click target vertically without changing its visible box or the
+// horizontal spacing between navigation items.
+const HIT_AREA_CLASS =
+  "relative after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-['']";
+
 export default function Nav() {
   const pathname = usePathname();
 
@@ -67,7 +72,7 @@ export default function Nav() {
                   <Link
                     href={link.href}
                     aria-current={active ? "page" : undefined}
-                    className={`meta transition-colors duration-200 ease-archive ${
+                    className={`meta ${HIT_AREA_CLASS} transition-colors duration-200 ease-archive ${
                       active ? "text-gold" : "text-ivory/55 hover:text-ivory"
                     }`}
                   >
@@ -79,7 +84,7 @@ export default function Nav() {
             <li className="ml-2 lg:ml-4">
               <Link
                 href={enterHref}
-                className="meta border border-[--surface-rule] px-4 py-2 text-ivory transition-colors duration-200 ease-archive hover:border-[--gold] hover:text-gold"
+                className={`meta ${HIT_AREA_CLASS} border border-[--surface-rule] px-4 py-2 text-ivory transition-colors duration-200 ease-archive hover:border-[--gold] hover:text-gold`}
               >
                 ENTER
               </Link>
