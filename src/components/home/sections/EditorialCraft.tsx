@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Flow from "@/components/motion/Flow";
 import Reveal from "@/components/motion/Reveal";
-import Symbol from "@/components/brand/Symbol";
 import Section from "./Section";
 
 /**
@@ -19,11 +18,9 @@ import Section from "./Section";
  * would not be true.
  *
  * WHAT REPLACED IT
- * A typographic and technical composition rather than an empty frame, because
- * a reserved frame carries no information. The section now states the five
- * terms the house actually works in - craft, construction, symbol, form,
- * material - as a set index, and sets the canonical symbol beside them as
- * geometry. Every element is either approved artwork or type.
+ * A typographic and technical composition: the annotated plate centers the
+ * canonical symbol, while the text rail explains its relation to the six
+ * designs and indexes the five supported house terms.
  *
  * WHAT THIS SECTION IS NOT
  * It is not a Lookbook, and it does not pretend to be one. There is no
@@ -49,77 +46,102 @@ export default function EditorialCraft() {
       <div className="mx-auto grid max-w-[104rem] grid-cols-1 gap-12 px-5 md:px-10 lg:grid-cols-12 lg:gap-14 lg:px-14">
         {/* ---- The plate: the geometry, taken apart --------------------- */}
         <Flow rise={-22} className="lg:col-span-7">
-          <Reveal pattern="depth">
-            <figure className="vitrine image-frame">
-              <Image
-                src="/brand/archive-plate-full.png"
-                alt="MR.KCRONUS archive plate, exploded view: the canonical symbol taken apart into its annotated components, with a symbol-meaning legend. The component names and descriptions are part of the artwork."
-                width={1254}
-                height={1254}
-                sizes="(max-width: 1023px) 92vw, 980px"
-                className="h-auto w-full object-contain"
-              />
-            </figure>
-          </Reveal>
+          <figure className="vitrine image-frame">
+            <Image
+              src="/brand/archive-plate-full.png"
+              alt="MR.KCRONUS exploded view: The Archive Breakdown 001, an annotated diagram of the canonical symbol."
+              aria-describedby="craft-plate-annotations"
+              width={1254}
+              height={1254}
+              sizes="(max-width: 1023px) 92vw, (max-width: 104rem) 52vw, 55.125rem"
+              className="h-auto w-full object-contain"
+            />
+            <div id="craft-plate-annotations" hidden>
+              <p>
+                Symbol meaning key: Focus, Direction, Balance, Essence, Origin.
+              </p>
+              <dl>
+                <div>
+                  <dt>Top Point</dt>
+                  <dd>Focus. Ascendance. The starting point.</dd>
+                </div>
+                <div>
+                  <dt>Circle</dt>
+                  <dd>Unity. Cycle. The eternal loop.</dd>
+                </div>
+                <div>
+                  <dt>Horizontal Line</dt>
+                  <dd>Balance. Horizon. The line between.</dd>
+                </div>
+                <div>
+                  <dt>Central Axis</dt>
+                  <dd>Strength. Alignment. The spine of purpose.</dd>
+                </div>
+                <div>
+                  <dt>Triad Arms</dt>
+                  <dd>Creation. Direction. The three paths.</dd>
+                </div>
+                <div>
+                  <dt>Intersection</dt>
+                  <dd>Convergence. Where intentions meet.</dd>
+                </div>
+                <div>
+                  <dt>Guardians</dt>
+                  <dd>Protection. Boundaries. The silent watchers.</dd>
+                </div>
+                <div>
+                  <dt>Core Diamond</dt>
+                  <dd>Essence. Identity. The heart of the archive.</dd>
+                </div>
+                <div>
+                  <dt>Foundation</dt>
+                  <dd>Grounding. Origin. Built to endure.</dd>
+                </div>
+                <div>
+                  <dt>Base Point</dt>
+                  <dd>Root. Beginning. The mark of existence.</dd>
+                </div>
+              </dl>
+            </div>
+          </figure>
         </Flow>
 
-        {/* ---- Type, the set index, and the mark as geometry ------------- */}
-        <div className="lg:col-span-4 lg:col-start-9">
-          <Reveal pattern="rise">
-            <p className="meta meta-stone">Construction</p>
-          </Reveal>
+        {/* ---- Type and the set index ----------------------------------- */}
+        <Reveal pattern="rise" className="lg:col-span-4 lg:col-start-9">
+          <p className="meta meta-stone">Construction</p>
 
-          <Reveal pattern="rise" delay={0.12}>
-            <h2 id="craft-heading" className="display-editorial mt-5">
-              The Craft
-            </h2>
-          </Reveal>
+          <h2 id="craft-heading" className="display-editorial mt-5">
+            The Symbol, Taken Apart
+          </h2>
 
-          <Reveal pattern="rise" delay={0.24} className="mt-8">
-            <p className="prose-archive text-[--surface-ink-soft]">
-              Every design in the collection is built from the same canonical
-              geometry. The plate is that geometry taken apart and annotated:
-              the symbol the house is named for, component by component.
-            </p>
-          </Reveal>
+          <p
+            className="prose-archive mt-8"
+            style={{ color: "var(--surface-ink-soft)" }}
+          >
+            Every design in the collection is built from the same canonical
+            geometry. This plate shows the house symbol annotated, component by
+            component.
+          </p>
 
           {/* THE SET INDEX. Five terms the house works in, each on its own
               hairline. This is a designed list rather than a filler list: it
               is the only vocabulary the approved corpus actually supports,
               and it replaces a frame that carried nothing at all. */}
-          <Reveal pattern="rise" delay={0.36} className="mt-12">
-            {/* THIS WAS A <dl> WITH NO <dd>, AND IS NOW AN <ol>.
+          <ol className="mt-12 border-b border-[--surface-rule]">
+            {TERMS.map((term) => (
+              <li
+                key={term}
+                className="border-t border-[--surface-rule] py-4"
+              >
+                <span className="meta text-ink">{term}</span>
+              </li>
+            ))}
+          </ol>
 
-               A definition list asserts term/description pairs. Each entry here
-               is a single index term with no description at all, so five bare
-               <dt>s and zero <dd>s told assistive technology a definition list
-               existed and then supplied no definitions. AboutSection.tsx fixed
-               exactly this mistake in its own index; the same fix had not been
-               applied here.
-
-               These are an ordered INDEX of vocabulary, not definitions, so an
-               ordered list is the honest structure. */}
-            <ol className="border-b border-[--surface-rule]">
-              {TERMS.map((term) => (
-                <li
-                  key={term}
-                  className="border-t border-[--surface-rule] py-4"
-                >
-                  <span className="meta text-ink">{term}</span>
-                </li>
-              ))}
-            </ol>
-          </Reveal>
-
-          <Reveal pattern="rise" delay={0.48} className="mt-12">
-            <div className="flex items-center gap-6">
-              <Symbol height={54} color="var(--ink)" className="shrink-0" />
-              <span className="meta meta-stone">
-                One symbol. Six designs. One archive.
-              </span>
-            </div>
-          </Reveal>
-        </div>
+          <p className="meta meta-stone mt-12">
+            One symbol. Six designs. One archive.
+          </p>
+        </Reveal>
       </div>
     </Section>
   );
