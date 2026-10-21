@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 /**
  * Mobile navigation layer.
@@ -28,6 +29,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1
 const DESKTOP_MEDIA_QUERY = "(min-width: 768px)";
 
 export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: string }) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -169,18 +171,24 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
             className="flex h-svh flex-col justify-between px-5 pb-10 pt-20"
           >
             <ul className="flex flex-col gap-7">
-              {LINKS.map((link, index) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="display block text-[2.25rem] leading-none text-ivory transition-opacity duration-200 ease-archive hover:opacity-70"
-                  >
-                    <span className="sr-only">{`Item ${index + 1}: `}</span>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              {LINKS.map((link, index) => {
+                const active = pathname === link.href;
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      aria-current={active ? "page" : undefined}
+                      onClick={() => setOpen(false)}
+                      className={`display block text-[2.25rem] leading-none transition-opacity duration-200 ease-archive hover:opacity-70 ${
+                        active ? "text-gold" : "text-ivory"
+                      }`}
+                    >
+                      <span className="sr-only">{`Item ${index + 1}: `}</span>
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
               <li>
                 <Link
                   href={enterHref}
