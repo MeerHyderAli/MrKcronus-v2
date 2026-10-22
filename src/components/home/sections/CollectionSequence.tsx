@@ -435,11 +435,13 @@ export default function CollectionSequence() {
   return (
     <>
       <div className="motion-preference-reduced">{staticMarkup}</div>
+      {/* Keep the pinned track above the following section's isolated image
+          stack so it cannot paint through the collection frame on release. */}
       <Section
         id="collection-sequence"
         surface="dark"
         labelledBy="collection-sequence-heading"
-        className="motion-preference-full relative"
+        className="motion-preference-full relative z-10"
       >
         {/* THE GROUND IS PAINTED HERE, NOT BY data-surface.
            Section is a fixed primitive that forwards no style, and widening it to
