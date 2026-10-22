@@ -5,7 +5,6 @@ import JoinArchive from "@/components/home/JoinArchive";
 import StoryFragment from "@/components/home/StoryFragment";
 import AboutSection from "@/components/home/sections/AboutSection";
 import ArchiveTeaser from "@/components/home/sections/ArchiveTeaser";
-import CollectionBoard from "@/components/home/sections/CollectionBoard";
 import CollectionSequence from "@/components/home/sections/CollectionSequence";
 import EditorialCraft from "@/components/home/sections/EditorialCraft";
 import Philosophy from "@/components/home/sections/Philosophy";
@@ -39,13 +38,12 @@ export const metadata = {
  *   2  BrandIntroduction    the house, before         (uncommitted, not ours)
  *   3  Gateway              THE CROSSING   dark->ivory (added in Phase 1)
  *   4  CollectionSequence   MOVEMENT B — the exam     stone  one pinned track
- *   5  CollectionBoard      MOVEMENT C — the whole    ivory
- *   6  Philosophy           the brand sentence        ivory
- *   7  ArchiveTeaser        the tonal hinge           DARK
- *   8  EditorialCraft       craft / reserved slot     ivory
- *   9  StoryFragment        JOURNAL — unchanged       ivory
- *  10  AboutSection         identity                  ivory
- *  11  JoinArchive          honest invitation, inert  dark
+ *   5  Philosophy           the brand sentence        ivory
+ *   6  ArchiveTeaser        the tonal hinge           DARK
+ *   7  EditorialCraft       craft / reserved slot     ivory
+ *   8  StoryFragment        JOURNAL — unchanged       ivory
+ *   9  AboutSection         identity                  ivory
+ *  10  JoinArchive          honest invitation, inert  dark
  *   -  Footer                                          (locked, Build 1)
  *
  * MOVEMENT A — THE MANIFEST IS NO LONGER RENDERED HERE
@@ -58,12 +56,12 @@ export const metadata = {
  * straight into the Sequence.
  *
  * The `id="collection"` anchor the Hero's CTA points at lived on the Manifest's
- * <section>. It now sits on a plain wrapper around Sequence + Board below, so
- * the anchor targets the same collection experience with no extra spacing.
+ * <section>. It now sits on a plain wrapper around the Sequence; the removed
+ * whole-board presentation is not part of the homepage composition.
  *
  * THE TONE ARC
- * dark -> dark -> CROSSING -> stone -> ivory -> ivory -> DARK -> ivory ->
- * ivory -> ivory -> dark -> dark. Dark is reserved for three deliberate moments:
+ * dark -> dark -> CROSSING -> stone -> ivory -> DARK -> ivory -> ivory ->
+ * ivory -> dark -> dark. Dark is reserved for three deliberate moments:
  * the Archive hinge, Join and the Footer (plus the BrandIntroduction that opens
  * the page). The archive teaser is dark precisely so that /archive reads as
  * entering another room rather than continuing the same page.
@@ -106,12 +104,11 @@ export const metadata = {
  * movements, which present all six canonical designs rather than two, and
  * which never imply a product route. The file is preserved.
  *
- * THE COLLECTION IS ONE EXPERIENCE
- * Sequence and Board are two movements of a single idea, not two sections and
- * emphatically not six chapters. They share one type scale and one motion
- * dialect, and the progression across them — Gateway ivory -> Sequence stone ->
- * Board ivory — is what marks the whole block as a single act rather than three
- * adjacent sections.
+ * THE COLLECTION ON THE HOMEPAGE
+ * Movement B, the pinned Sequence, remains the homepage's collection section.
+ * Movement C — the whole-board presentation headed "Six designs, one collection"
+ * — is intentionally not rendered here. The canonical board asset and its
+ * component remain untouched; the six designs are still examined in the Sequence.
  *
  * A NOTE ON THE PREVIOUS "THE ENEMY" DUPLICATION
  * The retired page comment claimed artifact-enemy.png was a garment and that
@@ -140,26 +137,22 @@ export default function HomePage() {
       {/* ---- 3. The gateway: dark to ivory, Hero into the Collection ----- */}
       <Gateway />
 
-      {/* ---- 4-5. The Collection: Sequence (stone) -> Board (ivory) ------ */}
-      {/* id="collection" is the Hero's CTA target. It lived on the Manifest's
-          <section>; it now wraps the two remaining movements of the same
-          experience. A plain div adds no box of its own, so the spacing between
-          Gateway and Sequence is unchanged. */}
+      {/* ---- 4. The Collection: Movement B, the Sequence ---------------- */}
+      {/* Keep the Hero's CTA target on the remaining collection section. */}
       <div id="collection">
         <CollectionSequence />
-        <CollectionBoard />
       </div>
 
-      {/* ---- 6. What MR.KCRONUS is -------------------------------------- */}
+      {/* ---- 5. What MR.KCRONUS is -------------------------------------- */}
       <Philosophy />
 
-      {/* ---- 7. The tonal hinge into the Archive ------------------------- */}
+      {/* ---- 6. The tonal hinge into the Archive ------------------------- */}
       <ArchiveTeaser />
 
-      {/* ---- 8. Craft and the reserved campaign slot --------------------- */}
+      {/* ---- 7. Craft and the reserved campaign slot --------------------- */}
       <EditorialCraft />
 
-      {/* ---- 9-11. Record, identity, invitation ------------------------- */}
+      {/* ---- 8-10. Record, identity, invitation -------------------------- */}
       <StoryFragment />
       <AboutSection />
       <JoinArchive />
