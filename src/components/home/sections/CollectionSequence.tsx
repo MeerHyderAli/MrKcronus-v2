@@ -587,10 +587,9 @@ export default function CollectionSequence() {
             </div>
           </div>
         </div>
-        {/* The sticky frame needs one viewport to leave its track. Keep the
-            following section below that release interval instead of letting
-            its image appear behind the final collection frame. */}
-        <div aria-hidden="true" className="h-svh" />
+        {/* A short vitrine pause separates the pinned frame from the next
+            section without adding a full blank viewport. */}
+        <div aria-hidden="true" className="h-[12svh]" />
       </Section>
     </>
   );
