@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRef } from "react";
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useTransform,
 } from "motion/react";
@@ -13,7 +12,6 @@ import Symbol from "@/components/brand/Symbol";
 import Wordmark from "@/components/brand/Wordmark";
 import ConstructionField from "@/components/home/ConstructionField";
 import LightPool from "@/components/home/LightPool";
-import { useCompactMotion } from "@/components/motion/motionEnv";
 
 /**
  * HERO — THE THRESHOLD
@@ -93,8 +91,6 @@ import { useCompactMotion } from "@/components/motion/motionEnv";
 const MARK_CLASS = "max-w-[30vw] md:h-[300px] md:max-w-none";
 
 export default function Hero() {
-  const reduced = useReducedMotion();
-  const compact = useCompactMotion();
   const trackRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -168,190 +164,189 @@ export default function Hero() {
      mask, no activation: a static threshold with the mark seated, the identity
      legible and one clear action reachable without scrolling anything.
 
-     This branch was deleted by accident when the transform table above was
-     rewritten. It is not optional - AGENTS.md requires a deliberately
-     simplified reduced-motion experience, and this is the one place on the site
-     that a reader arrives at before doing anything at all. */
-  if (reduced) {
-    return (
+     The static markup is present in both server and client output. A CSS
+     prefers-reduced-motion query selects it before hydration, so reduced-motion
+     users never receive the pinned choreography or a client-side tree swap. */
+  const staticMarkup = (
+    <section
+      data-surface="dark"
+      aria-labelledby="hero-heading-static"
+      className="relative overflow-hidden pt-16 md:pt-20"
+    >
+      <h1 id="hero-heading-static" className="sr-only">
+        MR.KCRONUS
+      </h1>
+
+      <div className="relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-[104rem] flex-col items-center justify-center gap-8 px-5 py-12 text-center md:min-h-[calc(102svh-5rem)] md:px-10 lg:px-14">
+        <Symbol height={190} className="max-w-[38vw]" />
+        <Wordmark
+          width={420}
+          style={{ maxWidth: "80vw" }}
+          decorative={false}
+          label="MR.KCRONUS"
+        />
+        <p className="meta meta-stone">Six designs</p>
+        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+          <Link href="#collection" className="cta-solid">
+            The Collection
+          </Link>
+          <Link href="/archive" className="cta-invitation">
+            Enter the Archive
+          </Link>
+        </div>
+        <div className="vitrine image-frame mt-2 w-full max-w-[280px]">
+          <Image
+            src="/brand/artifact-architect.png"
+            alt="MR.KCRONUS garment brand visual: a black short-sleeve tee printed with the house wordmark above a hooded figure framed inside a cracked clock face, above a ruined city."
+            width={730}
+            height={1024}
+            sizes="(max-width: 1023px) 86vw, 280px"
+            className="h-auto w-full object-contain"
+          />
+        </div>
+      </div>
+    </section>
+  );
+
+  return (
+    <>
+      <div className="motion-preference-reduced">{staticMarkup}</div>
       <section
+        ref={trackRef}
         data-surface="dark"
         aria-labelledby="hero-heading"
-        className="relative overflow-hidden pt-16 md:pt-20"
+        className="motion-preference-full relative"
       >
         <h1 id="hero-heading" className="sr-only">
           MR.KCRONUS
         </h1>
 
-        <div className="relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-[104rem] flex-col items-center justify-center gap-8 px-5 py-12 text-center md:min-h-[calc(102svh-5rem)] md:px-10 lg:px-14">
-          <Symbol height={190} className="max-w-[38vw]" />
-          <Wordmark
-            width={420}
-            style={{ maxWidth: "80vw" }}
-            decorative={false}
-            label="MR.KCRONUS"
-          />
-          <p className="meta meta-stone">Six designs</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
-            <Link href="#collection" className="cta-solid">
-              The Collection
-            </Link>
-            <Link href="/archive" className="cta-invitation">
-              Enter the Archive
-            </Link>
-          </div>
-          <div className="vitrine image-frame mt-2 w-full max-w-[280px]">
-            <Image
-              src="/brand/artifact-architect.png"
-              alt="MR.KCRONUS garment brand visual: a black short-sleeve tee printed with the house wordmark above a hooded figure framed inside a cracked clock face, above a ruined city."
-              width={730}
-              height={1024}
-              sizes="(max-width: 1023px) 86vw, 280px"
-              className="h-auto w-full object-contain"
-            />
-          </div>
-        </div>
-      </section>
-    );
-  }
-  const runway = compact ? "200vh" : "240vh";
-
-  return (
-    <section
-      ref={trackRef}
-      data-surface="dark"
-      aria-labelledby="hero-heading"
-      className="relative"
-    >
-      <h1 id="hero-heading" className="sr-only">
-        MR.KCRONUS
-      </h1>
-
-      <div className="relative" style={{ height: runway }}>
-        <div
-          className="sticky top-0 h-svh overflow-hidden"
-          style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
-        >
-          <div className="absolute inset-0 bg-obsidian" aria-hidden="true" />
-
-          {/* Layer 1 - the construction field: assembly geometry that expands
-              and turns to frame the mark. */}
-          <motion.div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
-            style={{
-              opacity: fieldOpacity,
-              rotate: fieldRotate,
-              scale: fieldScale,
-              transformStyle: "preserve-3d",
-            }}
+        <div className="relative h-[200vh] lg:h-[240vh]">
+          <div
+            className="sticky top-0 h-svh overflow-hidden"
+            style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
           >
-            <ConstructionField className="h-[86svh] w-[86svh] max-h-[720px] max-w-[720px] text-ivory" />
-          </motion.div>
+            <div className="absolute inset-0 bg-obsidian" aria-hidden="true" />
 
-          {/* Layer 2 - the page supplies the light the mark needs. A single
-              radial gradient, no filter, no blur. */}
-          <motion.div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
-            style={{ opacity: poolOpacity, scale: poolScale }}
-          >
-            <LightPool
-              className="h-[70svh] w-[70svh] max-h-[620px] max-w-[620px]"
-              peak={0.3}
-            />
-          </motion.div>
-
-          {/* Layer 3 - the canonical symbol, intact, arriving out of the depth
-              and returning to it. Never split, never deformed. */}
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center"
-            style={{
-              opacity: markOpacity,
-              scale: markScale,
-              y: markY,
-              z: markZ,
-            }}
-          >
-            <Symbol height={300} className={MARK_CLASS} />
-          </motion.div>
-
-          {/* Layer 4 - the activation cast. The one gold moment on the site. */}
-          <motion.div
-            aria-hidden="true"
-            className="absolute inset-0 flex items-center justify-center"
-            style={{ opacity: goldOpacity, scale: markScale, z: markZ }}
-          >
-            <Symbol
-              height={300}
-              className={MARK_CLASS}
-              color="var(--gold)"
-            />
-          </motion.div>
-
-          {/* The front door. Sits above the receding mark and resolves as it
-              returns to depth, so the two read as one continuous move. */}
-          <div className="relative z-10 mx-auto flex h-full max-w-[104rem] flex-col px-5 md:px-10 lg:px-14">
+            {/* Layer 1 - the construction field: assembly geometry that expands
+                and turns to frame the mark. */}
             <motion.div
-              className="flex flex-1 flex-col items-center justify-center text-center"
-              style={{ opacity: doorOpacity, y: doorY }}
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              style={{
+                opacity: fieldOpacity,
+                rotate: fieldRotate,
+                scale: fieldScale,
+                transformStyle: "preserve-3d",
+              }}
             >
-              {/* The wordmark masks in from the left at p 0.08 - 0.22, part
-                  of the same scroll-driven sequence as the mark and the
-                  field. It is not on a timer: nothing in this Hero resolves
-                  on its own clock, so the whole threshold is one gesture the
-                  reader performs. */}
-              <motion.div style={{ opacity: wordOpacity, y: wordY }}>
-                <motion.div style={{ clipPath: wordReveal }}>
-                  <Wordmark
-                    width={420}
-                    style={{ maxWidth: "80vw" }}
-                    decorative={false}
-                    label="MR.KCRONUS"
-                  />
+              <ConstructionField className="h-[86svh] w-[86svh] max-h-[720px] max-w-[720px] text-ivory" />
+            </motion.div>
+
+            {/* Layer 2 - the page supplies the light the mark needs. A single
+                radial gradient, no filter, no blur. */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              style={{ opacity: poolOpacity, scale: poolScale }}
+            >
+              <LightPool
+                className="h-[70svh] w-[70svh] max-h-[620px] max-w-[620px]"
+                peak={0.3}
+              />
+            </motion.div>
+
+            {/* Layer 3 - the canonical symbol, intact, arriving out of the depth
+                and returning to it. Never split, never deformed. */}
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                opacity: markOpacity,
+                scale: markScale,
+                y: markY,
+                z: markZ,
+              }}
+            >
+              <Symbol height={300} className={MARK_CLASS} />
+            </motion.div>
+
+            {/* Layer 4 - the activation cast. The one gold moment on the site. */}
+            <motion.div
+              aria-hidden="true"
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ opacity: goldOpacity, scale: markScale, z: markZ }}
+            >
+              <Symbol
+                height={300}
+                className={MARK_CLASS}
+                color="var(--gold)"
+              />
+            </motion.div>
+
+            {/* The front door. Sits above the receding mark and resolves as it
+                returns to depth, so the two read as one continuous move. */}
+            <div className="relative z-10 mx-auto flex h-full max-w-[104rem] flex-col px-5 md:px-10 lg:px-14">
+              <motion.div
+                className="flex flex-1 flex-col items-center justify-center text-center"
+                style={{ opacity: doorOpacity, y: doorY }}
+              >
+                {/* The wordmark masks in from the left at p 0.08 - 0.22, part
+                    of the same scroll-driven sequence as the mark and the
+                    field. It is not on a timer: nothing in this Hero resolves
+                    on its own clock, so the whole threshold is one gesture the
+                    reader performs. */}
+                <motion.div style={{ opacity: wordOpacity, y: wordY }}>
+                  <motion.div style={{ clipPath: wordReveal }}>
+                    <Wordmark
+                      width={420}
+                      style={{ maxWidth: "80vw" }}
+                      decorative={false}
+                      label="MR.KCRONUS"
+                    />
+                  </motion.div>
+                </motion.div>
+
+                <motion.p
+                  className="meta meta-stone mt-10"
+                  style={{ opacity: ctaOpacity }}
+                >
+                  Six designs
+                </motion.p>
+
+                <motion.div
+                  className="mt-9 flex flex-wrap items-center justify-center gap-x-8 gap-y-4"
+                  style={{ opacity: ctaOpacity }}
+                >
+                  <Link href="#collection" className="cta-solid">
+                    The Collection
+                  </Link>
+                  <Link href="/archive" className="cta-invitation">
+                    Enter the Archive
+                  </Link>
                 </motion.div>
               </motion.div>
 
-              <motion.p
-                className="meta meta-stone mt-10"
-                style={{ opacity: ctaOpacity }}
-              >
-                Six designs
-              </motion.p>
-
+              {/* The garment. A hero / brand visual, never the canonical
+                  collection specification. */}
               <motion.div
-                className="mt-9 flex flex-wrap items-center justify-center gap-x-8 gap-y-4"
-                style={{ opacity: ctaOpacity }}
+                className="flex shrink-0 justify-center pb-8 md:pb-10"
+                style={{ opacity: vitrineOpacity, y: vitrineY }}
               >
-                <Link href="#collection" className="cta-solid">
-                  The Collection
-                </Link>
-                <Link href="/archive" className="cta-invitation">
-                  Enter the Archive
-                </Link>
+                <div className="vitrine image-frame w-full max-w-[300px]">
+                  <Image
+                    src="/brand/artifact-architect.png"
+                    alt="MR.KCRONUS garment brand visual: a black short-sleeve tee printed with the house wordmark above a hooded figure framed inside a cracked clock face, above a ruined city."
+                    width={730}
+                    height={1024}
+                    sizes="(max-width: 1023px) 86vw, 300px"
+                    className="h-auto max-h-[30svh] w-full object-contain"
+                  />
+                </div>
               </motion.div>
-            </motion.div>
-
-            {/* The garment. A hero / brand visual, never the canonical
-                collection specification. */}
-            <motion.div
-              className="flex shrink-0 justify-center pb-8 md:pb-10"
-              style={{ opacity: vitrineOpacity, y: vitrineY }}
-            >
-              <div className="vitrine image-frame w-full max-w-[300px]">
-                <Image
-                  src="/brand/artifact-architect.png"
-                  alt="MR.KCRONUS garment brand visual: a black short-sleeve tee printed with the house wordmark above a hooded figure framed inside a cracked clock face, above a ruined city."
-                  width={730}
-                  height={1024}
-                  sizes="(max-width: 1023px) 86vw, 300px"
-                  className="h-auto max-h-[30svh] w-full object-contain"
-                />
-              </div>
-            </motion.div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

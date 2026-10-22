@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import { routeMetadata } from "@/app/routeMetadata";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "MR.KCRONUS. A world built through symbols, architecture and form.",
-};
+export const metadata = routeMetadata(
+  "About",
+  "/about",
+  "MR.KCRONUS. A world built through symbols, architecture and form.",
+);
 
 /**
  * Structural shell only. No founder biography, dates, locations,

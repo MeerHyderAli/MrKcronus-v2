@@ -25,6 +25,11 @@ const LINKS = [
   { href: "/about", label: "ABOUT" },
 ] as const;
 
+// Extend each click target vertically without changing its visible box or the
+// horizontal spacing between navigation items.
+const HIT_AREA_CLASS =
+  "relative after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-['']";
+
 export default function Nav() {
   const pathname = usePathname();
 
@@ -51,6 +56,7 @@ export default function Nav() {
       <div className="mx-auto flex h-16 max-w-[104rem] items-center justify-between px-5 md:h-20 md:px-10 lg:px-14">
         <Link
           href="/"
+          data-modal-background=""
           className="flex items-center gap-3 md:gap-4"
           aria-label="MR.KCRONUS, home"
         >
@@ -58,7 +64,7 @@ export default function Nav() {
           <Wordmark width={112} className="md:w-[132px]" />
         </Link>
 
-        <nav aria-label="Primary" className="hidden md:block">
+        <nav data-modal-background="" aria-label="Primary" className="hidden md:block">
           <ul className="flex items-center gap-8 lg:gap-11">
             {LINKS.map((link) => {
               const active = pathname === link.href;
@@ -67,7 +73,7 @@ export default function Nav() {
                   <Link
                     href={link.href}
                     aria-current={active ? "page" : undefined}
-                    className={`meta transition-colors duration-200 ease-archive ${
+                    className={`meta ${HIT_AREA_CLASS} transition-colors duration-200 ease-archive ${
                       active ? "text-gold" : "text-ivory/55 hover:text-ivory"
                     }`}
                   >
@@ -79,7 +85,7 @@ export default function Nav() {
             <li className="ml-2 lg:ml-4">
               <Link
                 href={enterHref}
-                className="meta border border-[--surface-rule] px-4 py-2 text-ivory transition-colors duration-200 ease-archive hover:border-[--gold] hover:text-gold"
+                className={`meta ${HIT_AREA_CLASS} border border-[--surface-rule] px-4 py-2 text-ivory transition-colors duration-200 ease-archive hover:border-[--gold] hover:text-gold`}
               >
                 ENTER
               </Link>

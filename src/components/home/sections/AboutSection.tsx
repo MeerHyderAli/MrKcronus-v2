@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { COLLECTION } from "@/components/collection/collectionData";
-import Flow from "@/components/motion/Flow";
 import Reveal from "@/components/motion/Reveal";
 import Section from "./Section";
 
@@ -45,10 +44,8 @@ export default function AboutSection() {
       labelledBy="about-heading"
       className="py-20 md:py-28"
     >
-      <Flow fade={false} rise={20} className="mx-auto max-w-[104rem] px-5 md:px-10 lg:px-14">
-        <Reveal pattern="rise">
-          <p className="meta meta-stone">About</p>
-        </Reveal>
+      <div className="mx-auto max-w-[104rem] px-5 md:px-10 lg:px-14">
+        <p className="meta meta-stone">About</p>
 
         <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
           {/* ---- Identity, at display scale --------------------------- */}
@@ -59,18 +56,19 @@ export default function AboutSection() {
           </Reveal>
 
           {/* ---- Structural fact, and the six designs ------------------ */}
-          <div className="lg:col-span-5 lg:col-start-8">
-            <Reveal pattern="rise" delay={0.12}>
-              <p className="prose-archive text-[--surface-ink-soft]">
-                MR.KCRONUS is a fashion house built on a single canonical
-                symbol. The collection is six designs. Behind them is an archive
-                of artworks and records that the collection draws its geometry
-                from.
-              </p>
-            </Reveal>
+          <Reveal
+            pattern="rise"
+            delay={0.12}
+            className="lg:col-span-5 lg:col-start-8"
+          >
+            <p className="prose-archive text-[--surface-ink-soft]">
+              MR.KCRONUS is a fashion house built on a single canonical
+              symbol. The collection is six designs. Behind them is an archive
+              of artworks and records that the collection draws its geometry
+              from.
+            </p>
 
-            <Reveal pattern="rise" delay={0.24} className="mt-10">
-              {/* ORDERED LIST, NOT A DEFINITION LIST.
+            {/* ORDERED LIST, NOT A DEFINITION LIST.
 
                   This was a <dl> whose children were <div> wrappers holding a
                   bare <span> plus a lone <dt> — no <dd> anywhere. A definition
@@ -86,6 +84,7 @@ export default function AboutSection() {
                   row classes on the <li>, and Tailwind's preflight already
                   neutralises list markers and default padding, exactly as it
                   did for the <dl>. */}
+            <div className="mt-10">
               <ol className="grid grid-cols-2 gap-x-6 border-y border-[--surface-rule] sm:grid-cols-3">
                 {COLLECTION.map((design) => (
                   <li
@@ -99,9 +98,9 @@ export default function AboutSection() {
                   </li>
                 ))}
               </ol>
-            </Reveal>
+            </div>
 
-            <Reveal pattern="rise" delay={0.36} className="mt-10">
+            <div className="mt-10">
               <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
                 <Link href="/about" className="cta-solid">
                   About MR.KCRONUS
@@ -110,10 +109,10 @@ export default function AboutSection() {
                   The Archive
                 </Link>
               </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </div>
-      </Flow>
+      </div>
     </Section>
   );
 }

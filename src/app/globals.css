@@ -83,7 +83,7 @@
   --surface-bg: var(--surface-dark);
   --surface-ink: var(--ivory);
   --surface-ink-soft: var(--stone);
-  --surface-muted: var(--stone);
+  --surface-muted: rgba(245, 245, 240, 0.55);
   --surface-rule: var(--rule);
   --surface-focus: var(--gold);
 
@@ -206,7 +206,7 @@
   color: var(--ivory);
   --surface-ink: var(--ivory);
   --surface-ink-soft: var(--stone);
-  --surface-muted: var(--stone);
+  --surface-muted: rgba(245, 245, 240, 0.55);
   --surface-rule: var(--rule);
   --surface-focus: var(--gold);
   color-scheme: dark;
@@ -217,7 +217,7 @@
   color: var(--ivory);
   --surface-ink: var(--ivory);
   --surface-ink-soft: var(--stone);
-  --surface-muted: var(--stone);
+  --surface-muted: rgba(245, 245, 240, 0.55);
   --surface-rule: var(--rule);
   --surface-focus: var(--gold);
   color-scheme: dark;
@@ -313,11 +313,18 @@ body {
 }
 
 .meta-stone {
-  /* Surface-aware. On dark this resolves to --stone exactly as before. On a
-     light surface it becomes --ink-muted, which is warm rather than neutral
-     grey and measures 5.67:1 on ivory and 4.95:1 on stone - both AA at this
-     size. Stone itself would pass too, but it reads cooler than the new
-     surfaces deserve. */
+  /* Surface-aware and AA-safe. Dark surfaces use Ivory at 55% opacity, the
+     same palette treatment as the header and footer; light surfaces use
+     --ink-muted, which measures at least 4.95:1. */
+  color: var(--surface-muted);
+}
+
+/* Surface-aware text utilities used for active/inactive collection state. */
+.text-ink {
+  color: var(--surface-ink);
+}
+
+.text-ink-muted {
   color: var(--surface-muted);
 }
 
@@ -452,12 +459,28 @@ body {
 
 /* ==========================================================================
    REDUCED MOTION
-   A deliberate simplification, not a removal. Content stays reachable and
-   legible. Scroll-linked camera movement is disabled in the client layer;
-   these rules remove what remains in CSS.
+   A deliberate simplification, not a removal. The pinned tracks provide static
+   server-rendered alternatives selected by this media query before hydration;
+   these rules also neutralise remaining CSS transitions and animations.
    ========================================================================== */
 
+.motion-preference-reduced {
+  display: none;
+}
+
+.motion-preference-full {
+  display: block;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .motion-preference-reduced {
+    display: block;
+  }
+
+  .motion-preference-full {
+    display: none;
+  }
+
   *,
   *::before,
   *::after {
@@ -698,7 +721,7 @@ body {
   color: var(--ivory);
   --surface-ink: var(--ivory);
   --surface-ink-soft: var(--stone);
-  --surface-muted: var(--stone);
+  --surface-muted: rgba(245, 245, 240, 0.55);
   --surface-rule: var(--rule);
   --surface-focus: var(--gold);
   color-scheme: dark;

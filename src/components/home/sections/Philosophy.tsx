@@ -1,72 +1,57 @@
+import Image from "next/image";
 import Flow from "@/components/motion/Flow";
-import Reveal from "@/components/motion/Reveal";
-
-import Symbol from "@/components/brand/Symbol";
 import Section from "./Section";
 
 /**
- * PHILOSOPHY — THE BRAND STATEMENT
+ * PHILOSOPHY — THE CINEMATIC PAUSE
  *
- * The one moment on the homepage that says what MR.KCRONUS is, without lore.
- * The Build 13 homepage previously had no brand articulation at all: the only
- * approved brand sentence in the repository lived in /about and in the layout
- * metadata and never reached the front page.
- *
- * THE SENTENCE
- *   "A world built through symbols, architecture and form."
- *
- * That is the approved copy, used unchanged. It is not paraphrased, not
- * extended, and not improved. It is the only approved brand sentence in the
- * corpus, and it appears here and nowhere else on the page - the Hero
- * deliberately carries no tagline rather than a second version of this one.
- *
- * TYPOGRAPHY IS THE OBJECT
- * This is a type-led section on an ivory ground with no imagery at all. The
- * statement is set large in Bodoni and drifts slowly as the section passes,
- * which is the treatment the brand voice calls for: the sentence is the object
- * being examined, and nothing competes with it.
- *
- * The drift uses the SLOW rate deliberately. This is not a garment being turned
- * in a light, and it must not move like one.
+ * The approved campaign frame is kept intact. The figure and concrete hall are
+ * the image's own composition; responsive object positioning keeps that scene
+ * legible while the headline occupies the dark negative space.
  */
 export default function Philosophy() {
   return (
     <Section
       id="philosophy"
-      surface="ivory"
+      surface="dark"
       labelledBy="philosophy-heading"
-      className="py-20 md:py-28"
+      className="overflow-hidden"
     >
-      <div className="mx-auto grid max-w-[104rem] grid-cols-1 items-center gap-12 px-5 md:px-10 lg:grid-cols-12 lg:gap-10 lg:px-14">
-        <div className="lg:col-span-7">
-        <Reveal pattern="rise">
-          <p className="meta meta-stone">Philosophy</p>
-        </Reveal>
+      <div className="relative isolate flex min-h-[78svh] items-end overflow-hidden md:min-h-[70svh] md:items-center lg:min-h-[78svh]">
+        <Image
+          src="/brand/philosophy-campaign.png"
+          alt="A solitary hooded figure stands on the right inside a vast brutalist concrete hall, beneath a shaft of light; the left side recedes into deep shadow."
+          fill
+          sizes="100vw"
+          className="object-cover object-[76%_50%] md:object-[72%_50%] lg:object-center"
+        />
 
-        <Flow rise={30} className="mt-8 md:mt-12">
-          <h2
-            id="philosophy-heading"
-            className="display-editorial max-w-[24ch] text-ink md:max-w-[22ch]"
-          >
-            A world built through symbols, architecture and form.
-          </h2>
-        </Flow>
+        {/* The source is already dark on the left. These restrained page-level
+            gradients only reinforce text contrast; the image is not filtered. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 md:hidden"
+          style={{
+            background:
+              "linear-gradient(0deg, rgba(5,5,5,0.88) 0%, rgba(5,5,5,0.62) 26%, rgba(5,5,5,0.12) 60%, rgba(5,5,5,0) 82%)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 hidden md:block"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(5,5,5,0.24) 0%, rgba(5,5,5,0.10) 40%, rgba(5,5,5,0) 68%)",
+          }}
+        />
 
-        <Reveal pattern="rise" delay={0.12} className="mt-8 md:mt-10">
-          <div aria-hidden="true" className="h-px w-24 bg-[--surface-rule]" />
-        </Reveal>
-        </div>
-
-        {/* The canonical symbol as a counterweight.
-
-            The statement alone left the entire right half of a 1664px canvas
-            empty, which on a wide screen is what made the section read as a
-            draft rather than a composition. The mark is the brand's own
-            geometry - not decoration and not an invented graphic - set large
-            enough to hold the right column and light enough to stay secondary
-            to the words. Never transformed: no scale, no rotation, no skew. */}
-        <div className="flex justify-center lg:col-span-4 lg:col-start-9">
-          <Symbol height={320} color="var(--ink)" className="max-w-[46vw] opacity-[0.07]" />
+        <div className="relative z-10 mx-auto w-full max-w-[104rem] px-5 pb-12 pt-36 md:px-10 md:py-16 lg:px-14">
+          <Flow rise={12} fade={false} className="max-w-[42rem]">
+            <h2 id="philosophy-heading" className="display-editorial text-ivory">
+              <span className="block">STAND APART.</span>
+              <span className="block">LEAVE A MARK.</span>
+            </h2>
+          </Flow>
         </div>
       </div>
     </Section>

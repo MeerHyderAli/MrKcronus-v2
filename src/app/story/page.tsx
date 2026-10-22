@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import { routeMetadata } from "@/app/routeMetadata";
 
-export const metadata: Metadata = {
-  title: "Story",
-  description: "MR.KCRONUS. The story.",
-};
+export const metadata = routeMetadata(
+  "Story",
+  "/story",
+  "MR.KCRONUS. The story.",
+);
 
 /**
  * Structural shell only. The visual-first chronicle is built in a later

@@ -1,35 +1,20 @@
+import Image from "next/image";
 import Link from "next/link";
+import { getArchivePlate } from "@/components/archive/archiveData";
 import Flow from "@/components/motion/Flow";
 import Reveal from "@/components/motion/Reveal";
 
 /**
  * STORY / JOURNAL
  *
- * The Journal entry point on the homepage.
- *
- * WHAT CHANGED IN BUILD 13.1 AND WHY
- *
- * This rendered as a very large double-framed box containing four short words -
- * FILE 001, ARCHIVE RECORD, STORY, READ THE STORY. On a wide screen the frame
- * was far larger than its contents, which reads as an unfilled wireframe rather
- * than as a record.
- *
- * The brief for this pass was explicit: do not invent article content, and if
- * none exists, reduce the visual footprint rather than fabricating it. So the
- * footprint is what changed. The panel is now a compact horizontal record, the
- * type is larger relative to its container, and the section reserves less
- * vertical space. There is still no excerpt, still no date, still no headline
- * and still no byline, because none of those exists.
- *
- * 19-07 is a graphic motif and is never a date. "12 APR 2025", which appeared
- * on the client reference's record card, has never been copied here and never
- * will be.
- *
- * THE FOUR APPROVED WORDS
- * FILE 001, ARCHIVE RECORD, STORY and READ THE STORY are unchanged. READ THE
- * STORY is the existing supplied route label, not invented editorial copy.
+ * The homepage entry point to /story. The existing Witness archive plate is
+ * reused as the visual lead; this section does not reproduce the Archive
+ * chapter or invent article copy. Its embedded statement is exposed to screen
+ * readers as a text equivalent without being repeated visibly.
  */
 export default function StoryFragment() {
+  const plate = getArchivePlate("the-witness");
+
   return (
     <section
       aria-labelledby="story-fragment-heading"
@@ -37,46 +22,47 @@ export default function StoryFragment() {
       data-intensity="story"
       className="relative w-full px-5 py-16 md:px-10 md:py-20 lg:px-14"
     >
-      {/* The filing label. Editorial furniture: it names the record, so it is
-          exposed to assistive technology rather than hidden. */}
-      <div className="pointer-events-none absolute inset-y-0 right-6 hidden items-center lg:flex">
-        <span className="meta-vertical meta-vertical--stone">Archive Record</span>
+      <div className="mx-auto grid w-full max-w-[104rem] grid-cols-1 items-center gap-10 md:gap-12 lg:grid-cols-12 lg:gap-14">
+        {/* Image first in the DOM and on narrow screens; placed on the right
+            at desktop so the figure looks inward toward the text rail. */}
+        <Flow
+          fade={false}
+          rise={16}
+          className="lg:col-span-7 lg:col-start-6 lg:row-start-1"
+        >
+          <figure className="image-frame mx-auto w-full max-w-[34rem] lg:mx-0 lg:max-w-[42rem]">
+            <Image
+              src={plate.src}
+              alt={plate.alt}
+              aria-describedby="story-witness-statement"
+              width={plate.width}
+              height={plate.height}
+              sizes="(max-width: 767px) min(calc(100vw - 2.5rem), 34rem), (max-width: 1023px) min(calc(100vw - 5rem), 34rem), (max-width: 1304px) calc(58.333vw - 5.54rem), 42rem"
+              className="h-auto w-full"
+            />
+            <span id="story-witness-statement" className="sr-only">
+              The plate is marked WITNESS 003 and reads: “I saw the timeline
+              break. I saw him rewrite it. I chose to witness.”
+            </span>
+          </figure>
+        </Flow>
+
+        <Reveal
+          pattern="rise"
+          className="w-full max-w-[30rem] lg:col-span-4 lg:col-start-1 lg:row-start-1"
+        >
+          <p className="meta meta-stone">Journal</p>
+          <h2
+            id="story-fragment-heading"
+            className="display mt-6 text-[clamp(3rem,9vw,6.5rem)] leading-[0.86] text-[--surface-ink]"
+          >
+            Story
+          </h2>
+          <Link href="/story" className="cta-invitation mt-8">
+            Read the Story
+          </Link>
+        </Reveal>
       </div>
-
-      {/* Deliberately capped rather than full-bleed. A record is a document with
-          an edge, and an edge is what stops this reading as a wireframe. */}
-      <Flow fade={false} rise={16} className="mx-auto w-full max-w-[68rem] lg:pl-[4%]">
-        <div className="archival-border archival-border--datum px-6 py-8 md:px-10 md:py-10">
-          <Reveal pattern="rise">
-            <div className="flex items-baseline justify-between gap-4">
-              <span className="meta meta-stone">File 001</span>
-              <span className="meta meta-stone">Archive Record</span>
-            </div>
-          </Reveal>
-
-          <Reveal pattern="rise" delay={0.1}>
-            <div aria-hidden="true" className="mt-5 h-px w-full bg-[--surface-rule]" />
-          </Reveal>
-
-          <Reveal pattern="mask" delay={0.2}>
-            <h2
-              id="story-fragment-heading"
-              className="display mt-7 text-[clamp(3rem,9vw,6.5rem)] leading-[0.86] text-[--surface-ink]"
-            >
-              Story
-            </h2>
-          </Reveal>
-
-          <Reveal pattern="rise" delay={0.34}>
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-6 border-t border-[--surface-rule] pt-6">
-              <span className="meta meta-stone">Journal</span>
-              <Link href="/story" className="cta-invitation">
-                Read the Story
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </Flow>
     </section>
   );
 }

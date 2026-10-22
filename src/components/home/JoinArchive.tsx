@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Symbol from "@/components/brand/Symbol";
-import Flow from "@/components/motion/Flow";
 import Reveal from "@/components/motion/Reveal";
 
 /**
@@ -55,44 +54,35 @@ export default function JoinArchive() {
       data-intensity="about"
       className="mx-auto w-full max-w-[104rem] px-5 py-24 md:px-10 md:py-28 lg:px-14 lg:py-32"
     >
-      <Flow fade={false} rise={20} className="w-full">
-        <Reveal pattern="rise">
-          <div
-            aria-hidden="true"
-            className="h-px w-full origin-left bg-[--rule]"
-          />
-        </Reveal>
+      <div
+        aria-hidden="true"
+        className="h-px w-full origin-left bg-[--rule]"
+      />
 
-        <div className="grid grid-cols-1 gap-14 pt-14 md:pt-16 lg:grid-cols-12 lg:gap-10 lg:pt-20">
-          <Reveal pattern="rise" className="lg:col-span-6">
+      <div className="grid grid-cols-1 gap-14 pt-14 md:pt-16 lg:grid-cols-12 lg:gap-10 lg:pt-20">
+        <div className="lg:col-span-6">
+          <Reveal pattern="rise">
             <p className="meta meta-stone">Archive</p>
-
-            <Reveal pattern="mask" delay={0.12}>
-              <h2
-                id="join-archive-heading"
-                className="display mt-6 max-w-[14ch] text-[length:var(--type-title)] leading-[0.92] text-ivory"
-              >
-                Join the Archive
-              </h2>
-            </Reveal>
-
-            <Reveal pattern="rise" delay={0.24}>
-              <div
-                aria-hidden="true"
-                className="mt-10 h-px w-full origin-left bg-[--rule]"
-              />
-            </Reveal>
-
-            <Reveal pattern="rise" delay={0.36} className="mt-12">
-              <Symbol height={150} className="max-w-[34vw] opacity-[0.22]" />
-            </Reveal>
+            <h2
+              id="join-archive-heading"
+              className="display mt-6 max-w-[14ch] text-[length:var(--type-title)] leading-[0.92] text-ivory"
+            >
+              Join the Archive
+            </h2>
           </Reveal>
 
-          <Reveal
-            pattern="rise"
-            delay={0.3}
-            className="lg:col-span-5 lg:col-start-8"
-          >
+          <div
+            aria-hidden="true"
+            className="mt-10 h-px w-full origin-left bg-[--rule]"
+          />
+
+          <div className="mt-12">
+            <Symbol height={150} className="max-w-[34vw] opacity-[0.22]" />
+          </div>
+        </div>
+
+        <div className="lg:col-span-5 lg:col-start-8">
+          <Reveal pattern="rise" delay={0.12}>
             <form
               /* NAMED, AND NO LONGER CARRYING DEAD ATTRIBUTES.
 
@@ -128,7 +118,7 @@ export default function JoinArchive() {
                   autoComplete="email"
                   placeholder="—"
                   aria-describedby="join-archive-status"
-                  className="mt-3 h-12 w-full border border-[--rule] bg-transparent px-4 font-meta text-sm text-ivory placeholder:text-stone"
+                  className="mt-3 h-12 w-full border border-[--rule] bg-transparent px-4 font-meta text-sm text-ivory placeholder:text-ivory/55"
                 />
               </div>
               <button
@@ -138,26 +128,24 @@ export default function JoinArchive() {
                 Join
               </button>
             </form>
-
-            {/* Announces the refusal politely. Empty until an attempt is made. */}
-            <p
-              id="join-archive-status"
-              role="status"
-              aria-live="polite"
-              className="mt-5 min-h-[1.25rem] font-meta text-[0.6875rem] leading-relaxed tracking-[0.14em] text-stone"
-            >
-              {status}
-            </p>
           </Reveal>
-        </div>
 
-        <Reveal pattern="rise" delay={0.42}>
-          <div
-            aria-hidden="true"
-            className="mt-16 h-px w-full bg-[--rule] lg:mt-20"
-          />
-        </Reveal>
-      </Flow>
+          {/* Announces the refusal politely. Empty until an attempt is made. */}
+          <p
+            id="join-archive-status"
+            role="status"
+            aria-live="polite"
+            className="mt-5 min-h-[1.25rem] font-meta text-[0.6875rem] leading-relaxed tracking-[0.14em] text-ivory/55"
+          >
+            {status}
+          </p>
+        </div>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="mt-16 h-px w-full bg-[--rule] lg:mt-20"
+      />
     </section>
   );
 }

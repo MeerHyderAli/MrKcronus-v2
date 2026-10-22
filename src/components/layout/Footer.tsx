@@ -38,12 +38,9 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Footer" className="md:col-span-3">
-            {/* The footer sits on Obsidian, where meta-stone's --surface-muted
-                resolves to Stone at 3.17:1 — below AA for 11px text, and not
-                raisable against any dark ground (even pure black caps Stone at
-                3.17:1). text-ivory/55 is the same treatment Nav.tsx already
-                uses: an existing brand token with an alpha modifier, 5.81:1,
-                and still dimmer than the gold active state. */}
+            {/* The footer stays on Obsidian. text-ivory/55 is the same
+                palette treatment Nav.tsx uses, with 5.81:1 contrast, while
+                remaining quieter than the gold active state. */}
             <h2 className="meta text-ivory/55 mb-5">MR.KCRONUS</h2>
             <ul className="flex flex-col gap-3">
               {LINKS.map((link) => (
