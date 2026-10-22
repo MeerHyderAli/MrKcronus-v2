@@ -587,6 +587,10 @@ export default function CollectionSequence() {
             </div>
           </div>
         </div>
+        {/* The sticky frame needs one viewport to leave its track. Keep the
+            following section below that release interval instead of letting
+            its image appear behind the final collection frame. */}
+        <div aria-hidden="true" className="h-svh" />
       </Section>
     </>
   );
