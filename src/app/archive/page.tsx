@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
 import ArchiveIndex from "@/components/archive/ArchiveIndex";
+import { routeMetadata } from "@/app/routeMetadata";
 
-export const metadata: Metadata = {
-  title: "Archive",
-  description: "MR.KCRONUS. The archive.",
-};
+export const metadata = routeMetadata(
+  "Archive",
+  "/archive",
+  "MR.KCRONUS. The archive.",
+);
 
 /**
  * The archive.

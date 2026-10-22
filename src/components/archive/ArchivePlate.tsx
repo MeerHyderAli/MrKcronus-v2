@@ -33,12 +33,15 @@ export default function ArchivePlate({
   plate,
   ratio = "portrait",
   sizes,
+  preload = false,
   className = "",
 }: {
   plate: ArchivePlateData;
   ratio?: ArchivePlateRatio;
   /** Required. Next Image will not guess a viewport width for these plates. */
   sizes: string;
+  /** Set only for the opening plate, which is visible at the top of /archive. */
+  preload?: boolean;
   className?: string;
 }) {
   return (
@@ -53,6 +56,7 @@ export default function ArchivePlate({
         width={plate.width}
         height={plate.height}
         sizes={sizes}
+        preload={preload}
         className="h-full w-full object-cover"
       />
     </div>

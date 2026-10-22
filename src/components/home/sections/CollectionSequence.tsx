@@ -17,7 +17,6 @@ import {
   type SequenceMask,
 } from "@/components/collection/collectionData";
 import { DRIFT } from "@/components/motion/vocabulary";
-import { useCompactMotion } from "@/components/motion/motionEnv";
 import Section from "./Section";
 
 /**
@@ -176,13 +175,11 @@ const rad = (deg: number) => (deg * Math.PI) / 180;
 
 export default function CollectionSequence() {
   const reduced = useReducedMotion();
-  const compact = useCompactMotion();
   const trackRef = useRef<HTMLDivElement>(null);
 
   /* The stage's MEASURED width and the pinned frame's MEASURED height, read
-     once per resize. Never read during scroll — this is the same
-     outside-the-scroll-path pattern `useCompactMotion` uses, so the section
-     still writes no React state while the page moves.
+     once per resize. No layout reads happen during scroll; ResizeObserver only
+     updates dimensions when the stage or frame actually changes.
 
      Only the WIDTH of the stage box is observed: its height is written inline
      from this same measurement, so observing it as well would let the two
@@ -192,9 +189,9 @@ export default function CollectionSequence() {
   const [measured, setMeasured] = useState({ w: 0, h: 0, wide: false });
   useEffect(() => {
     /* `wide` is the `md:` grid, i.e. whether the readout shares the frame with
-       the drum or sits ABOVE it. It is read here rather than through a new
-       hook because it is the same question `useCompactMotion` asks, and it
-       re-reads on every resize the observer already delivers. */
+       the drum or sits ABOVE it. The observer already provides resize events,
+       so the breakpoint is sampled alongside the dimensions rather than via
+       another stateful hook. */
     const read = () => {
       const w = stageRef.current?.clientWidth ?? 0;
       const h = frameRef.current?.clientHeight ?? 0;
@@ -214,11 +211,11 @@ export default function CollectionSequence() {
 
   /* ONE scroll subscription for the whole section. The index and the drum are
      both pure functions of this value, so they cannot drift out of step with
-     each other, and the page carries exactly one pinned track.
+     each other, and the motion version carries exactly one pinned track.
 
-     Declared above the reduced-motion branch deliberately: a hook called on
-     only one branch is a rules-of-hooks violation. When reduced, trackRef never
-     attaches and Motion resolves the value to zero. */
+     Hooks stay unconditional. CSS selects the static alternate markup for
+     reduced-motion users before hydration; that visible version has no track
+     or sticky stage. */
   const { scrollYProgress } = useScroll({
     target: trackRef,
     offset: ["start start", "end end"],
@@ -227,7 +224,6 @@ export default function CollectionSequence() {
   /* The runway carries a 100svh pinned stage, so the stage is pinned for the
      remainder of the runway. Shorter on small screens: the six masks all still
      play, they simply travel less far. */
-  const runway = compact ? "300vh" : "400vh";
 
   /* ---- The index's own state -------------------------------------------
      THE SECTION WRITES REACT STATE DURING SCROLL EXACTLY SIX TIMES.
@@ -361,43 +357,41 @@ export default function CollectionSequence() {
   }, [measured.w, measured.h, measured.wide]);
 
   /* ---- Reduced motion: static, ordered, complete ---------------------- */
-  if (reduced) {
-    return (
-      <Section
-        id="collection-sequence"
-        surface="dark"
-        labelledBy="collection-sequence-heading"
-        className="py-20 md:py-28"
-      >
-        <h2 id="collection-sequence-heading" className="sr-only">
-          The six designs, in order
-        </h2>
-        {/* Same matched ground as the animated branch. The static grid is the
-            same six designs and must present them the same way: a framed
-            catalogue here and a floating one there would make motion preference
-            change the COLLECTION, not just its movement. Absolute against the
-            section; the grid below is relative and later, so it paints above. */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0"
-          style={{ backgroundColor: "var(--surface-vitrine)" }}
-        />
-        <div className="relative mx-auto max-w-[104rem] px-5 md:px-10 lg:px-14">
-          <ol className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
-            {COLLECTION.map((design) => (
-              <li key={design.slug} className="flex flex-col">
-                <span className="meta meta-stone mb-3">{design.order}</span>
-                <div className="relative aspect-square w-full overflow-hidden">
-                  <BoardImage design={design} alt={`MR.KCRONUS ${design.name}: a black short-sleeve tee printed with this design, front view, as presented in the collection board.`} />
-                </div>
-                <span className="meta mt-4 text-ink">{design.name}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </Section>
-    );
-  }
+  const staticMarkup = (
+    <Section
+      id="collection-sequence-static"
+      surface="dark"
+      labelledBy="collection-sequence-heading-static"
+      className="py-20 md:py-28"
+    >
+      <h2 id="collection-sequence-heading-static" className="sr-only">
+        The six designs, in order
+      </h2>
+      {/* Same matched ground as the animated branch. The static grid is the
+          same six designs and must present them the same way: a framed
+          catalogue here and a floating one there would make motion preference
+          change the COLLECTION, not just its movement. Absolute against the
+          section; the grid below is relative and later, so it paints above. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{ backgroundColor: "var(--surface-vitrine)" }}
+      />
+      <div className="relative mx-auto max-w-[104rem] px-5 md:px-10 lg:px-14">
+        <ol className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {COLLECTION.map((design) => (
+            <li key={design.slug} className="flex flex-col">
+              <span className="meta meta-stone mb-3">{design.order}</span>
+              <div className="relative aspect-square w-full overflow-hidden">
+                <BoardImage design={design} alt={`MR.KCRONUS ${design.name}: a black short-sleeve tee printed with this design, front view, as presented in the collection board.`} />
+              </div>
+              <span className="meta mt-4 text-ink">{design.name}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </Section>
+  );
 
   /* WHY THIS SECTION HAS NO CARD, AND WHY ITS GROUND IS MEASURED RATHER THAN
      PICKED.
@@ -417,7 +411,7 @@ export default function CollectionSequence() {
 
      So the page meets the artwork instead. The data-surface scope is `dark`,
      because this section wants the whole light/dark editorial system that
-     implies - ivory type, stone meta, gold focus - and --surface-dark is
+     implies - ivory type, muted ivory metadata, gold focus - and --surface-dark is
      obsidian. But the GROUND is set separately, to --surface-vitrine, because
      the two are not the same colour and the difference is visible. MEASURED on
      the asset, over the outer 24px ring of all six cells (31,296 samples, never
@@ -431,161 +425,168 @@ export default function CollectionSequence() {
      so what turns on the drum is the design. No derived asset, no re-encode, no
      approximation of approved artwork: the board is served exactly as supplied.
 
-     Text follows the surface automatically. `text-ink` / `text-ink-muted` are
-     deliberately not defined as theme utilities, so the readout and the index
-     inherit the scope's colour, which [data-surface="dark"] sets to ivory. The
-     Gateway is untouched by this: it still completes its dark-to-ivory crossing
-     on its own ivory floor, and the Collection opens obsidian beneath it, the
-     same section-boundary cut the page already makes at Philosophy. */
+     Text follows the surface automatically. The semantic `text-ink` and
+     `text-ink-muted` classes map to --surface-ink and --surface-muted in
+     globals.css, so active and inactive index states now resolve to real,
+     contrast-safe colours. The cross-faded readout is visual-only; the ordered
+     index carries each design name, current-step state and entrance description
+     for assistive technology. The Gateway still completes its dark-to-ivory
+     crossing on its own floor before the Collection opens on the vitrine ground. */
   return (
-    <Section
-      id="collection-sequence"
-      surface="dark"
-      labelledBy="collection-sequence-heading"
-      className="relative"
-    >
-      {/* THE GROUND IS PAINTED HERE, NOT BY data-surface.
-         Section is a fixed primitive that forwards no style, and widening it to
-         do so would change every section on the page for one section's need. So
-         the matched ground is this backdrop instead. It is absolute against the
-         section's own relative box, and the track below is itself relative and
-         later in DOM order, so it paints above this rather than under it.
+    <>
+      <div className="motion-preference-reduced">{staticMarkup}</div>
+      <Section
+        id="collection-sequence"
+        surface="dark"
+        labelledBy="collection-sequence-heading"
+        className="motion-preference-full relative"
+      >
+        {/* THE GROUND IS PAINTED HERE, NOT BY data-surface.
+           Section is a fixed primitive that forwards no style, and widening it to
+           do so would change every section on the page for one section's need. So
+           the matched ground is this backdrop instead. It is absolute against the
+           section's own relative box, and the track below is itself relative and
+           later in DOM order, so it paints above this rather than under it.
 
-         aria-hidden because it is pure ground: it carries no content and must
-         never be announced. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{ backgroundColor: "var(--surface-vitrine)" }}
-      />
-
-      <h2 id="collection-sequence-heading" className="sr-only">
-        The six designs, in order
-      </h2>
-
-      <div ref={trackRef} className="relative" style={{ height: runway }}>
-        {/* THE HEADER IS FIXED AND THE FRAME IS PINNED UNDER IT.
-
-           `h-svh` measures the whole viewport, header included, so centring the
-           frame's content in it slides the readout up behind a bar that never
-           moves. Measured at 392px wide: the readout's top edge landed at 25px
-           on a 650px frame and 31px on 667px, against a header 65px deep - so
-           the design numeral the whole section is named for was cut off across
-           its top, and a phone with browser chrome cut off more of it still.
-           Only the mobile stack is affected; from `md` the column is beside the
-           drum rather than above it and the inset would be wasted height. */}
+           aria-hidden because it is pure ground: it carries no content and must
+           never be announced. */}
         <div
-          ref={frameRef}
-          className="sticky top-0 flex h-svh items-center overflow-hidden pt-16 md:pt-0"
-        >
-          <div className="mx-auto grid w-full max-w-[104rem] grid-cols-1 items-center gap-6 px-5 md:grid-cols-2 md:gap-8 md:px-10 lg:grid-cols-12 lg:gap-8 lg:px-14">
-            {/* THE READOUT AND THE INDEX SHARE ONE COLUMN.
-                The index replaced the old full-width thumbnail arc and took over
-                its job: the ordinal and name of all six designs, which one is at
-                the front, and every keyboard affordance the section offers.
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{ backgroundColor: "var(--surface-vitrine)" }}
+        />
 
-                It sits UNDER the readout rather than where the reference puts it,
-                top-right. Across cols 5-6 the same names measured 98px against a
-                125px column at 1024px - the collision that made the arc move
-                rows in the first place - and cols 1-4 are wide enough at every
-                breakpoint from 390px up that no name has to be shrunk or hidden
-                to fit. */}
-            <div className="lg:col-span-4 md:col-start-1 md:row-start-1 lg:col-start-auto lg:row-start-auto">
-              <Readout progress={scrollYProgress} />
+        <h2 id="collection-sequence-heading" className="sr-only">
+          The six designs, in order
+        </h2>
 
-              <div className="mt-4 sm:mt-6 lg:mt-9">
-                <p className="meta meta-stone mb-3">The six, in order</p>
-                {/* ONE ROW ON A PHONE, ONE COLUMN FROM `sm` UP.
+        <div ref={trackRef} className="relative h-[300vh] lg:h-[400vh]">
+          {/* THE HEADER IS FIXED AND THE FRAME IS PINNED UNDER IT.
 
-                      The mobile stack has to hold a readout, an index and the
-                      drum inside one pinned viewport, and stacked vertically
-                      the six rows took more height than the frame could spare -
-                      which pushed the readout up under the fixed header. A
-                      single row of ordinals costs one line instead of six, and
-                      below `sm` the ordinal is the only label the row carries
-                      anyway, so nothing that was on screen is lost. */}
-                <ol
-                  className="grid grid-cols-6 gap-x-1 sm:block"
-                  aria-label="The six designs, in order"
-                  onKeyDown={onIndexKey}
-                >
-                  {COLLECTION.map((design, index) => (
-                    <IndexRow
-                      key={design.slug}
-                      design={design}
-                      index={index}
-                      isActive={index === activeIndex}
-                      onJump={jumpTo}
-                      onFocus={(i) => {
-                        focusIndex.current = i;
-                      }}
-                      register={(node) => {
-                        indexRefs.current[index] = node;
-                      }}
-                    />
-                  ))}
-                </ol>
+             `h-svh` measures the whole viewport, header included, so centring the
+             frame's content in it slides the readout up behind a bar that never
+             moves. Measured at 392px wide: the readout's top edge landed at 25px
+             on a 650px frame and 31px on 667px, against a header 65px deep - so
+             the design numeral the whole section is named for was cut off across
+             its top, and a phone with browser chrome cut off more of it still.
+             Only the mobile stack is affected; from `md` the column is beside the
+             drum rather than above it and the inset would be wasted height. */}
+          <div
+            ref={frameRef}
+            className="sticky top-0 flex h-svh items-center overflow-hidden pt-16 md:pt-0"
+          >
+            <div className="mx-auto grid w-full max-w-[104rem] grid-cols-1 items-center gap-6 px-5 md:grid-cols-2 md:gap-8 md:px-10 lg:grid-cols-12 lg:gap-8 lg:px-14">
+              {/* THE READOUT AND THE INDEX SHARE ONE COLUMN.
+                  The index replaced the old full-width thumbnail arc and took over
+                  its job: the ordinal and name of all six designs, which one is at
+                  the front, and every keyboard affordance the section offers.
+
+                  It sits UNDER the readout rather than where the reference puts it,
+                  top-right. Across cols 5-6 the same names measured 98px against a
+                  125px column at 1024px - the collision that made the arc move
+                  rows in the first place - and cols 1-4 are wide enough at every
+                  breakpoint from 390px up that no name has to be shrunk or hidden
+                  to fit. */}
+              <div className="lg:col-span-4 md:col-start-1 md:row-start-1 lg:col-start-auto lg:row-start-auto">
+                <p className="sr-only" aria-live="polite" aria-atomic="true">
+                  Now showing {COLLECTION[activeIndex].order}: {COLLECTION[activeIndex].name}. {COLLECTION[activeIndex].entrance}.
+                </p>
+                <Readout progress={scrollYProgress} />
+
+                <div className="mt-4 sm:mt-6 lg:mt-9">
+                  <p className="meta meta-stone mb-3">The six, in order</p>
+                  {/* ONE ROW ON A PHONE, ONE COLUMN FROM `sm` UP.
+
+                        The mobile stack has to hold a readout, an index and the
+                        drum inside one pinned viewport, and stacked vertically
+                        the six rows took more height than the frame could spare -
+                        which pushed the readout up under the fixed header. A
+                        single row of ordinals costs one line instead of six, and
+                        below `sm` the ordinal is the only label the row carries
+                        anyway, so nothing that was on screen is lost. */}
+                  <ol
+                    className="grid grid-cols-6 sm:block"
+                    aria-label="The six designs, in order"
+                    onKeyDown={onIndexKey}
+                  >
+                    {COLLECTION.map((design, index) => (
+                      <IndexRow
+                        key={design.slug}
+                        design={design}
+                        index={index}
+                        isActive={index === activeIndex}
+                        onJump={jumpTo}
+                        onFocus={(i) => {
+                          focusIndex.current = i;
+                        }}
+                        register={(node) => {
+                          indexRefs.current[index] = node;
+                        }}
+                      />
+                    ))}
+                  </ol>
+                </div>
               </div>
-            </div>
 
-            {/* THE DRUM.
+              {/* THE DRUM.
 
-                The stage box is sized by CSS - the same 512px native cap the
-                section has always had, bounded by viewport HEIGHT below md so
-                the one-column stack always fits - and only its WIDTH is read
-                back, because every other dimension below is expressed against
-                that one number. Its HEIGHT is written inline as the drum's
-                reach, which is what reserves room for a card to bleed above the
-                stage without landing on the readout and index above it. */}
-            <div className="md:col-start-2 md:row-start-1 lg:col-span-5 lg:col-start-8 lg:row-start-auto">
-              <div
-                ref={stageRef}
-                className="relative mx-auto w-full max-w-[min(512px,30svh)] md:max-w-[min(512px,72svh)] lg:max-w-[512px]"
-                style={{
-                  height: drum.height,
-                  perspective: `${drum.lens}px`,
-                  /* The vanishing point is the featured card's own centre, which
-                     in the one-column stack sits at `extent` rather than at the
-                     middle of the box. Getting this wrong skews every card in
-                     the stack away from the column it belongs to. */
-                  perspectiveOrigin: `50% ${drum.extent}px`,
-                }}
-              >
-                {/* The wheel is pulled back by one drum radius so the front face
-                    lands on the picture plane. That set-back is constant, so it
-                    is a plain transform and never a MotionValue: a card at
-                    distance zero ends at z = drumR - drumR = exactly the plane
-                    the perspective is measured from, and therefore renders at
-                    its full native size.
-
-                    It hangs from `extent` rather than filling the box, so the
-                    cards' centre line - and with it the vanishing point above -
-                    is the drum's own centre and not the box's. */}
+                  The stage box is sized by CSS - the same 512px native cap the
+                  section has always had, bounded by viewport HEIGHT below md so
+                  the one-column stack always fits - and only its WIDTH is read
+                  back, because every other dimension below is expressed against
+                  that one number. Its HEIGHT is written inline as the drum's
+                  reach, which is what reserves room for a card to bleed above the
+                  stage without landing on the readout and index above it. */}
+              <div className="md:col-start-2 md:row-start-1 lg:col-span-5 lg:col-start-8 lg:row-start-auto">
                 <div
-                  className="absolute inset-x-0"
+                  ref={stageRef}
+                  className="relative mx-auto w-full max-w-[min(512px,30svh)] md:max-w-[min(512px,72svh)] lg:max-w-[512px]"
                   style={{
-                    top: drum.extent,
-                    height: 0,
-                    transformStyle: "preserve-3d",
-                    transform: `translateZ(${-drum.drumR}px)`,
+                    height: drum.height,
+                    perspective: `${drum.lens}px`,
+                    /* The vanishing point is the featured card's own centre, which
+                       in the one-column stack sits at `extent` rather than at the
+                       middle of the box. Getting this wrong skews every card in
+                       the stack away from the column it belongs to. */
+                    perspectiveOrigin: `50% ${drum.extent}px`,
                   }}
                 >
-                  {COLLECTION.map((design, index) => (
-                    <DrumCard
-                      key={design.slug}
-                      design={design}
-                      index={index}
-                      progress={scrollYProgress}
-                      drum={drum}
-                    />
-                  ))}
+                  {/* The wheel is pulled back by one drum radius so the front face
+                      lands on the picture plane. That set-back is constant, so it
+                      is a plain transform and never a MotionValue: a card at
+                      distance zero ends at z = drumR - drumR = exactly the plane
+                      the perspective is measured from, and therefore renders at
+                      its full native size.
+
+                      It hangs from `extent` rather than filling the box, so the
+                      cards' centre line - and with it the vanishing point above -
+                      is the drum's own centre and not the box's. */}
+                  <div
+                    className="absolute inset-x-0"
+                    style={{
+                      top: drum.extent,
+                      height: 0,
+                      transformStyle: "preserve-3d",
+                      transform: `translateZ(${-drum.drumR}px)`,
+                    }}
+                  >
+                    {COLLECTION.map((design, index) => (
+                      <DrumCard
+                        key={design.slug}
+                        design={design}
+                        index={index}
+                        progress={scrollYProgress}
+                        drum={drum}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </Section>
+      </Section>
+    </>
   );
 }
 
@@ -637,7 +638,7 @@ function Readout({ progress }: { progress: MotionValue<number> }) {
   const slice = 1 / COLLECTION.length;
 
   return (
-    <div>
+    <div aria-hidden="true">
       <p className="meta meta-stone mb-5 md:mb-6">Now showing</p>
       <div className="relative min-h-[8rem] lg:min-h-[9rem]">
         {COLLECTION.map((design, index) => {
@@ -753,11 +754,12 @@ function IndexRow({
       <button
         type="button"
         ref={register}
-        aria-current={isActive ? "true" : undefined}
+        aria-current={isActive ? "step" : undefined}
+        aria-describedby={`collection-entrance-${design.slug}`}
         tabIndex={isActive ? 0 : -1}
         onClick={() => onJump(index)}
         onFocus={() => onFocus(index)}
-        className="flex w-full items-baseline gap-3 py-1 text-left sm:py-1.5 md:py-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
+        className="flex min-h-11 w-full items-center gap-3 text-left focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-current"
       >
         <span
           className={`display shrink-0 text-[0.95rem] leading-none ${
@@ -771,6 +773,9 @@ function IndexRow({
         </span>
         <span className="sr-only">{design.name}</span>
       </button>
+      <span id={`collection-entrance-${design.slug}`} className="sr-only">
+        {design.entrance}
+      </span>
     </li>
   );
 }

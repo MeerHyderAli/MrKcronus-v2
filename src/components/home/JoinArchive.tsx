@@ -118,7 +118,7 @@ export default function JoinArchive() {
                   autoComplete="email"
                   placeholder="—"
                   aria-describedby="join-archive-status"
-                  className="mt-3 h-12 w-full border border-[--rule] bg-transparent px-4 font-meta text-sm text-ivory placeholder:text-stone"
+                  className="mt-3 h-12 w-full border border-[--rule] bg-transparent px-4 font-meta text-sm text-ivory placeholder:text-ivory/55"
                 />
               </div>
               <button
@@ -135,7 +135,7 @@ export default function JoinArchive() {
             id="join-archive-status"
             role="status"
             aria-live="polite"
-            className="mt-5 min-h-[1.25rem] font-meta text-[0.6875rem] leading-relaxed tracking-[0.14em] text-stone"
+            className="mt-5 min-h-[1.25rem] font-meta text-[0.6875rem] leading-relaxed tracking-[0.14em] text-ivory/55"
           >
             {status}
           </p>

@@ -51,6 +51,11 @@ import { ARCHIVE_PLATES } from "@/components/archive/archiveData";
 const OPENING = ARCHIVE_PLATES[0];
 const ENTRIES = ARCHIVE_PLATES.slice(1);
 
+/* The 8-column plate is about 58-62vw from lg up to the container cap, then
+   capped at 1024px inside the 104rem page container. Below lg it fills content. */
+const PLATE_SIZES =
+  "(max-width: 1023px) 92vw, (max-width: 1663px) 61vw, 1024px";
+
 export default function ArchiveIndex() {
   return (
     <div className="mx-auto w-full max-w-[104rem] px-5 pb-24 md:px-10 md:pb-32 lg:px-14">
@@ -72,7 +77,7 @@ export default function ArchiveIndex() {
         </div>
 
         <div className="lg:col-span-8 lg:col-start-5">
-          <ArchivePlate plate={OPENING} sizes="(max-width: 1024px) 92vw, 42vw" />
+          <ArchivePlate plate={OPENING} sizes={PLATE_SIZES} preload />
         </div>
       </section>
 
@@ -125,7 +130,7 @@ export default function ArchiveIndex() {
                   : "lg:col-span-8 lg:col-start-5 lg:row-start-1"
               }
             >
-              <ArchivePlate plate={e} sizes="(max-width: 1024px) 92vw, 56vw" />
+              <ArchivePlate plate={e} sizes={PLATE_SIZES} />
             </div>
 
             <div

@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import {
   motion,
-  useReducedMotion,
   useScroll,
   useTransform,
 } from "motion/react";
@@ -132,7 +131,6 @@ import { getLevelEntries, getUniverseLevel } from "@/components/universe/univers
 const LEVEL_ID = "level-01";
 
 export default function Gateway() {
-  const reduced = useReducedMotion();
   const compact = useCompactMotion();
   const trackRef = useRef<HTMLElement>(null);
 
@@ -240,44 +238,40 @@ export default function Gateway() {
 
   /* ---- REDUCED MOTION ----------------------------------------------------
      Present, not performed. One field, one pool of light, the chapter named.
-     No pin, no travel, no portal - and the Collection immediately after, so the
-     reader is never held behind an animation to reach the designs. */
-  if (reduced) {
-    return (
-      <section
-        data-surface="dark"
-        aria-labelledby="gateway-heading"
-        className="relative overflow-hidden"
-      >
-        <div className="relative flex min-h-[78svh] items-center justify-center overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
-          >
-            <ConstructionField className="h-[68svh] w-[68svh] max-h-[560px] max-w-[560px] text-ivory" />
-          </div>
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
-          >
-            <LightPool className="h-[62svh] w-[62svh] max-h-[520px] max-w-[520px]" peak={0.22} />
-          </div>
-
-          <div className="relative mx-auto w-full max-w-[104rem] px-5 text-center md:px-10 lg:px-14">
-            <p className="meta meta-stone">{level.label}</p>
-            <h2 id="gateway-heading" className="display-editorial mt-5">
-              The first chapter
-            </h2>
-            <p className="meta meta-stone mt-6">
-              {entries.length} entries
-            </p>
-          </div>
+     No pin, no travel, no portal - and the Collection immediately after. The
+     CSS media query selects this static markup before hydration. */
+  const staticMarkup = (
+    <section
+      data-surface="dark"
+      aria-labelledby="gateway-heading-static"
+      className="relative overflow-hidden"
+    >
+      <div className="relative flex min-h-[78svh] items-center justify-center overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+        >
+          <ConstructionField className="h-[68svh] w-[68svh] max-h-[560px] max-w-[560px] text-ivory" />
         </div>
-      </section>
-    );
-  }
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+        >
+          <LightPool className="h-[62svh] w-[62svh] max-h-[520px] max-w-[520px]" peak={0.22} />
+        </div>
 
-  const stageHeight = compact ? "100svh" : "112svh";
+        <div className="relative mx-auto w-full max-w-[104rem] px-5 text-center md:px-10 lg:px-14">
+          <p className="meta meta-stone">{level.label}</p>
+          <h2 id="gateway-heading-static" className="display-editorial mt-5">
+            The first chapter
+          </h2>
+          <p className="meta meta-stone mt-6">
+            {entries.length} entries
+          </p>
+        </div>
+      </div>
+    </section>
+  );
 
   /* PLANE RASTER SIZE
      The corridor must keep THREE planes at every breakpoint - that is the
@@ -300,150 +294,153 @@ export default function Gateway() {
        "h-[74svh] w-[74svh] max-h-[620px] max-w-[620px]"];
 
   return (
-    <section
-      ref={trackRef}
-      data-surface="dark"
-      aria-labelledby="gateway-heading"
-      className="relative overflow-hidden"
-    >
-      <div className="relative" style={{ height: stageHeight }}>
-        <div
-          className="absolute inset-0 overflow-hidden"
-          style={{ perspective: "1100px", perspectiveOrigin: "50% 48%" }}
-        >
-          <div className="absolute inset-0 bg-obsidian" aria-hidden="true" />
+    <>
+      <div className="motion-preference-reduced">{staticMarkup}</div>
+      <section
+        ref={trackRef}
+        data-surface="dark"
+        aria-labelledby="gateway-heading"
+        className="motion-preference-full relative overflow-hidden"
+      >
+        <div className="relative h-[100svh] lg:h-[112svh]">
+          <div
+            className="absolute inset-0 overflow-hidden"
+            style={{ perspective: "1100px", perspectiveOrigin: "50% 48%" }}
+          >
+            <div className="absolute inset-0 bg-obsidian" aria-hidden="true" />
 
-          <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
-            {/* The three planes of the corridor. Same approved component, three
-                depths, nothing redrawn. */}
+            <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
+              {/* The three planes of the corridor. Same approved component, three
+                  depths, nothing redrawn. */}
+              <motion.div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                style={{
+                  opacity: farOpacity,
+                  z: farZ,
+                  scale: farScale,
+                  y: farY,
+                  willChange: "transform, opacity",
+                }}
+              >
+                <ConstructionField className={planeSize[0] + " text-ivory"} />
+              </motion.div>
+
+              <motion.div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                style={{
+                  opacity: midOpacity,
+                  z: midZ,
+                  scale: midScale,
+                  y: midY,
+                  willChange: "transform, opacity",
+                }}
+              >
+                <ConstructionField className={planeSize[1] + " text-ivory"} />
+              </motion.div>
+
+              <motion.div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 flex items-center justify-center"
+                style={{
+                  opacity: nearOpacity,
+                  z: nearZ,
+                  scale: nearScale,
+                  y: nearY,
+                  willChange: "transform, opacity",
+                }}
+              >
+                <ConstructionField className={planeSize[2] + " text-ivory"} />
+              </motion.div>
+
+              {/* The ivory portal: Movement A's own ground, approached down the
+                  corridor until it fills the frame. */}
+              <motion.div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                  z: portalZ,
+                  opacity: portalOpacity,
+                  willChange: "transform, opacity",
+                  background: "var(--surface-ivory)",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* The light event. One gradient, no filter, no blur - the same
+              restraint the Hero's light pool uses. */}
+          <div
+            className="pointer-events-none absolute inset-0 flex items-center justify-center"
+            aria-hidden="true"
+          >
+            <motion.div
+              className="flex h-full w-full items-center justify-center"
+              style={{ opacity: poolOpacity, scale: poolScale }}
+            >
+              <LightPool className="h-[74svh] w-[74svh] max-h-[640px] max-w-[640px]" peak={0.26} />
+            </motion.div>
+          </div>
+
+          {/* THE CHAPTER, IN TWO GROUNDS.
+
+              One set of words, rendered twice and cross-faded, because the ground
+              behind them changes from obsidian to ivory inside a single crossing
+              and the only correct colour changes with it. The ivory copy is the
+              one that arrives and is read; the ink copy is the one that persists
+              past the handoff so the floor never carries nothing.
+
+              The two layers are stacked, not sequential, so the chapter does not
+              shift position when it changes ground. The ivory layer is
+              aria-hidden: the words are identical, and exposing both would
+              announce the chapter twice. The id the section's aria-labelledby
+              points at lives on the ink layer, which is the copy still on screen
+              once the crossing has resolved. */}
+          <div className="relative z-10 mx-auto h-full w-full max-w-[104rem] px-5 text-center md:px-10 lg:px-14">
             <motion.div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 flex items-center justify-center"
-              style={{
-                opacity: farOpacity,
-                z: farZ,
-                scale: farScale,
-                y: farY,
-                willChange: "transform, opacity",
-              }}
+              className="absolute inset-0 flex flex-col items-center justify-center"
+              style={{ opacity: typeIvoryFade }}
             >
-              <ConstructionField className={planeSize[0] + " text-ivory"} />
+              <motion.p className="meta text-stone" style={{ opacity: labelOpacity, y: labelY }}>
+                {level.label}
+              </motion.p>
+              <motion.p
+                className="display-editorial mt-6"
+                style={{ opacity: titleOpacity, y: titleY, clipPath: titleReveal }}
+              >
+                The first chapter
+              </motion.p>
+              <motion.p
+                className="meta text-stone mt-7"
+                style={{ opacity: labelOpacity, y: labelY }}
+              >
+                {entries.length} entries
+              </motion.p>
             </motion.div>
 
             <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 flex items-center justify-center"
-              style={{
-                opacity: midOpacity,
-                z: midZ,
-                scale: midScale,
-                y: midY,
-                willChange: "transform, opacity",
-              }}
+              className="absolute inset-0 flex flex-col items-center justify-center"
+              style={{ opacity: typeInkFade }}
             >
-              <ConstructionField className={planeSize[1] + " text-ivory"} />
+              {/* Set in ink explicitly rather than inherited. This section
+                  declares data-surface="dark", so the inherited colour is
+                  --ivory, which is exactly the colour that must not survive the
+                  crossing. */}
+              <p className="meta mt-0" style={{ color: "var(--ink-muted)" }}>
+                {level.label}
+              </p>
+              <h2 id="gateway-heading" className="display-editorial mt-6" style={{ color: "var(--ink)" }}>
+                The first chapter
+              </h2>
+              <p className="meta mt-7" style={{ color: "var(--ink-muted)" }}>
+                {entries.length} entries
+              </p>
             </motion.div>
-
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 flex items-center justify-center"
-              style={{
-                opacity: nearOpacity,
-                z: nearZ,
-                scale: nearScale,
-                y: nearY,
-                willChange: "transform, opacity",
-              }}
-            >
-              <ConstructionField className={planeSize[2] + " text-ivory"} />
-            </motion.div>
-
-            {/* The ivory portal: Movement A's own ground, approached down the
-                corridor until it fills the frame. */}
-            <motion.div
-              aria-hidden="true"
-              className="absolute inset-0"
-              style={{
-                z: portalZ,
-                opacity: portalOpacity,
-                willChange: "transform, opacity",
-                background: "var(--surface-ivory)",
-              }}
-            />
           </div>
         </div>
-
-        {/* The light event. One gradient, no filter, no blur - the same
-            restraint the Hero's light pool uses. */}
-        <div
-          className="pointer-events-none absolute inset-0 flex items-center justify-center"
-          aria-hidden="true"
-        >
-          <motion.div
-            className="flex h-full w-full items-center justify-center"
-            style={{ opacity: poolOpacity, scale: poolScale }}
-          >
-            <LightPool className="h-[74svh] w-[74svh] max-h-[640px] max-w-[640px]" peak={0.26} />
-          </motion.div>
-        </div>
-
-        {/* THE CHAPTER, IN TWO GROUNDS.
-
-            One set of words, rendered twice and cross-faded, because the ground
-            behind them changes from obsidian to ivory inside a single crossing
-            and the only correct colour changes with it. The ivory copy is the
-            one that arrives and is read; the ink copy is the one that persists
-            past the handoff so the floor never carries nothing.
-
-            The two layers are stacked, not sequential, so the chapter does not
-            shift position when it changes ground. The ivory layer is
-            aria-hidden: the words are identical, and exposing both would
-            announce the chapter twice. The id the section's aria-labelledby
-            points at lives on the ink layer, which is the copy still on screen
-            once the crossing has resolved. */}
-        <div className="relative z-10 mx-auto h-full w-full max-w-[104rem] px-5 text-center md:px-10 lg:px-14">
-          <motion.div
-            aria-hidden="true"
-            className="absolute inset-0 flex flex-col items-center justify-center"
-            style={{ opacity: typeIvoryFade }}
-          >
-            <motion.p className="meta meta-stone" style={{ opacity: labelOpacity, y: labelY }}>
-              {level.label}
-            </motion.p>
-            <motion.p
-              className="display-editorial mt-6"
-              style={{ opacity: titleOpacity, y: titleY, clipPath: titleReveal }}
-            >
-              The first chapter
-            </motion.p>
-            <motion.p
-              className="meta meta-stone mt-7"
-              style={{ opacity: labelOpacity, y: labelY }}
-            >
-              {entries.length} entries
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center"
-            style={{ opacity: typeInkFade }}
-          >
-            {/* Set in ink explicitly rather than inherited. This section
-                declares data-surface="dark", so the inherited colour is
-                --ivory, which is exactly the colour that must not survive the
-                crossing. */}
-            <p className="meta mt-0" style={{ color: "var(--ink-muted)" }}>
-              {level.label}
-            </p>
-            <h2 id="gateway-heading" className="display-editorial mt-6" style={{ color: "var(--ink)" }}>
-              The first chapter
-            </h2>
-            <p className="meta mt-7" style={{ color: "var(--ink-muted)" }}>
-              {entries.length} entries
-            </p>
-          </motion.div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

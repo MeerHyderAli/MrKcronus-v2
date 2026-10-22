@@ -1,25 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import Nav from "@/components/nav/Nav";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
-/* Display / editorial face.
-   High-contrast didone. Variable weight axis retained; the display range
-   (500-600) is enforced via the .display utility in globals.css because
-   hairline strokes disappear against Obsidian at lighter weights. */
-const bodoni = Bodoni_Moda({
+/* Display / editorial face. The variable weight axis is retained; the display
+   range (500-600) is enforced by globals.css because Bodoni's hairlines
+   disappear against Obsidian at lighter weights. The unmodified Latin WOFF2
+   and its OFL license are kept in ./fonts so builds need no Google Fonts fetch. */
+const bodoni = localFont({
+  src: "./fonts/bodoni-moda-latin-wght-normal.woff2",
   variable: "--font-bodoni",
-  subsets: ["latin"],
+  weight: "400 900",
   display: "swap",
 });
 
-/* Meta / institutional face.
-   Used ONLY as uppercase wide-tracked small metadata, never as a
-   general-purpose interface typeface. */
-const inter = Inter({
+/* Meta / institutional face. Used only as uppercase wide-tracked metadata. */
+const inter = localFont({
+  src: "./fonts/inter-latin-wght-normal.woff2",
   variable: "--font-inter",
-  subsets: ["latin"],
+  weight: "100 900",
   display: "swap",
 });
 
@@ -34,6 +34,9 @@ export const metadata: Metadata = {
     template: "%s — MR.KCRONUS",
   },
   description: DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
   applicationName: "MR.KCRONUS",
   keywords: [
     "MR.KCRONUS",
@@ -53,7 +56,7 @@ export const metadata: Metadata = {
     locale: "en",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "MR.KCRONUS",
     description: DESCRIPTION,
   },
@@ -102,15 +105,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${bodoni.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <a href="#main" className="skip-link meta">
+        <a href="#main" data-modal-background="" className="skip-link meta">
           Skip to content
         </a>
         <Nav />
-        {/* pt offsets the fixed header so no route starts underneath it */}
-        <main id="main" className="flex-1 pt-16 md:pt-20">
-          {children}
-        </main>
-        <Footer />
+        <div
+          id="page-content"
+          data-modal-background=""
+          className="flex min-h-full flex-1 flex-col"
+        >
+          {/* pt offsets the fixed header so no route starts underneath it */}
+          <main id="main" tabIndex={-1} className="flex-1 pt-16 md:pt-20">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

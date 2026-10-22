@@ -88,6 +88,14 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
       }
     };
 
+    const backgroundElements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-modal-background]"),
+    );
+    const previousInert = backgroundElements.map((element) => [element, element.inert] as const);
+    previousInert.forEach(([element]) => {
+      element.inert = true;
+    });
+
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", onKeyDown);
@@ -101,6 +109,9 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
       document.removeEventListener("keydown", onKeyDown);
       desktopQuery.removeEventListener("change", closeOnDesktop);
       document.body.style.overflow = previousOverflow;
+      previousInert.forEach(([element, wasInert]) => {
+        if (element.isConnected) element.inert = wasInert;
+      });
     };
   }, [open]);
 

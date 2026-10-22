@@ -56,6 +56,7 @@ export default function Nav() {
       <div className="mx-auto flex h-16 max-w-[104rem] items-center justify-between px-5 md:h-20 md:px-10 lg:px-14">
         <Link
           href="/"
+          data-modal-background=""
           className="flex items-center gap-3 md:gap-4"
           aria-label="MR.KCRONUS, home"
         >
@@ -63,7 +64,7 @@ export default function Nav() {
           <Wordmark width={112} className="md:w-[132px]" />
         </Link>
 
-        <nav aria-label="Primary" className="hidden md:block">
+        <nav data-modal-background="" aria-label="Primary" className="hidden md:block">
           <ul className="flex items-center gap-8 lg:gap-11">
             {LINKS.map((link) => {
               const active = pathname === link.href;
