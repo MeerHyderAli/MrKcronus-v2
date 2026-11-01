@@ -235,19 +235,38 @@ An earlier Build 13 phase replaced it with a static split, on the reading that
 the homepage should simply be calmer. That was wrong, and the client corrected
 it: this is the signature motion of the house.
 
-The Hero carries the full logo scroll animation:
+**REVISED 2026-10-31, AT CLIENT INSTRUCTION — THE PARTICLE THRESHOLD.**
+The first screen is no longer void. The client supplied a particle-logo
+reference and approved this opening:
 
-    0.00-0.10  VOID        the construction field resolves out of nothing
-    0.08-0.22  MR.KCRONUS  the wordmark masks in from the left
-    0.20-0.40  THE SYMBOL  the canonical mark arrives out of the depth
-    0.30-0.72  ASSEMBLY    the field expands and turns to frame it
-    0.40-0.68  LIGHT       the page supplies the light the mark needs
-    0.46-0.66  ACTIVATION  the single gold cast
-    0.62-0.94  RECEDING    the mark returns to depth as a watermark while
-                           the front door resolves over it
+    0.00-0.08  MR.KCRONUS  the wordmark, held in shimmering ivory particles
+    0.08-0.38  THE MORPH   the particles release in a wave, travel through
+                           depth and re-gather as the symbol
+    0.32-0.46  THE SYMBOL  the canonical mark resolves crisp over the particle
+                           symbol; the particles settle away
 
-The Hero is pinned for **one viewport** of scroll, not the retired seven. All
-seven beats are preserved, resolved across a 140svh runway.
+The particles are a transition only. Their positions are sampled from the
+canonical mask PNGs, so no geometry is redrawn, and the mark that lands is the
+untouched canonical asset. This is the one approved WebGL use and the one
+approved particle system on the site: raw WebGL, no 3D library, the GPU moves
+every particle and scroll supplies one progress value. Reduced motion and
+devices without WebGL get the static threshold, never the particles.
+
+The remaining beats, with the ending revised at the same instruction:
+
+    0.20-0.60  ASSEMBLY    the field expands and turns to frame it
+    0.36-0.62  LIGHT       the page supplies the light the mark needs
+    0.44-0.56  ACTIVATION  the single gold cast
+    0.56-0.86  PASSAGE     the mark dissolves back into particles and the
+                           camera passes through it and the field
+    0.78-1.00  THE DOOR    what lies behind the symbol resolves
+
+The release runs from the centre of the wordmark outward. A scroll hint holds
+the first screen and is gone by p 0.05.
+
+The Hero track is 200vh on compact viewports and 280vh from lg, so it is
+pinned for one viewport of scroll on mobile and 1.8 on desktop. That is still
+nowhere near the retired 760svh crawl.
 
 Still retired, and still correct:
 
@@ -905,3 +924,13 @@ The website should feel designed, not generated.
 Every animation, transition, frame, and element must have a reason to exist.
 
 Restraint is part of the design.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

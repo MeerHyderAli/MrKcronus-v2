@@ -46,7 +46,7 @@ export default function Philosophy() {
         />
 
         <div className="relative z-10 mx-auto w-full max-w-[104rem] px-5 pb-12 pt-36 md:px-10 md:py-16 lg:px-14">
-          <Flow rise={12} fade={false} className="max-w-[42rem]">
+          <Flow rise={12} fade={false} className="max-w-2xl">
             <h2 id="philosophy-heading" className="display-editorial text-ivory">
               <span className="block">STAND APART.</span>
               <span className="block">LEAVE A MARK.</span>

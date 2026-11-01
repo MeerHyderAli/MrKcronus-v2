@@ -472,6 +472,34 @@ body {
   display: block;
 }
 
+/* Hero scroll hint: a thread that draws down and withdraws, slowly. */
+.scroll-hint-line {
+  display: block;
+  width: 1px;
+  height: 3rem;
+  background: linear-gradient(to bottom, transparent, var(--ivory));
+  opacity: 0.6;
+  animation: scroll-hint 2.4s var(--ease-drape) infinite;
+}
+
+@keyframes scroll-hint {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  50.01% {
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .motion-preference-reduced {
     display: block;

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   motion,
   useScroll,
@@ -12,6 +12,7 @@ import Symbol from "@/components/brand/Symbol";
 import Wordmark from "@/components/brand/Wordmark";
 import ConstructionField from "@/components/home/ConstructionField";
 import LightPool from "@/components/home/LightPool";
+import ParticleMorph from "@/components/home/ParticleMorph";
 
 /**
  * HERO — THE THRESHOLD
@@ -21,17 +22,19 @@ import LightPool from "@/components/home/LightPool";
  * it is the signature motion of this brand and removing it cost the homepage
  * something the section list alone could not replace.
  *
- * WHAT CAME BACK
- * The full symbol choreography, layer for layer, from the retired Hero:
+ * THE SEQUENCE
+ * Opening revised 2026-10-31 at client instruction (the particle threshold,
+ * see AGENTS.md). The first screen is no longer void:
  *
- *   0.00-0.10  VOID            the construction field resolves out of nothing
- *   0.08-0.22  MR.KCRONUS      the wordmark masks in from the left
- *   0.20-0.40  THE SYMBOL      the canonical mark arrives out of the depth
- *   0.30-0.72  ASSEMBLY        the field expands and turns to frame it
- *   0.40-0.68  LIGHT           the page supplies the light the mark needs
- *   0.46-0.66  ACTIVATION      the single gold cast
- *   0.62-0.94  RECEDING        the mark returns to depth as a watermark and
- *                              the front door resolves over it
+ *   0.00-0.08  MR.KCRONUS      the wordmark, held in shimmering particles
+ *   0.08-0.38  THE MORPH       the particles release and re-gather as the symbol
+ *   0.32-0.46  THE SYMBOL      the canonical mark resolves over them
+ *   0.20-0.60  ASSEMBLY        the field expands and turns to frame it
+ *   0.36-0.62  LIGHT           the page supplies the light the mark needs
+ *   0.44-0.56  ACTIVATION      the single gold cast
+ *   0.56-0.86  PASSAGE         the mark dissolves back into particles and the
+ *                              camera passes through it and the field
+ *   0.78-1.00  THE DOOR        what lies behind the symbol resolves
  *
  * WHAT DID NOT COME BACK, AND WHY
  * The exploded archive plate and the THE ARCHIVE IS OPEN statement. Those are
@@ -88,7 +91,8 @@ import LightPool from "@/components/home/LightPool";
  * reachable immediately rather than after any scroll.
  */
 
-const MARK_CLASS = "max-w-[30vw] md:h-[300px] md:max-w-none";
+// Mobile keeps its 300px mark; desktop gets a larger one.
+const MARK_CLASS = "h-[300px] max-w-[30vw] md:max-w-none lg:h-[min(52svh,460px)]";
 
 export default function Hero() {
   const trackRef = useRef<HTMLElement>(null);
@@ -98,67 +102,75 @@ export default function Hero() {
     offset: ["start start", "end end"],
   });
 
-  /* ---- THE HERO OPENS ON VOID ----------------------------------------
-     The first frame is black and that is correct. The mark is assembled,
-     the field expands, the light is supplied, the gold fires and the front
-     door resolves - all of it driven by scroll across one viewport of
-     runway. A threshold should feel like a threshold.
+  /* ---- THE HERO OPENS ON MR.KCRONUS ----------------------------------
+     The DOM wordmark is server-rendered, so the first frame is never empty.
+     Once the particle scene is ready it takes over that exact box and the DOM
+     wordmark steps back; without WebGL the DOM wordmark simply scrolls away. */
+  const markRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
+  const [particlesReady, setParticlesReady] = useState(false);
+  const onParticlesReady = useCallback(() => setParticlesReady(true), []);
+  const hintOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
+  const introOpacity = useTransform(scrollYProgress, [0.03, 0.12], [1, 0]);
+  const particleMorph = useTransform(scrollYProgress, [0.06, 0.34], [0, 1]);
+  /* The particles settle away under the crisp mark, then return at 0.56 when
+     the mark dissolves back into them for the passage. */
+  const particleFade = useTransform(
+    scrollYProgress,
+    [0.34, 0.44, 0.56, 0.62],
+    [1, 0, 0, 1],
+  );
+  const particleExit = useTransform(scrollYProgress, [0.6, 0.86], [0, 1]);
 
-     (Reverted at client instruction after a composed-rest-state experiment.
-     The visitor is meant to arrive at nothing and then watch the house
-     declare itself.) */
+  /* The field assembles around the mark, then the camera passes through it:
+     it scales past the viewer and is gone with the particles. */
   const fieldOpacity = useTransform(
     scrollYProgress,
-    [0, 0.18, 0.55, 0.72, 0.94],
-    [0, 0.5, 0.82, 0.28, 0.12],
+    [0, 0.2, 0.36, 0.5, 0.6, 0.84],
+    [0, 0, 0.5, 0.82, 0.82, 0],
   );
-  const fieldRotate = useTransform(scrollYProgress, [0.3, 0.8], [0, 12]);
+  const fieldRotate = useTransform(scrollYProgress, [0.3, 0.84], [0, 24]);
   const fieldScale = useTransform(
     scrollYProgress,
-    [0, 0.58, 0.8, 1],
-    [1.04, 0.92, 1.06, 1],
+    [0, 0.5, 0.6, 0.84],
+    [1.04, 0.94, 1, 2.6],
   );
 
-  /* ---- MR.KCRONUS: masks in from the left, early ---------------------- */
-  const wordOpacity = useTransform(scrollYProgress, [0.06, 0.16], [0, 1]);
-  const wordY = useTransform(scrollYProgress, [0.08, 0.22], [26, 0]);
+  /* ---- MR.KCRONUS returns with the front door, masked in from the left */
+  const wordOpacity = useTransform(scrollYProgress, [0.78, 0.86], [0, 1]);
+  const wordY = useTransform(scrollYProgress, [0.78, 0.9], [26, 0]);
   const wordReveal = useTransform(
     scrollYProgress,
-    [0.08, 0.2],
+    [0.78, 0.9],
     ["inset(0% 100% 0% 0%)", "inset(0% 0% 0% 0%)"],
   );
 
-  /* ---- THE SYMBOL arrives out of the depth and returns to it ---------- */
+  /* ---- THE SYMBOL resolves over the particle symbol and later dissolves
+     back into it. It never moves: the particles carry all the travel, so the
+     two always coincide. */
   const markOpacity = useTransform(
     scrollYProgress,
-    [0.2, 0.32, 0.62, 0.88, 1],
-    [0, 1, 1, 0.5, 0.26],
+    [0.3, 0.42, 0.56, 0.64],
+    [0, 1, 1, 0],
   );
-  const markScale = useTransform(
-    scrollYProgress,
-    [0.2, 0.38, 0.88, 1],
-    [0.84, 1, 1.06, 0.82],
-  );
-  const markZ = useTransform(scrollYProgress, [0.2, 0.4, 0.88, 1], [-170, 10, 90, -140]);
-  const markY = useTransform(scrollYProgress, [0.2, 0.38, 1], [14, 0, -50]);
 
   /* ---- LIGHT: the page supplies it ----------------------------------- */
   const poolOpacity = useTransform(
     scrollYProgress,
-    [0.4, 0.54, 0.68, 0.9],
-    [0, 1, 0.6, 0.2],
+    [0.36, 0.5, 0.62, 0.8],
+    [0, 1, 0.6, 0],
   );
-  const poolScale = useTransform(scrollYProgress, [0.4, 0.62], [0.7, 1.05]);
+  const poolScale = useTransform(scrollYProgress, [0.36, 0.56, 0.8], [0.7, 1.05, 1.8]);
 
   /* ---- ACTIVATION: the one gold cast, the only gold on the site ------ */
-  const goldOpacity = useTransform(scrollYProgress, [0.46, 0.56, 0.66], [0, 0.85, 0]);
+  const goldOpacity = useTransform(scrollYProgress, [0.44, 0.5, 0.56], [0, 0.85, 0]);
 
-  /* ---- THE FRONT DOOR resolves under the receding mark ---------------- */
-  const doorOpacity = useTransform(scrollYProgress, [0.62, 0.82], [0, 1]);
-  const doorY = useTransform(scrollYProgress, [0.62, 0.86], [22, 0]);
-  const ctaOpacity = useTransform(scrollYProgress, [0.7, 0.88], [0, 1]);
-  const vitrineOpacity = useTransform(scrollYProgress, [0.76, 0.94], [0, 1]);
-  const vitrineY = useTransform(scrollYProgress, [0.76, 0.96], [30, 0]);
+  /* ---- THE FRONT DOOR is what lies behind the symbol ------------------ */
+  const doorOpacity = useTransform(scrollYProgress, [0.78, 0.92], [0, 1]);
+  const doorY = useTransform(scrollYProgress, [0.78, 0.94], [22, 0]);
+  const ctaOpacity = useTransform(scrollYProgress, [0.84, 0.95], [0, 1]);
+  const vitrineOpacity = useTransform(scrollYProgress, [0.86, 0.98], [0, 1]);
+  const vitrineY = useTransform(scrollYProgress, [0.86, 1], [30, 0]);
   /* ---- REDUCED MOTION ---------------------------------------------------
      The whole composition, simply present. No field, no depth travel, no
      mask, no activation: a static threshold with the mark seated, the identity
@@ -221,7 +233,7 @@ export default function Hero() {
           MR.KCRONUS
         </h1>
 
-        <div className="relative h-[200vh] lg:h-[240vh]">
+        <div className="relative h-[200vh] lg:h-[280vh]">
           <div
             className="sticky top-0 h-svh overflow-hidden"
             style={{ perspective: "1200px", perspectiveOrigin: "50% 50%" }}
@@ -256,31 +268,62 @@ export default function Hero() {
               />
             </motion.div>
 
+            {/* Layer 2b - the opening. The DOM wordmark holds the first frame;
+                the particle scene replaces it, carries it into the symbol and
+                settles away under the canonical mark. */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              style={{ opacity: introOpacity }}
+            >
+              <div
+                ref={introRef}
+                className={`transition-opacity duration-700 ${particlesReady ? "opacity-0" : ""}`}
+              >
+                <Wordmark width="min(80vw, 880px)" style={{ maxWidth: "none" }} />
+              </div>
+            </motion.div>
+            <ParticleMorph
+              morph={particleMorph}
+              exit={particleExit}
+              fade={particleFade}
+              fromRef={introRef}
+              toRef={markRef}
+              onReady={onParticlesReady}
+              className="pointer-events-none absolute inset-0 h-full w-full"
+            />
+
             {/* Layer 3 - the canonical symbol, intact, arriving out of the depth
                 and returning to it. Never split, never deformed. */}
             <motion.div
               className="absolute inset-0 flex items-center justify-center"
-              style={{
-                opacity: markOpacity,
-                scale: markScale,
-                y: markY,
-                z: markZ,
-              }}
+              style={{ opacity: markOpacity }}
             >
-              <Symbol height={300} className={MARK_CLASS} />
+              <div ref={markRef}>
+                <Symbol className={MARK_CLASS} />
+              </div>
             </motion.div>
 
             {/* Layer 4 - the activation cast. The one gold moment on the site. */}
             <motion.div
               aria-hidden="true"
               className="absolute inset-0 flex items-center justify-center"
-              style={{ opacity: goldOpacity, scale: markScale, z: markZ }}
+              style={{ opacity: goldOpacity }}
             >
               <Symbol
-                height={300}
                 className={MARK_CLASS}
                 color="var(--gold)"
               />
+            </motion.div>
+
+            {/* The scroll hint. Gone as soon as the reader begins. */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-8 flex flex-col items-center gap-3 md:bottom-10"
+              style={{ opacity: hintOpacity }}
+            >
+              <span className="meta meta-stone">Scroll</span>
+              <span className="scroll-hint-line" />
             </motion.div>
 
             {/* The front door. Sits above the receding mark and resolves as it
@@ -290,7 +333,7 @@ export default function Hero() {
                 className="flex flex-1 flex-col items-center justify-center text-center"
                 style={{ opacity: doorOpacity, y: doorY }}
               >
-                {/* The wordmark masks in from the left at p 0.08 - 0.22, part
+                {/* The wordmark masks in from the left at p 0.62 - 0.78, part
                     of the same scroll-driven sequence as the mark and the
                     field. It is not on a timer: nothing in this Hero resolves
                     on its own clock, so the whole threshold is one gesture the
