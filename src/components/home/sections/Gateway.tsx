@@ -9,7 +9,7 @@ import {
 import ConstructionField from "@/components/home/ConstructionField";
 import LightPool from "@/components/home/LightPool";
 import { useCompactMotion } from "@/components/motion/motionEnv";
-import { getLevelEntries, getUniverseLevel } from "@/components/universe/universe";
+import { COLLECTION } from "@/components/collection/collectionData";
 
 /**
  * ACT II - THE GATEWAY
@@ -128,15 +128,11 @@ import { getLevelEntries, getUniverseLevel } from "@/components/universe/univers
  * version, so nothing downstream is ever withheld.
  */
 
-const LEVEL_ID = "level-01";
-
 export default function Gateway() {
   const compact = useCompactMotion();
   const trackRef = useRef<HTMLElement>(null);
 
-  /* Chapter identity comes from the universe model, never from a literal. */
-  const level = getUniverseLevel(LEVEL_ID);
-  const entries = getLevelEntries(LEVEL_ID);
+  const count = COLLECTION.length;
 
   const { scrollYProgress } = useScroll({
     target: trackRef,
@@ -261,12 +257,12 @@ export default function Gateway() {
         </div>
 
         <div className="relative mx-auto w-full max-w-[104rem] px-5 text-center md:px-10 lg:px-14">
-          <p className="meta meta-stone">{level.label}</p>
+          <p className="meta meta-stone">Drop 1</p>
           <h2 id="gateway-heading-static" className="display-editorial mt-5">
-            The first chapter
+            The Collection
           </h2>
           <p className="meta meta-stone mt-6">
-            {entries.length} entries
+            {count} designs
           </p>
         </div>
       </div>
@@ -404,19 +400,19 @@ export default function Gateway() {
               style={{ opacity: typeIvoryFade }}
             >
               <motion.p className="meta text-stone" style={{ opacity: labelOpacity, y: labelY }}>
-                {level.label}
+                Drop 1
               </motion.p>
               <motion.p
                 className="display-editorial mt-6"
                 style={{ opacity: titleOpacity, y: titleY, clipPath: titleReveal }}
               >
-                The first chapter
+                The Collection
               </motion.p>
               <motion.p
                 className="meta text-stone mt-7"
                 style={{ opacity: labelOpacity, y: labelY }}
               >
-                {entries.length} entries
+                {count} designs
               </motion.p>
             </motion.div>
 
@@ -429,13 +425,13 @@ export default function Gateway() {
                   --ivory, which is exactly the colour that must not survive the
                   crossing. */}
               <p className="meta mt-0" style={{ color: "var(--ink-muted)" }}>
-                {level.label}
+                Drop 1
               </p>
               <h2 id="gateway-heading" className="display-editorial mt-6" style={{ color: "var(--ink)" }}>
-                The first chapter
+                The Collection
               </h2>
               <p className="meta mt-7" style={{ color: "var(--ink-muted)" }}>
-                {entries.length} entries
+                {count} designs
               </p>
             </motion.div>
           </div>

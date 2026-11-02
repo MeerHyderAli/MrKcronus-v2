@@ -14,7 +14,7 @@ import type { ArchivePlateData } from "@/components/archive/archiveData";
  *
  *   - "portrait" (default) - aspect-[4/5] with object-cover. The seven
  *     portraits crop by under one per cent, which is invisible, and this is
- *     the /archive presentation, preserved exactly.
+ *     the /story presentation, preserved exactly.
  *   - "square" - a true 1:1 frame. THE ENEMY is natively 1254x1254, so this
  *     crops nothing at all and the wide dark margins inside the artwork are
  *     preserved as the negative space they are.
@@ -40,7 +40,7 @@ export default function ArchivePlate({
   ratio?: ArchivePlateRatio;
   /** Required. Next Image will not guess a viewport width for these plates. */
   sizes: string;
-  /** Set only for the opening plate, which is visible at the top of /archive. */
+  /** Set only for the opening plate, which is visible at the top of /story. */
   preload?: boolean;
   className?: string;
 }) {

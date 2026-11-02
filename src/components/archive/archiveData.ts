@@ -63,7 +63,7 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
     width: 825,
     height: 1024,
     alt:
-      "Archive plate: a hooded crowned figure holding an open book inside a " +
+      "Story plate: a hooded crowned figure holding an open book inside a " +
       "gothic library, loose pages scattered around it, with circular compass " +
       "geometry behind the head.",
     lightPeak: 0.1,
@@ -86,7 +86,7 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
        corridor on the back - see collectionData.ts and AGENTS.md, Artwork
        canon. Do not read this plate's clock across into the garment. */
     alt:
-      "Archive plate: the house wordmark above an intact but cracked numeral " +
+      "Story plate: the house wordmark above an intact but cracked numeral " +
       "clock face, with a hooded figure framed inside the face and a ruined " +
       "city beneath it.",
     lightPeak: 0.1,
@@ -101,7 +101,7 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
        outward - where The Architect's clock stays whole inside its rim. That
        single distinction is what these two plates turn on. */
     alt:
-      "Archive plate: a numeral clock face breaking apart into scattered " +
+      "Story plate: a numeral clock face breaking apart into scattered " +
       "fragments above a ruined city, with a lone figure standing on a wet " +
       "road below.",
     lightPeak: 0.11,
@@ -113,7 +113,7 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
     width: 825,
     height: 1024,
     alt:
-      "Archive plate: a figure in profile with a lit eye and a high-collared " +
+      "Story plate: a figure in profile with a lit eye and a high-collared " +
       "coat against a night city, with a circular halo behind the head.",
     lightPeak: 0.13,
   },
@@ -124,7 +124,7 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
     width: 825,
     height: 1024,
     alt:
-      "Archive plate: a crowned figure in draped robes looking upward, beneath " +
+      "Story plate: a crowned figure in draped robes looking upward, beneath " +
       "an eight-pointed star and orbital circles.",
     lightPeak: 0.16,
   },
@@ -135,7 +135,7 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
     width: 825,
     height: 1024,
     alt:
-      "Archive plate: an armoured figure in profile in layered plate armour, " +
+      "Story plate: an armoured figure in profile in layered plate armour, " +
       "beneath a vertical axis and circular compass geometry.",
     lightPeak: 0.16,
   },
@@ -146,7 +146,7 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
     width: 1254,
     height: 1254,
     alt:
-      "Archive plate: a hooded figure wearing a beaked mask, with crosshair " +
+      "Story plate: a hooded figure wearing a beaked mask, with crosshair " +
       "and circular geometry and a vertical sigil axis.",
     lightPeak: 0.2,
   },
@@ -157,7 +157,7 @@ export const ARCHIVE_PLATES: readonly ArchivePlateData[] = [
     width: 825,
     height: 1024,
     alt:
-      "Archive plate: a shrouded hooded figure with three glowing points, " +
+      "Story plate: a shrouded hooded figure with three glowing points, " +
       "surrounded by concentric orbital circles and constellation lines.",
     lightPeak: 0.22,
   },

@@ -952,11 +952,20 @@ function DrumCard({
  * block - which is the square card, exactly one cell wide. No measurement, no
  * derived file, no re-encoding.
  */
-function BoardImage({ design, alt }: { design: CollectionDesign; alt: string }) {
+export function BoardImage({
+  design,
+  alt,
+  loading,
+}: {
+  design: CollectionDesign;
+  alt: string;
+  loading?: "lazy" | "eager";
+}) {
   return (
     <Image
       src={BOARD.src}
       alt={alt}
+      loading={loading}
       width={BOARD.width}
       height={BOARD.height}
       /* `sizes` MUST describe the rendered width of the <img> itself, not the

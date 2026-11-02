@@ -1,13 +1,12 @@
 import Hero from "@/components/home/Hero";
-import BrandIntroduction from "@/components/home/sections/BrandIntroduction";
 import Gateway from "@/components/home/sections/Gateway";
 import JoinArchive from "@/components/home/JoinArchive";
-import StoryFragment from "@/components/home/StoryFragment";
-import AboutSection from "@/components/home/sections/AboutSection";
-import ArchiveTeaser from "@/components/home/sections/ArchiveTeaser";
-import CollectionSequence from "@/components/home/sections/CollectionSequence";
-import EditorialCraft from "@/components/home/sections/EditorialCraft";
+import LevelOne from "@/components/home/sections/LevelOne";
+import TheCollection from "@/components/home/sections/TheCollection";
+import TheMark from "@/components/home/sections/TheMark";
+import ArchiveDrops from "@/components/home/sections/ArchiveDrops";
 import Philosophy from "@/components/home/sections/Philosophy";
+import TheWorld from "@/components/home/sections/TheWorld";
 
 export const metadata = {
   description:
@@ -30,21 +29,20 @@ export const metadata = {
  * learn whether MR.KCRONUS sells clothes without committing to the mythology.
  * It read as "enter the archive", not "enter the fashion house".
  *
- * The homepage now presents and introduces. The narrative belongs to /archive.
+ * The homepage now presents and introduces. The narrative belongs to /story.
  *
  * RENDERED ORDER
  *
  *   1  Hero                 threshold                 (rebuilt in Build 13 P3)
- *   2  BrandIntroduction    the house, before         (uncommitted, not ours)
- *   3  Gateway              THE CROSSING   dark->ivory (added in Phase 1)
- *   4  CollectionSequence   MOVEMENT B — the exam     stone  one pinned track
- *   5  Philosophy           the brand sentence        ivory
- *   6  ArchiveTeaser        the tonal hinge           DARK
- *   7  EditorialCraft       craft / reserved slot     ivory
- *   8  StoryFragment        JOURNAL — unchanged       ivory
- *   9  AboutSection         identity                  ivory
- *  10  JoinArchive          honest invitation, inert  dark
- *   -  Footer                                          (locked, Build 1)
+ *   2  TheWorld             the colonnade             dark   one pinned track
+ *   3  LevelOne             THE TIMELINE              dark   one pinned track
+ *   -  Gateway              THE CROSSING   dark->ivory (added in Phase 1)
+ *   4  TheCollection        Drop 1, per colour        follows the chosen colour
+ *   5  Philosophy           THE CREED                 dark
+ *   -  TheMark              the symbol, taken apart   dark
+ *   6  ArchiveDrops         the drops, as doors       DARK
+ *   7  JoinArchive          the last door, inert form dark
+ *   -  Footer
  *
  * MOVEMENT A — THE MANIFEST IS NO LONGER RENDERED HERE
  * CollectionManifest used to sit between the Gateway and the Sequence. It was
@@ -62,8 +60,8 @@ export const metadata = {
  * THE TONE ARC
  * dark -> dark -> CROSSING -> stone -> ivory -> DARK -> ivory -> ivory ->
  * ivory -> dark -> dark. Dark is reserved for three deliberate moments:
- * the Archive hinge, Join and the Footer (plus the BrandIntroduction that opens
- * the page). The archive teaser is dark precisely so that /archive reads as
+ * the Archive hinge, Join and the Footer (plus The World that opens
+ * the page). The Archive section is dark precisely so that /archive reads as
  * entering another room rather than continuing the same page.
  *
  * THE GATEWAY IS A CROSSING, NOT A SECTION
@@ -81,13 +79,23 @@ export const metadata = {
  * UNRENDERED, NOT DELETED
  *
  * Ten approved components were removed from this page's composition in Build 13.
- * Their files are untouched and remain available to /archive and to future
+ * Their files are untouched and remain available to /story and to future
  * cinematic work, as recorded in AGENTS.md:
  *
  *   ArchiveChapter            ArchitectSection      SigilSection
  *   ArchitectArchiveChapter   FractureChapter       WitnessChapter
  *   GodsChapter               WarChapter            EnemyChapter
  *   UnknownChapter
+ *
+ * Gateway no longer names Level 01. LevelOne owns that name now, and the crossing
+ * leads from the story into the Collection, so it names the Collection.
+ *
+ * EditorialCraft, StoryFragment and AboutSection left this page on 2026-11-01 with
+ * the approved section order, which ends Archive, Join, footer. Their files are
+ * preserved and unrendered. /story and /about are reached from the navigation.
+ *
+ * BrandIntroduction is superseded by TheWorld, which keeps its plate and copy.
+ * Its file is preserved and unrendered.
  *
  * CollectionManifest was unrendered from this page separately, at the client's
  * instruction. CollectionColourways.tsx is unreferenced for the same reason: it
@@ -105,7 +113,10 @@ export const metadata = {
  * which never imply a product route. The file is preserved.
  *
  * THE COLLECTION ON THE HOMEPAGE
- * Movement B, the pinned Sequence, remains the homepage's collection section.
+ * TheCollection replaced Movement B here on 2026-11-01, which took the homepage
+ * back to three pinned tracks. CollectionSequence.tsx is preserved and unrendered,
+ * and the rest of this note describes that earlier arrangement.
+ * Movement B, the pinned Sequence, was the homepage's collection section.
  * Movement C — the whole-board presentation headed "Six designs, one collection"
  * — is intentionally not rendered here. The canonical board asset and its
  * component remain untouched; the six designs are still examined in the Sequence.
@@ -131,30 +142,28 @@ export default function HomePage() {
       {/* ---- 1. The threshold ------------------------------------------- */}
       <Hero />
 
-      {/* ---- 2. Brand introduction: the house, before the Collection ------ */}
-      <BrandIntroduction />
+      {/* ---- 2. The World: the colonnade into the plate ------------------ */}
+      <TheWorld />
 
-      {/* ---- 3. The gateway: dark to ivory, Hero into the Collection ----- */}
+      {/* ---- 3. Level 01: the timeline, plate and garment ---------------- */}
+      <LevelOne />
+
+      {/* ---- The gateway: dark to ivory, story into the Collection -------- */}
       <Gateway />
 
-      {/* ---- 4. The Collection: Movement B, the Sequence ---------------- */}
-      {/* Keep the Hero's CTA target on the remaining collection section. */}
-      <div id="collection">
-        <CollectionSequence />
-      </div>
+      {/* ---- 4. The Collection: Drop 1, per colour ---------------------- */}
+      <TheCollection />
 
       {/* ---- 5. What MR.KCRONUS is -------------------------------------- */}
       <Philosophy />
 
-      {/* ---- 6. The tonal hinge into the Archive ------------------------- */}
-      <ArchiveTeaser />
+      {/* ---- The mark the Creed left, examined part by part -------------- */}
+      <TheMark />
 
-      {/* ---- 7. Craft and the reserved campaign slot --------------------- */}
-      <EditorialCraft />
+      {/* ---- 6. The Archive: drops by category ---------------------------- */}
+      <ArchiveDrops />
 
-      {/* ---- 8-10. Record, identity, invitation -------------------------- */}
-      <StoryFragment />
-      <AboutSection />
+      {/* ---- 7. The last door --------------------------------------------- */}
       <JoinArchive />
     </>
   );

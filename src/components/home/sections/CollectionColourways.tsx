@@ -22,11 +22,10 @@ import {
  *
  * THE IMAGE NEVER CHANGES
  *
- * No per-colourway production asset exists. The colourway PDFs are composite
- * marketing sheets and are never cropped into production files, exactly as
- * collection-board.png is never cropped. So the board cell shown beside these
- * controls is NOT a photograph of the selected colour, and nothing here may
- * imply that it is. The controls name a colour; they do not render a garment.
+ * This control sits beside a board cell, which is NOT a photograph of the selected
+ * colour, and nothing here may imply that it is. It names a colour; it does not
+ * render a garment. TheCollection.tsx shows per-colour images and has its own
+ * control. This one is preserved with the unrendered Manifest.
  *
  * WHY A RADIO GROUP
  *

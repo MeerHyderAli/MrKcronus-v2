@@ -52,6 +52,25 @@
      Ivory on #0b0b0b measures 18.6:1. */
   --surface-vitrine: #0b0b0b;
 
+  /* ---- The World: the colonnade -----------------------------------------
+     Warm near-blacks stepped toward the light at the end of the arches, so
+     depth reads as atmosphere. Tonal derivations of Obsidian and Stone. */
+  --world-wall-near: var(--obsidian);
+  --world-wall-mid: #090807;
+  --world-wall-far: #0e0d0b;
+  --world-reveal: #191714;
+  --world-floor: rgba(14, 13, 11, 0.62);
+  --world-light: rgba(245, 240, 230, 0.2);
+  --world-haze-mid: rgba(245, 240, 230, 0.04);
+  --world-haze-far: rgba(245, 240, 230, 0.075);
+
+  /* ---- Level 01: the line the timeline is drawn with -------------------- */
+  --level-axis: rgba(245, 245, 240, 0.34);
+
+  /* ---- The Archive: a shut door, a step above the wall behind it -------- */
+  --drop-leaf: #161412;
+  --drop-leaf-lit: #2c2823;
+
   /* ---- Light-surface ink (Build 12B) ----------------------------------
      Warm darks, not neutral grey and never pure black, so the light surfaces
      belong to the same brand as the dark ones.
@@ -455,6 +474,1182 @@ body {
 ::selection {
   background-color: var(--gold);
   color: var(--obsidian);
+}
+
+/* ==========================================================================
+   THE WORLD: THE COLONNADE
+   One CSS 3D scene. perspective mirrors PERSPECTIVE in TheWorld.tsx. The origin
+   and the plate's object-position hold the same point, which is what keeps the
+   figure on the vanishing point at every aspect ratio.
+   ========================================================================== */
+
+.world-stage {
+  --world-ox: 50%;
+  --world-oy: 40%;
+  --world-arch-base: 64vw;
+  --world-arch-rise: 22svh;
+  --world-arch-drop: 57svh;
+  perspective: 100vmin;
+  perspective-origin: var(--world-ox) var(--world-oy);
+}
+
+/* Below lg the plate is far wider than the frame, so its box runs from past the
+   frame's left edge to the plate's right edge. --world-plate-w is the width from
+   the figure, held at centre, to that right edge, and --world-pan is the travel
+   that brings the stone head into frame. 178svh is the plate's width when it is
+   fitted to the height; 0.335 is the share of it right of the figure. */
+.world-plate-box {
+  --world-plate-w: max(100vw, calc(178svh * 0.335 + 50vw));
+  --world-pan: calc(100vw - var(--world-plate-w));
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40vw;
+  width: calc(var(--world-plate-w) + 40vw);
+}
+
+.world-plate {
+  object-position: 100% var(--world-oy);
+}
+
+/* Softens the plate's rectangle while it is still far away, so it never shows
+   as a hard-edged picture hanging in the dark. */
+.world-plate-edge {
+  box-shadow: inset 0 0 12vmin 7vmin var(--obsidian);
+}
+
+.world-arch {
+  --world-arch-w: calc(var(--world-arch-base) * var(--world-arch-widen, 1));
+  position: absolute;
+  left: calc(var(--world-ox) - var(--world-arch-w) / 2);
+  top: calc(var(--world-oy) - var(--world-arch-rise));
+  width: var(--world-arch-w);
+  height: calc(var(--world-arch-rise) + var(--world-arch-drop));
+  border-radius: calc(var(--world-arch-w) / 2) calc(var(--world-arch-w) / 2) 0 0;
+  box-shadow:
+    0 0 18vmin 4vmin var(--world-haze, transparent),
+    0 0 0 300vmax var(--world-wall);
+  /* The wall stops at the floor, or its footing shows through the wet stone. */
+  clip-path: inset(-300vmax -300vmax 0 -300vmax);
+}
+
+/* The back face of the wall. Perspective shows it as the inner face of the arch,
+   the one surface the light beyond can reach. */
+.world-arch--reveal {
+  box-shadow:
+    0 0 4vmin 1vmin var(--world-light),
+    0 0 0 300vmax var(--world-reveal);
+}
+
+/* Wet stone: part see-through, over the mirrored plate at its far end. */
+.world-floor {
+  position: absolute;
+  left: calc(var(--world-ox) - 200vw);
+  top: calc(var(--world-oy) + var(--world-arch-drop));
+  width: 400vw;
+  transform-origin: 50% 0;
+  background: linear-gradient(
+    to bottom,
+    var(--world-floor) 0,
+    var(--obsidian) 62%
+  );
+}
+
+/* The plate's reflection, mirrored about the figure's ground line (97% down the
+   plate). Drawn only while the floor is in view; the plate file is untouched. */
+.world-reflection {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% calc(var(--world-oy) + var(--world-arch-drop));
+  transform: scaleY(-1);
+  mask-image:
+    linear-gradient(to top, black 40%, transparent 72%),
+    linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  mask-composite: intersect;
+}
+
+.world-inscription {
+  position: absolute;
+  left: 50%;
+  top: 10.5svh;
+  width: 100%;
+  translate: -50% 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(1.25rem, 5.6vw, 2rem);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--surface-ink);
+}
+
+.world-scrim {
+  background: linear-gradient(
+    0deg,
+    rgba(5, 5, 5, 0.95) 0%,
+    rgba(5, 5, 5, 0.9) 20%,
+    rgba(5, 5, 5, 0.62) 33%,
+    rgba(5, 5, 5, 0.2) 45%,
+    rgba(5, 5, 5, 0) 58%
+  );
+}
+
+@media (min-width: 64rem) {
+  .world-stage {
+    --world-ox: 67%;
+    --world-arch-base: 22vw;
+    --world-arch-rise: 31svh;
+  }
+
+  .world-plate-box {
+    --world-pan: 0px;
+    left: 0;
+    width: 100%;
+  }
+
+  .world-plate {
+    object-position: var(--world-ox) var(--world-oy);
+  }
+
+  /* Shares the headline's left edge once the page container caps at 104rem. */
+  .world-inscription {
+    left: max(3.5rem, calc((100vw - 104rem) / 2 + 3.5rem));
+    top: var(--world-oy);
+    width: 12ch;
+    translate: 0 -50%;
+    text-align: left;
+    font-size: var(--type-numeral);
+  }
+
+  /* The second layer lets the plate's bright water leave on black rather than
+     stop at a ruled line as the stage scrolls off. */
+  .world-scrim {
+    background:
+      linear-gradient(to top, var(--obsidian) 0%, transparent 20%),
+      linear-gradient(
+        90deg,
+        rgba(5, 5, 5, 0.95) 0%,
+        rgba(5, 5, 5, 0.91) 28%,
+        rgba(5, 5, 5, 0.8) 46%,
+        rgba(5, 5, 5, 0.42) 58%,
+        rgba(5, 5, 5, 0.1) 68%,
+        rgba(5, 5, 5, 0) 78%
+      );
+  }
+}
+
+/* ==========================================================================
+   LEVEL 01: THE TIMELINE
+   --level-e is one entry's width. The camera is expressed in entries, so these
+   lengths are the only place the geometry lives. Far planes are scaled back up
+   by exactly what their depth takes away, so depth changes parallax, not size.
+   ========================================================================== */
+
+.level-track {
+  --level-step: 58vh;
+}
+
+.level-stage {
+  --level-e: 100vw;
+  --level-axis-y: 90svh;
+  --level-plate-h: 46svh;
+  --level-garment-w: min(40vw, 42svh);
+  perspective: 100vmin;
+  perspective-origin: 50% 46%;
+}
+
+.level-world {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: max-content;
+  transform-style: preserve-3d;
+}
+
+.level-intro {
+  flex: none;
+  align-self: center;
+  width: calc(50vw + var(--level-e) / 2);
+  padding-inline: 1.25rem;
+}
+
+.level-entry {
+  position: relative;
+  flex: none;
+  width: var(--level-e);
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.level-plane {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+.level-plane--plate {
+  left: 50%;
+  top: 11svh;
+  height: var(--level-plate-h);
+  transform: translateX(-50%) translateZ(-26vmin) scale(1.26);
+}
+
+/* The plates' near-black grounds dissolve into the stage rather than show as
+   rectangles. A mask, so the artwork itself is never filtered. */
+.level-plate-art {
+  position: relative;
+  height: 100%;
+  max-width: 86vw;
+  mask-image:
+    linear-gradient(to right, transparent, black 12%, black 88%, transparent),
+    linear-gradient(to bottom, transparent, black 6%, black 94%, transparent);
+  mask-composite: intersect;
+}
+
+.level-plane--garment {
+  right: 4vw;
+  top: 37svh;
+  width: var(--level-garment-w);
+  transform: translateZ(14vmin) scale(0.86);
+}
+
+/* A viewport onto one board cell; the mask loses the cell's printed label and
+   the board's rules, which the page already says in real text. */
+.level-garment {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  max-width: 512px;
+  mask-image:
+    radial-gradient(ellipse 52% 54% at 50% 54%, black 82%, transparent 100%),
+    linear-gradient(
+      to bottom,
+      transparent var(--garment-top, 6%),
+      black calc(var(--garment-top, 6%) + 1.5%)
+    ),
+    linear-gradient(
+      to right,
+      black var(--garment-right, 100%),
+      transparent calc(var(--garment-right, 100%) + 2%)
+    );
+  mask-composite: intersect;
+}
+
+/* The chapter's opening frame: the name of the level, as large as it will go. */
+.level-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: 17vw;
+  line-height: 0.94;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.level-text {
+  position: absolute;
+  left: 1.25rem;
+  right: 1.25rem;
+  top: 60svh;
+}
+
+.level-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: var(--type-numeral);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.level-line {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(1.5rem, 2.1vw, 2.25rem);
+  line-height: 1.2;
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+/* The timeline. It snaps at the break, and the part after it never lines up. */
+.level-axis {
+  position: absolute;
+  left: 0;
+  top: var(--level-axis-y);
+  width: calc(
+    50vw + var(--level-e) / 2 + (var(--level-break) + 0.5) * var(--level-e)
+  );
+  height: 1px;
+  background: var(--level-axis);
+}
+
+.level-axis--after {
+  left: calc(
+    50vw + var(--level-e) / 2 + (var(--level-break) + 0.5) * var(--level-e)
+  );
+  width: calc((var(--level-n) - var(--level-break) - 0.5) * var(--level-e));
+  transform: translateY(2.6svh);
+  background: linear-gradient(to right, var(--level-axis) 74%, transparent 94%);
+}
+
+.level-mark {
+  position: absolute;
+  left: 50%;
+  top: var(--level-axis-y);
+  width: 1px;
+  height: 1.4svh;
+  background: var(--level-axis);
+}
+
+.level-mark[data-after-break] {
+  transform: translateY(2.6svh);
+}
+
+.level-mark span {
+  position: absolute;
+  left: 0;
+  top: 2.2svh;
+  translate: -50% 0;
+}
+
+@media (min-width: 64rem) {
+  .level-track {
+    --level-step: 68vh;
+  }
+
+  .level-stage {
+    --level-e: 74vw;
+    --level-plate-h: 74svh;
+    --level-garment-w: 42svh;
+  }
+
+  .level-intro {
+    padding-inline: 3.5rem;
+  }
+
+  .level-title {
+    font-size: min(12.5vw, 13rem);
+  }
+
+  .level-plane--plate {
+    top: 12svh;
+    left: 27%;
+  }
+
+  .level-plane--garment {
+    top: auto;
+    right: 3%;
+    bottom: 15svh;
+  }
+
+  .level-text {
+    left: 60%;
+    right: 0;
+    top: 19svh;
+  }
+
+  .level-entry[data-layout="right"] .level-plane--plate {
+    left: 73%;
+  }
+
+  .level-entry[data-layout="right"] .level-plane--garment {
+    right: auto;
+    left: 3%;
+  }
+
+  .level-entry[data-layout="right"] .level-text {
+    left: 2%;
+    right: 60%;
+  }
+
+  .level-entry[data-layout="centre"] .level-plane--plate {
+    left: 50%;
+  }
+
+  .level-entry[data-layout="centre"] .level-plane--garment {
+    right: -2%;
+  }
+
+  .level-entry[data-layout="centre"] .level-text {
+    left: 0;
+    right: 68%;
+  }
+}
+
+/* ==========================================================================
+   THE COLLECTION
+   The room follows the chosen colour by remapping the surface roles, so type, rules
+   and focus follow with it. Field values reuse the swatch chips below: they are
+   representative interface colours, not garment specifications. Stone Beige keeps
+   the ivory the Gateway lands on.
+   ========================================================================== */
+
+.collection {
+  --collection-field: var(--surface-ivory);
+  background-color: var(--collection-field);
+  color: var(--surface-ink);
+  transition:
+    background-color var(--dur-reveal) var(--ease-archive),
+    color var(--dur-reveal) var(--ease-archive);
+}
+
+.collection:not([data-field="stone-beige"]) {
+  --surface-ink: var(--ivory);
+  --surface-muted: rgba(245, 245, 240, 0.72);
+  --surface-rule: var(--rule);
+  --surface-focus: var(--gold);
+}
+
+.collection[data-field="black"] {
+  --collection-field: var(--obsidian);
+}
+.collection[data-field="deep-olive"] {
+  --collection-field: #454a32;
+}
+.collection[data-field="dark-chocolate-brown"] {
+  --collection-field: #422d25;
+}
+.collection[data-field="midnight-navy"] {
+  --collection-field: #1f2536;
+}
+
+.collection-bar {
+  position: sticky;
+  top: 4rem;
+  z-index: 20;
+  background-color: var(--collection-field);
+  padding-block: 0.5rem;
+  transition: background-color var(--dur-reveal) var(--ease-archive);
+}
+
+/* Two lines at most, so the longest colour name never changes the bar's height. */
+.collection-active {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.collection-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--surface-muted);
+  cursor: pointer;
+  transition: color var(--dur-micro) var(--ease-archive);
+}
+
+.collection-swatch:hover,
+.collection-swatch[aria-checked="true"] {
+  color: var(--surface-ink);
+}
+
+.collection-swatch .cw-swatch__chip {
+  width: 1.125rem;
+  height: 1.125rem;
+  box-shadow: 0 0 0 1px var(--surface-muted);
+  transition: box-shadow var(--dur-micro) var(--ease-archive);
+}
+
+.collection-swatch:active .cw-swatch__chip {
+  transform: scale(0.9);
+}
+
+/* The selected chip carries a heavier ring, so the choice never rests on colour. */
+.collection-swatch[aria-checked="true"] .cw-swatch__chip {
+  box-shadow:
+    0 0 0 2px var(--collection-field),
+    0 0 0 4px var(--surface-ink);
+}
+
+.collection-swatch-name {
+  display: none;
+  font-size: 0.875rem;
+}
+
+.collection-swatch[aria-checked="true"] .collection-swatch-name {
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+
+.collection-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.75rem;
+}
+
+.collection-frame {
+  margin-inline: -1.25rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  background-color: var(--surface-vitrine);
+}
+
+.collection-frame::-webkit-scrollbar {
+  display: none;
+}
+
+.collection-stage {
+  position: relative;
+  width: 185%;
+}
+
+/* An outgoing image holds until the new one has faded in over it. */
+.collection-layer {
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0ms linear var(--dur-reveal);
+}
+
+.collection-layer.is-active {
+  z-index: 1;
+  opacity: 1;
+  transition: opacity var(--dur-reveal) var(--ease-archive);
+}
+
+.collection-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(1.75rem, 3vw, 3rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.collection-note {
+  line-height: 1.6;
+  max-width: 34ch;
+}
+
+/* Too narrow for the name beside five controls. Each design still states it. */
+@media (max-width: 22.4rem) {
+  .collection-active {
+    display: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  .collection-bar {
+    top: 5rem;
+  }
+
+  .collection-frame {
+    margin-inline: 0;
+    overflow: hidden;
+  }
+
+  .collection-stage {
+    width: 100%;
+  }
+}
+
+@media (min-width: 64rem) {
+  .collection-active {
+    display: none;
+  }
+
+  .collection-bar [role="radiogroup"] {
+    gap: 1.75rem;
+  }
+
+  .collection-swatch-name {
+    display: inline;
+  }
+
+  .collection-item {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: end;
+    gap: 1.5rem;
+  }
+
+  .collection-frame {
+    grid-column: 1 / span 9;
+    grid-row: 1;
+  }
+
+  .collection-caption {
+    grid-column: 10 / span 3;
+    grid-row: 1;
+  }
+
+  .collection-item[data-side="right"] .collection-frame {
+    grid-column: 4 / span 9;
+  }
+
+  .collection-item[data-side="right"] .collection-caption {
+    grid-column: 1 / span 3;
+  }
+}
+
+/* ==========================================================================
+   THE CREED
+   The plate is sized by its own aspect ratio rather than object-fit, so the mark can
+   be placed in plate coordinates. 0.76 is the figure's position across the plate.
+   ========================================================================== */
+
+/* The type hangs off the mark in ems, so the three stay locked at any shape of
+   screen. These are the mark's edges in the stage: 51% +/- 22% of the plate. */
+.creed-stage {
+  --creed-mark-top: 32.5svh;
+  --creed-mark-bottom: 81.8svh;
+  --creed-mark-y: 57.1svh;
+  --creed-mark-h: 49.3svh;
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 112svh;
+  overflow: hidden;
+}
+
+.creed-stage--still {
+  --creed-mark-top: 29svh;
+  --creed-mark-bottom: 73svh;
+  --creed-mark-y: 51svh;
+  --creed-mark-h: 44svh;
+  position: relative;
+  height: 100svh;
+}
+
+.creed-plate {
+  --creed-pan: 39%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  aspect-ratio: 1672 / 941;
+  translate: -76% 0;
+}
+
+.creed-plate--still {
+  transform: translateX(var(--creed-pan));
+}
+
+.creed-mark {
+  position: absolute;
+  left: 37%;
+  top: 51%;
+  height: 44%;
+  aspect-ratio: 694 / 1198;
+  translate: -50% -50%;
+}
+
+/* A wide, low falloff: light on concrete, not a lit tube. */
+.creed-mark-glow {
+  position: absolute;
+  inset: 0;
+  filter: blur(2.6vmin);
+}
+
+.creed-floorlight {
+  position: absolute;
+  left: 37%;
+  top: 90%;
+  width: 34%;
+  height: 16%;
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgba(245, 240, 230, 0.2), transparent);
+}
+
+.creed-foot {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 20svh;
+  background: linear-gradient(to top, var(--obsidian), transparent);
+}
+
+.creed-title {
+  position: absolute;
+  inset: 0;
+  max-width: none;
+  color: var(--ivory);
+}
+
+.creed-line {
+  position: absolute;
+  left: 1.25rem;
+  display: block;
+  white-space: nowrap;
+}
+
+.creed-line--first {
+  top: calc(var(--creed-mark-top) - 1.14em);
+}
+
+.creed-line--second {
+  top: calc(var(--creed-mark-bottom) + 0.14em);
+}
+
+@media (min-width: 48rem) {
+  .creed-line {
+    left: 2.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .creed-plate {
+    --creed-pan: 0%;
+    left: 78%;
+  }
+
+  .creed-line {
+    left: max(3.5rem, calc((100vw - 104rem) / 2 + 3.5rem));
+  }
+}
+
+/* Wider than the plate: fit its width, and hold the mark where the type expects it.
+   28.7vw is 51% of the plate's height at full width. */
+@media (min-width: 64rem) and (min-aspect-ratio: 2 / 1) {
+  .creed-plate {
+    top: calc(var(--creed-mark-y) - 28.7vw);
+    left: 0;
+    width: 100%;
+    height: auto;
+    translate: none;
+  }
+
+  .creed-mark {
+    height: var(--creed-mark-h);
+  }
+}
+
+/* ==========================================================================
+   THE ARCHIVE: DROPS AS DOORS
+   The open door is the widest thing in the row, so hierarchy says what is open before
+   any label does. Every door is the same height, so the row reads as one arcade.
+   ========================================================================== */
+
+.drops {
+  --drop-h: 62svh;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.5rem 0.75rem;
+}
+
+.drop--open {
+  grid-column: 1 / -1;
+}
+
+.drop-door {
+  position: relative;
+  display: block;
+  height: 26svh;
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+  perspective: 900px;
+  background-color: var(--obsidian);
+}
+
+/* The vanishing point sits near the hinge, so the open leaf stays a slim plane
+   rather than a wedge across what it has just revealed. */
+.drop--open .drop-door {
+  height: var(--drop-h);
+  perspective: 1400px;
+  perspective-origin: 15% 50%;
+}
+
+/* The rim of the opening, drawn above the door so it stays when the door has gone. */
+.drop-door::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  pointer-events: none;
+}
+
+/* 88% puts the printed back in the opening: each image holds front and back. */
+.drop-interior {
+  object-position: 88% 50%;
+  transform: scale(1.05);
+  transition: transform var(--dur-image) var(--ease-editorial);
+}
+
+.drop--open a:hover .drop-interior,
+.drop--open a:focus-visible .drop-interior {
+  transform: scale(1);
+}
+
+/* A leaf hangs on its left edge, and swings away from the viewer. */
+.drop-leaf {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--drop-leaf);
+  transform-origin: left center;
+  transition: transform var(--dur-firm) var(--ease-drape);
+}
+
+/* Pressed, a locked door gives on its hinge, then settles back. */
+.drop:not(.drop--open):hover .drop-leaf,
+.drop:not(.drop--open):active .drop-leaf {
+  transform: rotateY(5deg);
+}
+
+/* Its far edge catches the light from the room it has opened onto. */
+.drop-leaf--open {
+  background-image: linear-gradient(to right, var(--drop-leaf), var(--drop-leaf-lit));
+  transition: transform var(--dur-scene) var(--ease-editorial) 300ms;
+}
+
+.drop-leaf--open.is-open {
+  transform: rotateY(86deg);
+}
+
+.drop-seal {
+  opacity: 0.22;
+  transition: opacity var(--dur-firm) var(--ease-drape);
+}
+
+.drop:hover .drop-seal,
+.drop:active .drop-seal {
+  opacity: 0.4;
+}
+
+.drop-name {
+  display: block;
+  margin-top: 1.25rem;
+  font-family: var(--font-meta);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.drop--open .drop-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: var(--type-numeral);
+  line-height: 1;
+}
+
+.drop-status {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+  color: var(--surface-muted);
+}
+
+@media (min-width: 64rem) {
+  .drops {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .drop {
+    grid-column: span 2;
+  }
+
+  .drop--open {
+    grid-column: span 6;
+  }
+
+  .drop-door,
+  .drop--open .drop-door {
+    height: var(--drop-h);
+  }
+
+  .drop-name {
+    font-size: 1rem;
+  }
+}
+
+/* ==========================================================================
+   JOIN: THE LAST DOOR
+   One lit doorway in the dark, its light spilling across the floor into the footer.
+   The light is the same warm ivory as the arches in The World.
+   ========================================================================== */
+
+.join-stage {
+  --join-w: min(calc(100vw - 2.5rem), 36rem);
+  position: relative;
+  width: var(--join-w);
+  margin-inline: auto;
+}
+
+.join-arch {
+  position: relative;
+  display: flex;
+  min-height: min(80svh, 42rem);
+  border-radius: 999px 999px 0 0;
+  padding: clamp(4rem, 8vw, 5.5rem) 1.5rem 1.5rem;
+}
+
+.join-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px 999px 0 0;
+  box-shadow: 0 0 14vmin 2vmin var(--world-light);
+}
+
+/* Widens toward the viewer, as light through a doorway does on a floor. The blur
+   sits on the parent because a filter runs before its own element's clip-path. */
+.join-floor {
+  position: absolute;
+  top: 100%;
+  left: -30%;
+  right: -30%;
+  height: 14rem;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.join-floor::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(23% 0, 77% 0, 100% 100%, 0 100%);
+  background: linear-gradient(to bottom, rgba(245, 240, 230, 0.34), transparent);
+}
+
+/* A keyboard can reach the field before the scroll has opened the door. */
+.join-arch:focus-within {
+  clip-path: none !important;
+}
+
+.join-arch:focus-within .join-content {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.join-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-block: auto;
+  text-align: center;
+}
+
+.join-title {
+  margin-top: 1.75rem;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  color: var(--ink);
+}
+
+.join-form {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 24rem;
+  margin-top: 2.5rem;
+  text-align: left;
+}
+
+.join-label {
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+/* A form field keeps its one rule: the line it is written on. */
+.join-input {
+  height: 3rem;
+  width: 100%;
+  border-bottom: 1px solid var(--ink);
+  background: transparent;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.join-arch .join-submit:active {
+  opacity: 0.8;
+}
+
+/* The section around the doorway is dark, so the shared rule would make this button
+   ivory on the ivory arch. */
+.join-arch .join-submit.cta-solid {
+  width: 100%;
+  margin-top: 1rem;
+  background-color: var(--ink);
+  color: var(--ivory);
+  border-color: var(--ink);
+}
+
+@media (hover: hover) {
+  .join-arch .join-submit.cta-solid:hover,
+  .join-arch .join-submit.cta-solid:focus-visible {
+    background-color: transparent;
+    color: var(--ink);
+  }
+}
+
+.join-status {
+  min-height: 2.75rem;
+  max-width: 24rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .join-arch {
+    clip-path: none !important;
+  }
+
+  .join-content,
+  .join-glow,
+  .join-floor {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   THE MARK: THE SYMBOL, TAKEN APART
+   --mark-u is one part's height. The camera's keyframes assume equal parts and one
+   unit of padding above and below them: see LIST_UNITS in TheMark.tsx.
+   ========================================================================== */
+
+.mark-track {
+  --mark-u: 32svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* On a phone the plate holds the top of the screen while the names pass beneath it. */
+.mark-stage {
+  position: sticky;
+  top: 4rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 46svh;
+  margin-inline: -1.25rem;
+  overflow: hidden;
+  background-color: var(--obsidian);
+}
+
+/* The plate's ground is a little lighter than the page. Contrast takes it down to black,
+   and screen makes black disappear, so neither the plate's edge nor the light's shows. */
+.mark-plate img {
+  filter: contrast(1.2);
+}
+
+.mark-plate {
+  position: relative;
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 620 / 975;
+  mask-image:
+    linear-gradient(to right, transparent, black 8%, black 92%, transparent),
+    linear-gradient(to bottom, transparent, black 4%, black 96%, transparent);
+  mask-composite: intersect;
+}
+
+.mark-stage .mark-plate {
+  will-change: transform;
+  mix-blend-mode: screen;
+}
+
+.mark-plate-static {
+  width: min(100%, 26rem);
+  height: auto;
+}
+
+.mark-lead {
+  display: none;
+}
+
+/* Sits on the plate's axis (48%), at the height of the plate's own symbol. */
+.mark-flat {
+  position: absolute;
+  left: 48%;
+  top: 50.5%;
+  height: 83%;
+  aspect-ratio: 694 / 1198;
+  translate: -50% -50%;
+}
+
+.mark-intro {
+  padding-block: 4rem 2rem;
+}
+
+.mark-list {
+  padding-block: var(--mark-u);
+}
+
+.mark-part {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: var(--mark-u);
+}
+
+.mark-part-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(2rem, 3.4vw, 3.5rem);
+  line-height: 1;
+}
+
+.mark-part-meaning {
+  margin-top: 0.75rem;
+  max-width: 26ch;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.5;
+}
+
+.mark-close {
+  display: flex;
+  align-items: center;
+  min-height: calc(54svh - 4rem);
+}
+
+@media (min-width: 48rem) {
+  .mark-stage {
+    top: 5rem;
+    margin-inline: -2.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .mark-track {
+    --mark-u: 34svh;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
+
+  /* Centred on the screen, under the nav, so a part and its name share one line. */
+  .mark-stage {
+    top: 0;
+    grid-column: 1 / span 7;
+    align-self: start;
+    height: 100svh;
+    margin-inline: 0;
+    container-type: size;
+    mask-image: linear-gradient(to bottom, transparent 5rem, black 8rem, black 92%, transparent);
+  }
+
+  .mark-lead {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 1px;
+    background-color: var(--stone);
+  }
+
+  .mark-close {
+    min-height: 100svh;
+  }
+
+  .mark-copy {
+    grid-column: 8 / span 5;
+    grid-row: 1;
+  }
+
+  .mark-intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100svh;
+    padding-block: 0;
+  }
 }
 
 /* ==========================================================================
