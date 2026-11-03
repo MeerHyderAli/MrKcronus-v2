@@ -1,22 +1,13 @@
-import type { Metadata } from "next";
-import ArchiveIndex from "@/components/archive/ArchiveIndex";
+import { routeMetadata } from "@/app/routeMetadata";
+import ArchiveDrops from "@/components/home/sections/ArchiveDrops";
 
-export const metadata: Metadata = {
-  title: "Archive",
-  description: "MR.KCRONUS. The archive.",
-};
+export const metadata = routeMetadata(
+  "Archive",
+  "/archive",
+  "MR.KCRONUS drops by category. Tees are unlocked. Joggers, shirts and sunglasses are locked.",
+);
 
-/**
- * The archive.
- *
- * The eight approved archive plates and their identity names, presented as an
- * editorial index. Built in Build 9; the previous build was a structural shell
- * with placeholder copy that referred to its own build phases.
- *
- * No level numbering, no invented description, no lore. The plates carry their
- * own slogans and record codes inside the artwork, and none of that is
- * reproduced as text.
- */
+/** The Archive: the house's drops, one per category. See ArchiveDrops. */
 export default function ArchivePage() {
-  return <ArchiveIndex />;
+  return <ArchiveDrops headingLevel="h1" />;
 }

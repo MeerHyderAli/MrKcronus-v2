@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { COLLECTION } from "@/components/collection/collectionData";
 import Reveal from "@/components/motion/Reveal";
-import Flow from "@/components/motion/Flow";
 import Section from "./Section";
 
 /**
@@ -35,24 +34,21 @@ export default function CollectionBoard() {
       labelledBy="collection-board-heading"
       className="pb-20 md:pb-28"
     >
-      <Flow fade={false} rise={16} className="mx-auto max-w-[104rem] px-5 md:px-10 lg:px-14">
-        <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-12">
-          <Reveal pattern="rise" className="lg:col-span-6">
-            <h2 id="collection-board-heading" className="display-editorial">
-              Six designs, one collection
-            </h2>
-          </Reveal>
-
-          <Reveal
-            pattern="slide-left"
-            delay={0.12}
-            className="lg:col-span-4 lg:col-start-9"
+      <div className="mx-auto max-w-[104rem] px-5 md:px-10 lg:px-14">
+        <Reveal
+          pattern="rise"
+          className="grid grid-cols-1 items-end gap-8 lg:grid-cols-12"
+        >
+          <h2
+            id="collection-board-heading"
+            className="display-editorial lg:col-span-6"
           >
-            <p className="meta meta-stone">
-              {COLLECTION.length} designs · presented in order
-            </p>
-          </Reveal>
-        </div>
+            Six designs, one collection
+          </h2>
+          <p className="meta meta-stone lg:col-span-4 lg:col-start-9">
+            {COLLECTION.length} designs · presented in order
+          </p>
+        </Reveal>
 
         {/* The board itself. depth, because an image arriving flat reads as a
             pasted graphic rather than an object being set down. */}
@@ -68,7 +64,7 @@ export default function CollectionBoard() {
             />
           </figure>
         </Reveal>
-      </Flow>
+      </div>
     </Section>
   );
 }

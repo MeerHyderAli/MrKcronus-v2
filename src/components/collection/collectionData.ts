@@ -26,15 +26,15 @@
  * Movement C so the visitor always sees the complete collection rather than our
  * selection of it.
  *
- * THE COLOURWAY PDFs ARE REFERENCES, NOT PRODUCTION ASSETS
+ * THE COLOURWAY PDFs
  * The six files in reference-materials/colourways/ were audited across all
  * thirty pages. Every page is a full-page JPEG: the PDFs contain no extractable
  * text, and each page composes a garment mockup, typography and four detail
- * panels into one marketing sheet. They were used to establish names, labels
- * and colour facts. They are NEVER cropped into production files, exactly as the
- * board is never cropped. No per-colourway production imagery exists, and
- * `variants[].image` is therefore omitted throughout: presenting a board cell as
- * a photograph of a particular colourway would be a fabrication.
+ * panels into one marketing sheet. They established names, labels and colour
+ * facts, and since 2026-11-01, at the client's instruction, they also supply the
+ * per-colour images: scripts/crop-colourways.mjs cuts the front-and-back stage
+ * from each sheet into public/brand/colourways/. See getColourwayImage(). The
+ * board is still never cropped, and a board cell is never presented as a colourway.
  *
  * THE FIVE HOUSE COLOURS
  * Every design is intended in the same five colours. The customer-facing name is
@@ -148,11 +148,6 @@ export type ColourwayVariant = {
    * Absent where the sheet prints none, or where the label is anomalous.
    */
   sourceLabel?: string;
-  /**
-   * Omitted throughout: no per-colourway production asset exists. A board cell
-   * must never be presented as a photograph of one colour.
-   */
-  image?: { src: string; width: number; height: number; alt: string };
 };
 
 /** The single release every design currently belongs to. */
@@ -192,6 +187,8 @@ export type CollectionDesign = {
   entrance: string;
   /** Final canonical artwork description, as supplied. */
   artwork: { front: string; back: string };
+  /** Pixel size of this design's colourway images. The same for all five. */
+  stage: { width: number; height: number };
   /** Exactly five intended colour options. */
   variants: readonly ColourwayVariant[];
 };
@@ -224,6 +221,7 @@ export const COLLECTION: readonly CollectionDesign[] = [
     order: "01",
     name: "THE ARCHITECT",
     slug: "architect",
+    stage: { width: 1052, height: 560 },
     code: "001",
     drop: DROP_1,
     mask: "mask-up",
@@ -256,6 +254,7 @@ export const COLLECTION: readonly CollectionDesign[] = [
     order: "02",
     name: "THE SIGIL",
     slug: "sigil",
+    stage: { width: 1198, height: 600 },
     code: "002",
     drop: DROP_1,
     mask: "mask-horizontal",
@@ -277,6 +276,7 @@ export const COLLECTION: readonly CollectionDesign[] = [
     order: "03",
     name: "THE WITNESS",
     slug: "witness",
+    stage: { width: 1066, height: 586 },
     code: "003",
     drop: DROP_1,
     mask: "mask-left",
@@ -298,6 +298,7 @@ export const COLLECTION: readonly CollectionDesign[] = [
     order: "04",
     name: "THE FRACTURE",
     slug: "fracture",
+    stage: { width: 954, height: 593 },
     code: "004",
     drop: DROP_1,
     mask: "mask-vertical",
@@ -319,6 +320,7 @@ export const COLLECTION: readonly CollectionDesign[] = [
     order: "05",
     name: "THE ENEMY",
     slug: "enemy",
+    stage: { width: 954, height: 593 },
     code: "005",
     drop: DROP_1,
     mask: "fade-through",
@@ -343,6 +345,7 @@ export const COLLECTION: readonly CollectionDesign[] = [
     order: "06",
     name: "THE UNKNOWN",
     slug: "unknown",
+    stage: { width: 1274, height: 562 },
     code: "006",
     drop: DROP_1,
     mask: "iris",
@@ -375,6 +378,12 @@ export function getCollectionDesign(slug: string): CollectionDesign {
 /** The five intended colour options for one design, in house-colour order. */
 export function getDesignColourways(slug: string): readonly ColourwayVariant[] {
   return getCollectionDesign(slug).variants;
+}
+
+/** The front-and-back image of one design in one colour. */
+export function getColourwayImage(slug: string, colour: HouseColour) {
+  const { id } = getColourway(slug, colour);
+  return { src: `/brand/colourways/${id}.jpg`, ...getCollectionDesign(slug).stage };
 }
 
 /**

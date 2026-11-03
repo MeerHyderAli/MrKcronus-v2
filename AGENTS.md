@@ -186,21 +186,25 @@ presents and introduces; it does not contain the full narrative.
 Approved homepage order:
 
 1. Hero
-2. Gateway — the crossing from the Hero into the Collection  dark → ivory
-3. Collection — Manifest / Sequence / Board
-4. Philosophy (Brand Statement)
-5. Archive Teaser
-6. Editorial / Craft
-7. Journal
-8. About
-9. Join the Archive
+2. The World — the colonnade into the plate
+3. Level 01 — the timeline, plate and garment
+4. Gateway — the crossing into the Collection  dark → ivory
+5. The Collection — Drop 1, per colour
+6. The Creed — Philosophy.tsx, the brand statement
+7. The Mark — the symbol, taken apart
+8. The Archive — drops by category, as doors
+9. Join the Archive — the last door
 10. Footer
+
+Editorial / Craft, Journal and About left the homepage on 2026-11-01 with this order.
+`EditorialCraft.tsx`, `StoryFragment.tsx` and `AboutSection.tsx` are preserved and
+unrendered. `/story` and `/about` are reached from the navigation.
 
 ### Division of responsibility
 
 - The homepage's **primary collection experience is the six-design Collection.**
-- The **full mythology and cinematic narrative belong to `/archive`.**
-- `/archive` is the destination for the eight Archive artworks, the eight
+- The **full mythology and cinematic narrative belong to `/story`.**
+- `/story` is the destination for the eight Archive artworks, the eight
   Archive chapter components, `ArchitectSection` and `SigilSection`.
 
 ### The six-design Collection is one unified sequence
@@ -235,24 +239,43 @@ An earlier Build 13 phase replaced it with a static split, on the reading that
 the homepage should simply be calmer. That was wrong, and the client corrected
 it: this is the signature motion of the house.
 
-The Hero carries the full logo scroll animation:
+**REVISED 2026-10-31, AT CLIENT INSTRUCTION — THE PARTICLE THRESHOLD.**
+The first screen is no longer void. The client supplied a particle-logo
+reference and approved this opening:
 
-    0.00-0.10  VOID        the construction field resolves out of nothing
-    0.08-0.22  MR.KCRONUS  the wordmark masks in from the left
-    0.20-0.40  THE SYMBOL  the canonical mark arrives out of the depth
-    0.30-0.72  ASSEMBLY    the field expands and turns to frame it
-    0.40-0.68  LIGHT       the page supplies the light the mark needs
-    0.46-0.66  ACTIVATION  the single gold cast
-    0.62-0.94  RECEDING    the mark returns to depth as a watermark while
-                           the front door resolves over it
+    0.00-0.08  MR.KCRONUS  the wordmark, held in shimmering ivory particles
+    0.08-0.38  THE MORPH   the particles release in a wave, travel through
+                           depth and re-gather as the symbol
+    0.32-0.46  THE SYMBOL  the canonical mark resolves crisp over the particle
+                           symbol; the particles settle away
 
-The Hero is pinned for **one viewport** of scroll, not the retired seven. All
-seven beats are preserved, resolved across a 140svh runway.
+The particles are a transition only. Their positions are sampled from the
+canonical mask PNGs, so no geometry is redrawn, and the mark that lands is the
+untouched canonical asset. This is the one approved WebGL use and the one
+approved particle system on the site: raw WebGL, no 3D library, the GPU moves
+every particle and scroll supplies one progress value. Reduced motion and
+devices without WebGL get the static threshold, never the particles.
+
+The remaining beats, with the ending revised at the same instruction:
+
+    0.20-0.60  ASSEMBLY    the field expands and turns to frame it
+    0.36-0.62  LIGHT       the page supplies the light the mark needs
+    0.44-0.56  ACTIVATION  the single gold cast
+    0.56-0.86  PASSAGE     the mark dissolves back into particles and the
+                           camera passes through it and the field
+    0.78-1.00  THE DOOR    what lies behind the symbol resolves
+
+The release runs from the centre of the wordmark outward. A scroll hint holds
+the first screen and is gone by p 0.05.
+
+The Hero track is 200vh on compact viewports and 280vh from lg, so it is
+pinned for one viewport of scroll on mobile and 1.8 on desktop. That is still
+nowhere near the retired 760svh crawl.
 
 Still retired, and still correct:
 
-- The **exploded archive plate** beat - it belongs to the Archive Teaser.
-- The **THE ARCHIVE IS OPEN** statement - it belongs to the Archive Teaser.
+- The **exploded archive plate** beat.
+- The **THE ARCHIVE IS OPEN** statement. The Archive is now drops, and most are locked.
 - The **760svh** duration - seven beats across 660svh was the archive crawl in
   miniature.
 
@@ -284,6 +307,65 @@ transition into the Collection.
 
 ---
 
+## The World
+
+**ADDED 2026-11-01, AT CLIENT INSTRUCTION.** `src/components/home/sections/TheWorld.tsx`.
+It supersedes `BrandIntroduction.tsx`, which is preserved and unrendered, and keeps
+that section's plate and approved copy.
+
+The figure in the plate wears a print of the stone head on their horizon. The camera
+walks a dark colonnade toward them and withholds the head until the walls clear. A
+desktop frame then holds both heads. A phone's crop cannot, so there the camera pans
+from the print to the head.
+
+Its track is 260vh from lg and 240vh below. See "Pinned tracks" under Level 01.
+
+The depth is a CSS 3D scene with no WebGL. The arches and the floor are real planes
+around the flat plate, and no part of the plate is lifted out of it. The wet floor is
+a mirrored copy of the plate drawn at runtime, and the plate file is untouched.
+
+---
+
+## Level 01
+
+**ADDED 2026-11-01, AT CLIENT INSTRUCTION.** `src/components/home/sections/LevelOne.tsx`.
+This is Phase 2: each entry pairs its story plate with the garment that carries it.
+
+The artwork already tells this story in print: "I saw the timeline break",
+"Timeline 01: Collapsed", "The next timeline awaits". So the section is that timeline:
+one sideways camera and one line through every entry. The line snaps at The Fracture,
+the camera rolls with it and never levels out, and the line runs out at The Unknown.
+
+- **The lines are supplied.** `LINES` in the component reproduces words printed on the
+  plates and garments as real text. Do not add a line the artwork does not print.
+- **The Sigil** shows the canonical symbol where other entries show a plate, as itself.
+- **The Enemy** lights later and goes dark sooner than the others.
+- **The Fracture's plate** is split at runtime by two clip paths. The file is untouched.
+- **The Architect's garment** shows the correct print from its colourway image, at client
+  instruction (2026-11-02). The other five garments here still come from the board.
+
+### Pinned tracks
+
+The Hero, The World and Level 01 are the page's three full pinned tracks. The Mark's
+plate also holds in place while its names scroll past, added at the client's request for
+an exploded-view section (2026-11-02). Do not add another without asking.
+
+---
+
+## The Creed
+
+**REVISED 2026-11-01, AT CLIENT INSTRUCTION.** `src/components/home/sections/Philosophy.tsx`.
+The approved words are acted out. STAND and APART. part until the first line runs flush
+with the second. As LEAVE A MARK. lands, the canonical symbol opens in the dark wall as a
+slit of light and the hall brightens around it. The type leaves first, so the mark is left.
+
+It is not pinned. The stage only slows while it fills the frame.
+
+Its one gold use is the soft cast behind the opened mark. Keep it there and nowhere else
+in this section.
+
+---
+
 ## The Architect
 
 Use the supplied Architect artwork as a cinematic artifact.
@@ -306,7 +388,7 @@ Do not invent extensive lore.
 
 **Placement note:** `ArchitectSection.tsx` remains a preserved, approved
 component. Under Build 13 it is **not rendered on `/`**. It remains available
-for `/archive` and future cinematic work. Do not delete it. Do not silently
+for `/story` and future cinematic work. Do not delete it. Do not silently
 violate this by re-inserting it into the homepage.
 
 ---
@@ -320,7 +402,7 @@ product.
 
 **Placement note:** `SigilSection.tsx` remains a preserved, approved
 component. Under Build 13 it is **not rendered on `/`**. It remains available
-for `/archive` and future cinematic work. Do not delete it. Do not silently
+for `/story` and future cinematic work. Do not delete it. Do not silently
 violate this by re-inserting it into the homepage.
 
 ---
@@ -341,6 +423,11 @@ reference** and is authoritative for the six-design set.
 
 Do not blend competing design variants into one canonical print. Do not
 reconcile them. Where variants exist, the Collection board governs.
+
+**REVISED 2026-11-01, AT CLIENT INSTRUCTION.** On `/` the Collection is now one
+section, `src/components/home/sections/TheCollection.tsx`: all six designs with one
+colour control, so choosing a colour changes all six garments and the room around them.
+It is not pinned. The movements below are preserved and unrendered on `/`.
 
 Approved structure — three movements, one experience:
 
@@ -616,6 +703,13 @@ to **The Fracture**.
 
 ### Known asset discrepancy — The Architect (recorded, deliberately unresolved)
 
+The Collection and Level 01 show the correct 001 print, because they use its PDF image.
+The board is still outstanding.
+
+**The Hero keeps the old visual by client decision (2026-11-02).** Do not swap it for the
+correct print, and do not report it as an open problem. The rule that its alt text names no
+design still holds.
+
 The colourway PDF is authoritative for 001 and has been verified sheet by sheet.
 **Two shipped assets do not match it, and have deliberately not been altered:**
 
@@ -638,7 +732,7 @@ Until it is reissued, the following rule holds and is enforced by
 - The **Hero alt text describes the pixels and names no design**, so the render
   is described accurately while the accessible name stays silent on canon the
   corpus cannot support.
-- The **`/archive` plate alt may still mention a clock.** `The Architect.jpg` is
+- The **`/story` plate alt may still mention a clock.** `The Architect.jpg` is
   Archive plate artwork, not the 001 print, and it genuinely contains an intact
   cracked clock with a hooded figure framed inside it. The rule above governs the
   *garment*, not the plate.
@@ -671,10 +765,14 @@ between them.
 
 ### Assets
 
-The composite colourway PDF pages are **references, not production assets**. They
-are never cropped into production files, exactly as `collection-board.png` is
-never cropped. No per-colourway production imagery exists, so the selector must
-never imply that the board image depicts the selected garment colour.
+**REVISED 2026-11-01, AT CLIENT INSTRUCTION.** The client approved using the colourway
+PDFs for the colour images. `scripts/crop-colourways.mjs` cuts the front-and-back stage
+from each of the thirty sheets into `public/brand/colourways/<slug>--<colour>.jpg`,
+leaving out the sheet typography and detail panels. The sheet's own type is removed from
+the set where it sits beside a sleeve. Garments and prints are never altered.
+
+`collection-board.png` is still never cropped into production files, and a board cell
+must never be presented as a particular colour.
 
 ### Garments are not character plates
 
@@ -705,7 +803,21 @@ Do not turn it into:
 
 ## Archive
 
-`/archive` is the home of the full mythology and cinematic narrative.
+**REVISED 2026-11-01, AT CLIENT INSTRUCTION.** The Archive is the house's **drops, one per
+category**. Tees are unlocked. Joggers, shirts and sunglasses are locked. It renders on
+`/` and at `/archive` from `src/components/home/sections/ArchiveDrops.tsx`, and the
+categories are data at the top of that file.
+
+Each drop is a door. An open one swings open onto what it holds and leads to the Collection.
+A locked one stays shut, sealed with the canonical symbol, and shows nothing behind it:
+
+- No imagery for a locked category, because none exists and none may be faked.
+- No dates, promises or links for a locked category.
+- Opening a drop needs a real image and a real destination. It is still not ecommerce.
+
+The plates and mythology that used to live here are now at `/story`. See Story below. The
+code keeps the "archive" name for that data register (`archiveData.ts`, `ARCHIVE_PLATES`,
+"Archive-only lore"), so that name in the Universe canon means those plates, not the drops.
 
 The following must **NOT** be rendered on `/`:
 
@@ -721,10 +833,9 @@ The following must **NOT** be rendered on `/`:
 - SigilSection
 
 Their files must be **preserved**, not deleted. They remain available for
-`/archive` and future cinematic work. The homepage discovers the Archive; it
-does not reproduce it.
+`/story` and future cinematic work. The homepage does not reproduce them.
 
-Initial structure:
+The plates' level classification, now part of the Story:
 
 LEVEL 00 — CLASSIFIED
 LEVEL 01 — THE ARCHITECT
@@ -735,7 +846,34 @@ Do not fabricate extensive lore.
 
 ---
 
+## The Mark
+
+**ADDED 2026-11-02, AT CLIENT INSTRUCTION.** `src/components/home/sections/TheMark.tsx`. The
+exploded view, directly after The Creed. The flat mark resolves into the metal plate, then the
+camera examines it part by part, and it ends on the whole mark.
+
+The plate is one flat image, so its parts light up and fill the frame but never move apart.
+Names and meanings are printed on `archive-plate-full.png`. Do not add to them. Use the clean
+`archive-plate.png` here, because the full plate prints "The Archive Is Open".
+
+---
+
+## Join the Archive
+
+**REVISED 2026-11-01, AT CLIENT INSTRUCTION.** `src/components/home/JoinArchive.tsx`. One lit
+doorway in the dark, after the row of mostly locked doors. A slit of ivory light opens into
+a full arch on scroll, the form stands inside it, and the light spills across the floor into
+the footer. It is not pinned.
+
+**The form sends nothing.** No email service exists, so submitting announces that plainly.
+Do not add a success state or a "check your inbox" message until a real service exists.
+
+---
+
 ## Story
+
+**REVISED 2026-11-01, AT CLIENT INSTRUCTION.** `/story` now holds the eight plates that
+used to be at `/archive`, in `src/components/archive/StoryIndex.tsx`.
 
 Story is visual-first.
 
@@ -905,3 +1043,13 @@ The website should feel designed, not generated.
 Every animation, transition, frame, and element must have a reason to exist.
 
 Restraint is part of the design.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -2,20 +2,24 @@ import ArchivePlate from "@/components/archive/ArchivePlate";
 import { ARCHIVE_PLATES } from "@/components/archive/archiveData";
 
 /**
- * THE ARCHIVE  (route: /archive)
+ * THE STORY  (route: /story)
  *
- * Eight approved archive plates presented as an editorial INDEX - an
+ * Moved here from /archive at client instruction, when the Archive became the
+ * house's drops. The plates keep the "archive" name in code, because that is the name
+ * of their data register, but visitors meet them as the Story.
+ *
+ * Eight approved plates presented as an editorial INDEX - an
  * exploration surface with contents navigation, anchors and alternation.
  * This is deliberately NOT the homepage narrative shell; the homepage
  * chapters in components/home/chapters use the same data with a different
- * presentation. ArchiveIndex is never rendered on /.
+ * presentation. StoryIndex is never rendered on /.
  *
  * Server component: no client JavaScript on this route at all.
  *
  * THE EIGHT PLATES
  * Seven are 825x1024 portrait JPGs. THE ENEMY is a 1254x1254 square PNG. On
  * this route every plate is given the same 4:5 frame so the set reads as one
- * archive; the square Enemy takes a ten per cent crop per side, which its
+ * story; the square Enemy takes a ten per cent crop per side, which its
  * centred figure survives. That index treatment is unchanged in Build 11B -
  * the homepage Enemy chapter uses a true square frame instead.
  *
@@ -47,38 +51,45 @@ import { ARCHIVE_PLATES } from "@/components/archive/archiveData";
  * rendered result of this route is otherwise unchanged.
  */
 
-/** THE ARCHIVE is the opening identity; the rest are index entries. */
+/** The first plate opens the page; the rest are index entries. */
 const OPENING = ARCHIVE_PLATES[0];
 const ENTRIES = ARCHIVE_PLATES.slice(1);
 
-export default function ArchiveIndex() {
+/* The 8-column plate is about 58-62vw from lg up to the container cap, then
+   capped at 1024px inside the 104rem page container. Below lg it fills content. */
+const PLATE_SIZES =
+  "(max-width: 1023px) 92vw, (max-width: 1663px) 61vw, 1024px";
+
+export default function StoryIndex() {
   return (
     <div className="mx-auto w-full max-w-[104rem] px-5 pb-24 md:px-10 md:pb-32 lg:px-14">
       {/* ---- Opening identity -------------------------------------------- */}
       <section
         id={OPENING.id}
-        aria-labelledby="archive-heading"
-        className="grid grid-cols-1 items-center gap-10 pt-24 md:pt-32 lg:grid-cols-12 lg:gap-8"
+        aria-labelledby="story-heading"
+        className="grid grid-cols-1 items-start gap-10 pt-24 md:pt-32 lg:grid-cols-12 lg:gap-8"
       >
         <div className="lg:col-span-3">
-          <p className="meta meta-stone">Archive</p>
           <h1
-            id="archive-heading"
-            className="display mt-5 text-[clamp(2.25rem,5vw,4rem)] text-ivory"
+            id="story-heading"
+            className="display text-[clamp(2.25rem,5vw,4rem)] text-ivory"
           >
-            Archive
+            Story
           </h1>
           <div aria-hidden="true" className="mt-8 h-px w-16 bg-[--rule]" />
+          <h2 className="display mt-8 text-[clamp(1.35rem,4.5vw,1.5rem)] leading-tight text-ivory">
+            {OPENING.name}
+          </h2>
         </div>
 
         <div className="lg:col-span-8 lg:col-start-5">
-          <ArchivePlate plate={OPENING} sizes="(max-width: 1024px) 92vw, 42vw" />
+          <ArchivePlate plate={OPENING} sizes={PLATE_SIZES} preload />
         </div>
       </section>
 
       {/* ---- Contents ------------------------------------------------------ */}
       <nav
-        aria-label="Archive contents"
+        aria-label="Story contents"
         className="mt-24 border-t border-[--rule] pt-10 md:mt-32"
       >
         <p className="meta meta-stone">Contents</p>
@@ -125,7 +136,7 @@ export default function ArchiveIndex() {
                   : "lg:col-span-8 lg:col-start-5 lg:row-start-1"
               }
             >
-              <ArchivePlate plate={e} sizes="(max-width: 1024px) 92vw, 56vw" />
+              <ArchivePlate plate={e} sizes={PLATE_SIZES} />
             </div>
 
             <div
@@ -135,10 +146,9 @@ export default function ArchiveIndex() {
                   : "lg:col-span-3 lg:col-start-1 lg:row-start-1"
               }
             >
-              <p className="meta meta-stone">Archive</p>
               <h2
                 id={`${e.id}-heading`}
-                className="display mt-4 text-[clamp(1.35rem,4.5vw,1.5rem)] leading-tight text-ivory"
+                className="display text-[clamp(1.35rem,4.5vw,1.5rem)] leading-tight text-ivory"
               >
                 {e.name}
               </h2>

@@ -20,6 +20,7 @@
  * that a deliberately broken model can be checked without editing the real one.
  */
 
+import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import Module from "node:module";
 import path from "node:path";
@@ -400,8 +401,12 @@ check(
     HOUSE.every((c) => enemy.variants.some((v) => v.colour === c))
 );
 check(
-  "no variant carries a fabricated image reference",
-  designs.every((d) => d.variants.every((v) => v.image === undefined))
+  "every design has an image on disk for each of its five colours",
+  designs.every((d) =>
+    d.variants.every((v) =>
+      existsSync(path.join(root, "public", collection.getColourwayImage(d.slug, v.colour).src)),
+    ),
+  )
 );
 
 const archArt = architect.artwork;

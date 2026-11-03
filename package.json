@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "check:universe": "tsc -p scripts/tsconfig.check.json && node scripts/check-universe.mjs"
   },
   "dependencies": {

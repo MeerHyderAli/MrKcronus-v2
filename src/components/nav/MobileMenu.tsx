@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 /**
  * Mobile navigation layer.
@@ -25,18 +26,43 @@ const LINKS = [
 ] as const;
 
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const DESKTOP_MEDIA_QUERY = "(min-width: 768px)";
+const HIT_AREA_CLASS =
+  "relative after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-['']";
 
 export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: string }) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const wasOpenRef = useRef(false);
 
   useEffect(() => {
     if (!open) return;
 
     const panel = panelRef.current;
-    const button = buttonRef.current;
+    const desktopQuery = window.matchMedia(DESKTOP_MEDIA_QUERY);
+    const closeOnDesktop = (event: MediaQueryListEvent) => {
+      if (event.matches) setOpen(false);
+    };
+
+    desktopQuery.addEventListener("change", closeOnDesktop);
+
+    // The mobile toggle is hidden at this breakpoint. If the menu was opened
+    // just before crossing it, close without acquiring a scroll lock.
+    if (desktopQuery.matches) {
+      // The open state may commit just before a resize but its effect run just
+      // after it. Defer this correction and cancel it if the effect is cleaned
+      // up first (including an unmount).
+      const closeMenu = window.setTimeout(() => setOpen(false), 0);
+      return () => {
+        window.clearTimeout(closeMenu);
+        desktopQuery.removeEventListener("change", closeOnDesktop);
+      };
+    }
+
+    wasOpenRef.current = true;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -62,6 +88,14 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
       }
     };
 
+    const backgroundElements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-modal-background]"),
+    );
+    const previousInert = backgroundElements.map((element) => [element, element.inert] as const);
+    previousInert.forEach(([element]) => {
+      element.inert = true;
+    });
+
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", onKeyDown);
@@ -73,9 +107,27 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
+      desktopQuery.removeEventListener("change", closeOnDesktop);
       document.body.style.overflow = previousOverflow;
-      button?.focus();
+      previousInert.forEach(([element, wasInert]) => {
+        if (element.isConnected) element.inert = wasInert;
+      });
     };
+  }, [open]);
+
+  // Focus restoration is a state transition, not effect cleanup: this runs when
+  // the open dialog closes, but not when this component itself unmounts.
+  useEffect(() => {
+    if (open || !wasOpenRef.current) return;
+
+    wasOpenRef.current = false;
+    const button = buttonRef.current;
+    if (
+      !window.matchMedia(DESKTOP_MEDIA_QUERY).matches &&
+      button?.isConnected
+    ) {
+      button.focus();
+    }
   }, [open]);
 
   return (
@@ -132,23 +184,29 @@ export default function MobileMenu({ enterHref = "/archive" }: { enterHref?: str
             className="flex h-svh flex-col justify-between px-5 pb-10 pt-20"
           >
             <ul className="flex flex-col gap-7">
-              {LINKS.map((link, index) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="display block text-[2.25rem] leading-none text-ivory transition-opacity duration-200 ease-archive hover:opacity-70"
-                  >
-                    <span className="sr-only">{`Item ${index + 1}: `}</span>
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              {LINKS.map((link, index) => {
+                const active = pathname === link.href;
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      aria-current={active ? "page" : undefined}
+                      onClick={() => setOpen(false)}
+                      className={`display block ${HIT_AREA_CLASS} text-[2.25rem] leading-none transition-opacity duration-200 ease-archive hover:opacity-70 ${
+                        active ? "text-gold" : "text-ivory"
+                      }`}
+                    >
+                      <span className="sr-only">{`Item ${index + 1}: `}</span>
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
               <li>
                 <Link
                   href={enterHref}
                   onClick={() => setOpen(false)}
-                  className="display block text-[2.25rem] leading-none text-gold transition-opacity duration-200 ease-archive hover:opacity-70"
+                  className={`display block ${HIT_AREA_CLASS} text-[2.25rem] leading-none text-gold transition-opacity duration-200 ease-archive hover:opacity-70`}
                 >
                   <span className="sr-only">Item 4: </span>
                   ENTER

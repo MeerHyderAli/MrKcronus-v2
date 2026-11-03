@@ -1,16 +1,16 @@
 import Link from "next/link";
 import Symbol from "@/components/brand/Symbol";
-import Wordmark from "@/components/brand/Wordmark";
+import Wordmark, { WORDMARK_MAX_WIDTH } from "@/components/brand/Wordmark";
 
 /**
- * Institutional footer.
+ * Institutional footer. The page's last frame: the mark and the name, then the way
+ * back in.
  *
- * Asymmetric editorial layout rather than an ecommerce footer. No
- * newsletter, no email capture, no invented contact details, address,
- * founder information, press or testimonials.
+ * The wordmark is shown as large as its asset allows and no larger, because the
+ * canonical file is downscale-only.
  *
- * SOCIAL is rendered as a plain label with no link, because no verified
- * account URL has been supplied. Inventing one would be fabrication.
+ * Nothing here is invented. There is no year, address, founder information, press or
+ * contact detail, and no social links, because no verified account has been supplied.
  */
 
 const LINKS = [
@@ -21,36 +21,22 @@ const LINKS = [
 
 export default function Footer() {
   return (
-    /* The margin above the rule was md:mt-40 on top of JoinArchive's own
-       lg:py-32, which measured as a 288px band of unbroken #050505 between the
-       last section hairline and the footer border. The rule now sits directly
-       above the footer's own padding, and the single mt-14 is the whole gap. */
-    <footer className="border-t border-[--rule]">
-      <div className="mx-auto max-w-[104rem] px-5 py-14 md:px-10 md:py-20 lg:px-14">
-        {/* items-center so the short logo column is optically centred against
-            the taller link column instead of hanging at the top of its cell. */}
-        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-8">
-          <div className="md:col-span-5">
-            <div className="flex items-center gap-4">
-              <Symbol height={30} />
-              <Wordmark width={140} />
-            </div>
+    <footer>
+      <div className="mx-auto max-w-[104rem] px-5 pb-10 pt-16 md:px-10 md:pt-24 lg:px-14">
+        <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-12">
+          <div className="flex w-full max-w-[44rem] items-end gap-5 md:gap-8">
+            <Symbol height="clamp(3.5rem, 8vw, 6.5rem)" />
+            <Wordmark width={`min(100%, ${WORDMARK_MAX_WIDTH}px)`} className="min-w-0 flex-1" />
           </div>
 
-          <nav aria-label="Footer" className="md:col-span-3">
-            {/* The footer sits on Obsidian, where meta-stone's --surface-muted
-                resolves to Stone at 3.17:1 — below AA for 11px text, and not
-                raisable against any dark ground (even pure black caps Stone at
-                3.17:1). text-ivory/55 is the same treatment Nav.tsx already
-                uses: an existing brand token with an alpha modifier, 5.81:1,
-                and still dimmer than the gold active state. */}
-            <h2 className="meta text-ivory/55 mb-5">MR.KCRONUS</h2>
-            <ul className="flex flex-col gap-3">
+          <nav aria-label="Footer">
+            <h2 className="sr-only">MR.KCRONUS</h2>
+            <ul className="flex flex-wrap gap-x-8">
               {LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="meta text-ivory/55 transition-colors duration-200 ease-archive hover:text-ivory"
+                    className="meta inline-flex min-h-11 items-center text-ivory/55 transition-colors duration-200 ease-archive hover:text-ivory"
                   >
                     {link.label}
                   </Link>
@@ -58,21 +44,9 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
-
-          {/* SOCIAL WAS CUT, NOT REWRITTEN.
-
-              This previously read "NO VERIFIED ACCOUNT". Not inventing a social
-              URL was correct; printing the absence of one was not - it is
-              production language on a finished page, and it left the closing
-              frame with a third of its width carrying nothing but a refusal.
-              Nothing has been supplied to replace it with, and inventing a
-              handle would be fabrication. The column is removed rather than
-              filled, and the link column is allowed to breathe. */}
         </div>
 
-        <hr className="rule mt-14 md:mt-20" />
-
-        <p className="meta text-ivory/55 mt-6">© MR.KCRONUS</p>
+        <p className="meta mt-10 text-ivory/55 md:mt-14">© MR.KCRONUS</p>
       </div>
     </footer>
   );
