@@ -94,7 +94,7 @@ import ParticleMorph from "@/components/home/ParticleMorph";
 // Mobile keeps its 300px mark; desktop gets a larger one.
 const MARK_CLASS = "h-[300px] max-w-[30vw] md:max-w-none lg:h-[min(52svh,460px)]";
 
-export default function Hero() {
+export default function ThresholdHero() {
   const trackRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({

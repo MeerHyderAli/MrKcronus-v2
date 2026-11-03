@@ -5,8 +5,8 @@ import LevelOne from "@/components/home/sections/LevelOne";
 import TheCollection from "@/components/home/sections/TheCollection";
 import TheMark from "@/components/home/sections/TheMark";
 import ArchiveDrops from "@/components/home/sections/ArchiveDrops";
+import Chronicle from "@/components/home/sections/Chronicle";
 import Philosophy from "@/components/home/sections/Philosophy";
-import TheWorld from "@/components/home/sections/TheWorld";
 
 export const metadata = {
   description:
@@ -33,8 +33,8 @@ export const metadata = {
  *
  * RENDERED ORDER
  *
- *   1  Hero                 threshold                 (rebuilt in Build 13 P3)
- *   2  TheWorld             the colonnade             dark   one pinned track
+ *   1  Hero                 the eclipse               dark   not pinned
+ *   2  Chronicle            six perspectives          dark   not pinned
  *   3  LevelOne             THE TIMELINE              dark   one pinned track
  *   -  Gateway              THE CROSSING   dark->ivory (added in Phase 1)
  *   4  TheCollection        Drop 1, per colour        follows the chosen colour
@@ -94,8 +94,9 @@ export const metadata = {
  * the approved section order, which ends Archive, Join, footer. Their files are
  * preserved and unrendered. /story and /about are reached from the navigation.
  *
- * BrandIntroduction is superseded by TheWorld, which keeps its plate and copy.
- * Its file is preserved and unrendered.
+ * BrandIntroduction is superseded by TheWorld, which is superseded by Chronicle. The
+ * particle Threshold is superseded by Hero and kept as ThresholdHero. All three files
+ * are preserved and unrendered (2026-11-03, at client instruction).
  *
  * CollectionManifest was unrendered from this page separately, at the client's
  * instruction. CollectionColourways.tsx is unreferenced for the same reason: it
@@ -127,8 +128,8 @@ export const metadata = {
  * artifact-enemy.png is a portrait crop of the archive plate TheEnemy.png — the
  * same hooded, beaked-mask figure — and is character artwork, not a garment
  * render. The corpus holds exactly ONE genuine standalone garment render,
- * artifact-architect.png, which the Hero now uses as a hero / brand visual
- * rather than as a canonical collection product specification.
+ * artifact-architect.png. The Threshold used it as a hero / brand visual; since
+ * 2026-11-03 nothing on this page renders it.
  *
  * NOTHING HERE ADVERTISES COMMERCE
  * There are no prices, sizes, colourways, stock states, buy buttons or product
@@ -139,11 +140,11 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
-      {/* ---- 1. The threshold ------------------------------------------- */}
+      {/* ---- 1. The eclipse --------------------------------------------- */}
       <Hero />
 
-      {/* ---- 2. The World: the colonnade into the plate ------------------ */}
-      <TheWorld />
+      {/* ---- 2. The Chronicle: six perspectives, one truth --------------- */}
+      <Chronicle />
 
       {/* ---- 3. Level 01: the timeline, plate and garment ---------------- */}
       <LevelOne />

@@ -9,7 +9,7 @@
  */
 export default function LightPool({
   className,
-  color = "245, 245, 240",
+  color = "239, 231, 220",
   peak = 0.34,
 }: {
   className?: string;

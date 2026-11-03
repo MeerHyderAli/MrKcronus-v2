@@ -26,6 +26,12 @@ const inter = localFont({
 const SITE_URL = "https://mrkcronus.com";
 const DESCRIPTION =
   "MR.KCRONUS. A world built through symbols, architecture and form.";
+const SHARE_IMAGE = {
+  url: "/brand/hero/hero-wide.jpg",
+  width: 1920,
+  height: 819,
+  alt: "A cloaked figure before a split monolith, a vast dark planet and ruined towers.",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -54,11 +60,13 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: SITE_URL,
     locale: "en",
+    images: [SHARE_IMAGE],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "MR.KCRONUS",
     description: DESCRIPTION,
+    images: [SHARE_IMAGE],
   },
   robots: {
     index: true,
@@ -101,6 +109,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
+      data-scroll-behavior="smooth"
       lang="en"
       suppressHydrationWarning
       className={`${bodoni.variable} ${inter.variable} h-full antialiased`}

@@ -7,21 +7,24 @@
 
 :root {
   /* ---- Palette ------------------------------------------------------- */
-  /* Obsidian is unconditional. This brand site never inverts. */
+  /* Obsidian is unconditional. This brand site never inverts.
+     Warmed 2026-11-03 at client instruction, measured from their Hero and Chronicle
+     images: warm ivory, sepia stone, and an ember gold from the eclipse's ring. The
+     Collection keeps the earlier neutrals; see .collection. */
   --obsidian: #050505;
-  --ivory: #f5f5f0;
-  --stone: #5f5f5a;
-  --gold: #a89b7a;
+  --ivory: #efe7dc;
+  --stone: #7b7067;
+  --gold: #d4a373;
 
   /* Tonal derivations of the four tokens above. Not new colours. */
-  --surface: #0b0b0b;
-  --rule: rgba(245, 245, 240, 0.14);
+  --surface: #0d0c0b;
+  --rule: rgba(239, 231, 220, 0.14);
   /* Corrected in Build 8. Previously rgba(95, 95, 200, 0.28): the blue
      channel was 200, which is not in the Stone family and is not a
      permitted colour in this palette. Stone #5F5F5A is rgb(95, 95, 90).
      Alpha is unchanged. The token is currently unused, so no computed style
      could shift; see docs/VISUAL_SYSTEM.md section 16. */
-  --rule-stone: rgba(95, 95, 90, 0.28);
+  --rule-stone: rgba(123, 112, 103, 0.28);
 
   /* ---- Editorial surfaces (Build 12B) ---------------------------------
      The site now alternates between light architectural spreads and dark
@@ -35,7 +38,7 @@
   --surface-stone: #e6e1d7;
   --surface-stone-deep: #d4cec1;
   --surface-dark: var(--obsidian);
-  --surface-charcoal: #111111;
+  --surface-charcoal: #14120f;
 
   /* ---- Vitrine tile (Build 13) ------------------------------------------
      Every product and Archive asset in the approved corpus carries an opaque
@@ -50,7 +53,7 @@
      than a brand colour or an art-direction choice.
 
      Ivory on #0b0b0b measures 18.6:1. */
-  --surface-vitrine: #0b0b0b;
+  --surface-vitrine: #0d0c0b;
 
   /* ---- The World: the colonnade -----------------------------------------
      Warm near-blacks stepped toward the light at the end of the arches, so
@@ -60,12 +63,12 @@
   --world-wall-far: #0e0d0b;
   --world-reveal: #191714;
   --world-floor: rgba(14, 13, 11, 0.62);
-  --world-light: rgba(245, 240, 230, 0.2);
+  --world-light: rgba(232, 178, 128, 0.22);
   --world-haze-mid: rgba(245, 240, 230, 0.04);
   --world-haze-far: rgba(245, 240, 230, 0.075);
 
   /* ---- Level 01: the line the timeline is drawn with -------------------- */
-  --level-axis: rgba(245, 245, 240, 0.34);
+  --level-axis: rgba(239, 231, 220, 0.5);
 
   /* ---- The Archive: a shut door, a step above the wall behind it -------- */
   --drop-leaf: #161412;
@@ -102,7 +105,7 @@
   --surface-bg: var(--surface-dark);
   --surface-ink: var(--ivory);
   --surface-ink-soft: var(--stone);
-  --surface-muted: rgba(245, 245, 240, 0.55);
+  --surface-muted: rgba(239, 231, 220, 0.58);
   --surface-rule: var(--rule);
   --surface-focus: var(--gold);
 
@@ -225,7 +228,7 @@
   color: var(--ivory);
   --surface-ink: var(--ivory);
   --surface-ink-soft: var(--stone);
-  --surface-muted: rgba(245, 245, 240, 0.55);
+  --surface-muted: rgba(239, 231, 220, 0.58);
   --surface-rule: var(--rule);
   --surface-focus: var(--gold);
   color-scheme: dark;
@@ -236,7 +239,7 @@
   color: var(--ivory);
   --surface-ink: var(--ivory);
   --surface-ink-soft: var(--stone);
-  --surface-muted: rgba(245, 245, 240, 0.55);
+  --surface-muted: rgba(239, 231, 220, 0.58);
   --surface-rule: var(--rule);
   --surface-focus: var(--gold);
   color-scheme: dark;
@@ -287,6 +290,12 @@
 }
 
 /* ---- Base ------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
 
 html {
   background-color: var(--obsidian);
@@ -487,8 +496,10 @@ body {
   --world-ox: 50%;
   --world-oy: 40%;
   --world-arch-base: 64vw;
-  --world-arch-rise: 22svh;
-  --world-arch-drop: 57svh;
+  --world-arch-rise: 22lvh;
+  --world-arch-drop: 57lvh;
+  /* The furthest the frame's edge gets from the vanishing point. */
+  --world-reach: max(50vw, 40lvh);
   perspective: 100vmin;
   perspective-origin: var(--world-ox) var(--world-oy);
 }
@@ -496,10 +507,10 @@ body {
 /* Below lg the plate is far wider than the frame, so its box runs from past the
    frame's left edge to the plate's right edge. --world-plate-w is the width from
    the figure, held at centre, to that right edge, and --world-pan is the travel
-   that brings the stone head into frame. 178svh is the plate's width when it is
+   that brings the stone head into frame. 178lvh is the plate's width when it is
    fitted to the height; 0.335 is the share of it right of the figure. */
 .world-plate-box {
-  --world-plate-w: max(100vw, calc(178svh * 0.335 + 50vw));
+  --world-plate-w: max(100vw, calc(178lvh * 0.335 + 50vw));
   --world-pan: calc(100vw - var(--world-plate-w));
   position: absolute;
   top: 0;
@@ -515,11 +526,18 @@ body {
 /* Softens the plate's rectangle while it is still far away, so it never shows
    as a hard-edged picture hanging in the dark. */
 .world-plate-edge {
-  box-shadow: inset 0 0 12vmin 7vmin var(--obsidian);
+  background:
+    linear-gradient(to bottom, var(--obsidian), transparent 16vmin),
+    linear-gradient(to top, var(--obsidian), transparent 16vmin),
+    linear-gradient(to right, var(--obsidian), transparent 16vmin),
+    linear-gradient(to left, var(--obsidian), transparent 16vmin);
 }
 
 .world-arch {
   --world-arch-w: calc(var(--world-arch-base) * var(--world-arch-widen, 1));
+  /* Only as far as the frame's edge at this depth. A wall much larger than that
+     is a layer a phone's GPU cannot hold, and it drops pieces of the scene. */
+  --world-arch-spread: calc(var(--world-reach) * (1 + var(--world-arch-depth, 0) / 100));
   position: absolute;
   left: calc(var(--world-ox) - var(--world-arch-w) / 2);
   top: calc(var(--world-oy) - var(--world-arch-rise));
@@ -528,9 +546,12 @@ body {
   border-radius: calc(var(--world-arch-w) / 2) calc(var(--world-arch-w) / 2) 0 0;
   box-shadow:
     0 0 18vmin 4vmin var(--world-haze, transparent),
-    0 0 0 300vmax var(--world-wall);
+    0 0 0 var(--world-arch-spread) var(--world-wall);
   /* The wall stops at the floor, or its footing shows through the wet stone. */
-  clip-path: inset(-300vmax -300vmax 0 -300vmax);
+  clip-path: inset(
+    calc(var(--world-arch-spread) * -1) calc(var(--world-arch-spread) * -1) 0
+      calc(var(--world-arch-spread) * -1)
+  );
 }
 
 /* The back face of the wall. Perspective shows it as the inner face of the arch,
@@ -538,7 +559,7 @@ body {
 .world-arch--reveal {
   box-shadow:
     0 0 4vmin 1vmin var(--world-light),
-    0 0 0 300vmax var(--world-reveal);
+    0 0 0 var(--world-arch-spread) var(--world-reveal);
 }
 
 /* Wet stone: part see-through, over the mirrored plate at its far end. */
@@ -599,7 +620,8 @@ body {
   .world-stage {
     --world-ox: 67%;
     --world-arch-base: 22vw;
-    --world-arch-rise: 31svh;
+    --world-arch-rise: 31lvh;
+    --world-reach: max(67vw, 40lvh);
   }
 
   .world-plate-box {
@@ -654,7 +676,7 @@ body {
   --level-e: 100vw;
   --level-axis-y: 90svh;
   --level-plate-h: 46svh;
-  --level-garment-w: min(40vw, 42svh);
+  --level-garment-h: min(46vw, 42svh);
   perspective: 100vmin;
   perspective-origin: 50% 46%;
 }
@@ -709,29 +731,18 @@ body {
 .level-plane--garment {
   right: 4vw;
   top: 37svh;
-  width: var(--level-garment-w);
   transform: translateZ(14vmin) scale(0.86);
 }
 
-/* A viewport onto one board cell; the mask loses the cell's printed label and
-   the board's rules, which the page already says in real text. */
+/* Exactly the back half of the colourway image, shown as the photograph it is. The
+   frame's ratio comes from the image, so no sheet shows a piece of its front view. */
 .level-garment {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 1;
-  max-width: 512px;
+  height: var(--level-garment-h, auto);
   mask-image:
-    radial-gradient(ellipse 52% 54% at 50% 54%, black 82%, transparent 100%),
-    linear-gradient(
-      to bottom,
-      transparent var(--garment-top, 6%),
-      black calc(var(--garment-top, 6%) + 1.5%)
-    ),
-    linear-gradient(
-      to right,
-      black var(--garment-right, 100%),
-      transparent calc(var(--garment-right, 100%) + 2%)
-    );
+    linear-gradient(to right, transparent, black 5%, black 95%, transparent),
+    linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
   mask-composite: intersect;
 }
 
@@ -819,7 +830,7 @@ body {
   .level-stage {
     --level-e: 74vw;
     --level-plate-h: 74svh;
-    --level-garment-w: 42svh;
+    --level-garment-h: 40svh;
   }
 
   .level-intro {
@@ -885,6 +896,11 @@ body {
 
 .collection {
   --collection-field: var(--surface-ivory);
+  /* The one room that keeps the earlier neutrals, at client instruction (2026-11-03). */
+  --ivory: #f5f5f0;
+  --stone: #5f5f5a;
+  --gold: #a89b7a;
+  --rule: rgba(245, 245, 240, 0.14);
   background-color: var(--collection-field);
   color: var(--surface-ink);
   transition:
@@ -1149,7 +1165,7 @@ body {
   width: 34%;
   height: 16%;
   translate: -50% -50%;
-  background: radial-gradient(closest-side, rgba(245, 240, 230, 0.2), transparent);
+  background: radial-gradient(closest-side, rgba(232, 178, 128, 0.22), transparent);
 }
 
 .creed-foot {
@@ -1401,7 +1417,7 @@ body {
   position: absolute;
   inset: 0;
   clip-path: polygon(23% 0, 77% 0, 100% 100%, 0 100%);
-  background: linear-gradient(to bottom, rgba(245, 240, 230, 0.34), transparent);
+  background: linear-gradient(to bottom, rgba(232, 190, 150, 0.34), transparent);
 }
 
 /* A keyboard can reach the field before the scroll has opened the door. */
@@ -1944,7 +1960,7 @@ body {
   color: var(--ivory);
   --surface-ink: var(--ivory);
   --surface-ink-soft: var(--stone);
-  --surface-muted: rgba(245, 245, 240, 0.55);
+  --surface-muted: rgba(239, 231, 220, 0.58);
   --surface-rule: var(--rule);
   --surface-focus: var(--gold);
   color-scheme: dark;
@@ -2153,5 +2169,547 @@ body {
   .nav-bar {
     padding-left: max(env(safe-area-inset-left, 0px), 0.75rem);
     padding-right: max(env(safe-area-inset-right, 0px), 0.75rem);
+  }
+}
+/* ---- The rest of the house, graded to the Hero's light (2026-11-03) ---------
+   The plates are cool grey and their files stay untouched, so the warmth is applied
+   here. The Join arch burns the colour of the Hero's slit of light. */
+
+.creed-plate > img,
+.mark-plate img {
+  filter: sepia(0.5) saturate(1.25);
+}
+
+.join-arch {
+  --surface-ivory: #f1e5d6;
+}
+
+/* ==========================================================================
+   THE HERO: THE ECLIPSE
+   Designed for a phone first. Below lg the picture fills the top 80% of the
+   screen and falls away into the dark, where the action sits. From lg the screen
+   is wider than tall, so the whole picture shows and the page below peeks in.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  /* The nav is solid and the page starts below it, so the first screen is what is left. */
+  height: calc(100svh - 4rem);
+  min-height: 34rem;
+  overflow: clip;
+  background-color: var(--obsidian);
+}
+
+.hero-art {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 80%;
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  background-color: var(--obsidian);
+  opacity: 0;
+  animation: hero-veil-lift 2.6s var(--ease-drape) 0.15s both;
+}
+
+.hero-light {
+  mix-blend-mode: screen;
+}
+
+.hero-light--entrance {
+  opacity: 0;
+  animation: hero-ignite 3.1s var(--ease-drape) both;
+}
+
+.hero-light-walk {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(5, 5, 5, 0.6), transparent 13%),
+    linear-gradient(to top, var(--obsidian) 1%, transparent 26%);
+}
+
+.hero-words {
+  position: absolute;
+  z-index: 1;
+  inset: 25% 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.9rem, 2.4svh, 1.5rem);
+  padding-inline: 1.25rem;
+  text-align: center;
+}
+
+/* The door burns brightest behind the words, so the words take it down a little. */
+.hero-words::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -22% -6%;
+  background: radial-gradient(closest-side, rgba(5, 5, 5, 0.72), transparent);
+}
+
+.hero-mark {
+  width: min(76vw, 40svh);
+  animation: hero-mark-in 1.7s var(--ease-archive) 0.55s both;
+}
+
+.hero-line {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(0.78rem, 3.3vw, 1rem);
+  line-height: 2;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  text-shadow: 0 0 1em rgba(5, 5, 5, 0.9);
+}
+
+.hero-line span {
+  display: block;
+  animation: hero-rise 1.3s var(--ease-archive) 1.05s both;
+}
+
+.hero-line span + span {
+  animation-delay: 1.25s;
+}
+
+.hero-action {
+  position: absolute;
+  z-index: 1;
+  inset: auto 0 max(1rem, 2.6svh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.75rem, 2.2svh, 1.25rem);
+  padding-inline: 1.25rem;
+}
+
+.hero-cta {
+  width: min(100%, 22rem);
+  animation: hero-rise 1.3s var(--ease-archive) 1.55s both;
+}
+
+.hero-scroll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  animation: hero-fade 1.4s var(--ease-drape) 2.1s both;
+}
+
+.hero-scroll .scroll-hint-line {
+  height: clamp(1.5rem, 4.5svh, 2.75rem);
+}
+
+.hero-exit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-color: var(--obsidian);
+  opacity: 0;
+}
+
+@keyframes hero-veil-lift {
+  from {
+    opacity: 0.96;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-ignite {
+  0% {
+    opacity: 0;
+  }
+  30%,
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-mark-in {
+  from {
+    opacity: 0;
+    clip-path: inset(0 50%);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 -1%);
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 48rem) {
+  .hero {
+    height: calc(100svh - 5rem);
+  }
+}
+
+@media (min-width: 64rem) {
+  .hero {
+    height: min(48vw, 100svh - 5rem);
+    min-height: 34rem;
+  }
+
+  .hero-art {
+    height: 100%;
+  }
+
+  .hero-img {
+    object-position: 50% 50%;
+  }
+
+  .hero-shade {
+    background:
+      linear-gradient(to bottom, rgba(5, 5, 5, 0.55), transparent 16%),
+      linear-gradient(to top, var(--obsidian), transparent 16%);
+  }
+
+  .hero-words {
+    inset: 29% 0 auto;
+    gap: clamp(0.9rem, 1.5vw, 1.5rem);
+  }
+
+  .hero-mark {
+    width: clamp(22rem, 34vw, 40rem);
+  }
+
+  .hero-line {
+    font-size: clamp(0.8rem, 1.02vw, 1.15rem);
+  }
+
+  .hero-action {
+    inset: auto 0 clamp(1.25rem, 2.8vw, 3rem);
+  }
+
+  .hero-cta {
+    width: auto;
+    min-width: 19rem;
+  }
+
+  .hero-scroll {
+    display: none;
+  }
+}
+
+/* A phone on its side has no height to spare: the picture fills the frame, the words
+   tighten, and the action stays on the first screen. */
+@media (orientation: landscape) and (max-height: 30rem) {
+  .hero {
+    min-height: 17rem;
+  }
+
+  .hero-art {
+    height: 100%;
+  }
+
+  .hero-img {
+    object-position: 50% 62%;
+  }
+
+  .hero-words {
+    inset: 7% 0 auto;
+    gap: 0.5rem;
+  }
+
+  .hero-mark {
+    width: min(44vw, 20rem);
+  }
+
+  .hero-line {
+    font-size: 0.6875rem;
+    line-height: 1.6;
+  }
+
+  .hero-action {
+    inset: auto 0 0.75rem;
+  }
+
+  .hero-cta {
+    width: auto;
+    min-height: 2.75rem;
+    min-width: 15rem;
+  }
+
+  .hero-scroll {
+    display: none;
+  }
+}
+
+/* ---- The Hero's action, and the plainer link the Chronicle uses ---------- */
+
+.cta-outline,
+.cta-line {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-meta);
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--surface-ink);
+}
+
+.cta-outline {
+  min-height: 3.25rem;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0 1.75rem;
+  border: 1px solid var(--gold);
+  background-color: rgba(5, 5, 5, 0.42);
+  transition:
+    background-color var(--dur-firm) var(--ease-drape),
+    border-color var(--dur-firm) var(--ease-drape);
+}
+
+.cta-line {
+  min-height: 44px;
+  gap: 1rem;
+  border-bottom: 1px solid var(--gold);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  white-space: nowrap;
+}
+
+.cta-arrow {
+  width: 2.125rem;
+  height: 0.625rem;
+  flex-shrink: 0;
+  color: var(--gold);
+  transition: transform var(--dur-firm) var(--ease-drape);
+}
+
+@media (hover: hover) {
+  .cta-outline:hover {
+    background-color: rgba(212, 163, 115, 0.14);
+    border-color: var(--ivory);
+  }
+
+  .cta-outline:hover .cta-arrow,
+  .cta-line:hover .cta-arrow {
+    transform: translateX(0.375rem);
+  }
+}
+
+/* ==========================================================================
+   THE CHRONICLE
+   Below lg the words stand above the head, and its faded top slides under them.
+   From lg the picture fills the section and the words sit in its dark left side.
+   ========================================================================== */
+
+.chronicle {
+  overflow: clip;
+  background-color: var(--obsidian);
+  padding-top: clamp(4.5rem, 11svh, 7rem);
+}
+
+.chronicle-words {
+  position: relative;
+  z-index: 1;
+  padding-inline: 1.25rem;
+}
+
+.chronicle-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.chronicle-eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background-color: var(--gold);
+}
+
+.chronicle-title {
+  margin-top: 1.5rem;
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(1.75rem, 8.2vw, 2.75rem);
+  line-height: 1.14;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chronicle-title span {
+  display: block;
+}
+
+.chronicle-body {
+  margin-top: 1.25rem;
+  max-width: 30ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  color: var(--surface-ink);
+}
+
+.chronicle .cta-line {
+  margin-top: 1.25rem;
+}
+
+.chronicle-art {
+  position: relative;
+  width: 110vw;
+  margin: 0.75rem 0 0 -4.6vw;
+  aspect-ratio: 1000 / 819;
+  /* The head scales inside this frame, so its edges stay under the fades. */
+  overflow: clip;
+}
+
+.chronicle-head {
+  position: absolute;
+  inset: 0;
+  transform-origin: 54% 42%;
+  will-change: transform;
+}
+
+.chronicle-img {
+  object-fit: cover;
+  object-position: 65% 50%;
+}
+
+.chronicle-cracks {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+}
+
+.chronicle-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, var(--obsidian) 2%, transparent 22%),
+    linear-gradient(to top, var(--obsidian) 1%, transparent 20%);
+}
+
+@media (min-width: 64rem) {
+  .chronicle {
+    display: flex;
+    align-items: center;
+    min-height: max(42.7vw, 24rem);
+    padding-top: 0;
+  }
+
+  /* Both scale with the width, so the words always stop short of the head's hair. */
+  .chronicle-words {
+    width: 100%;
+    padding-inline: 5vw;
+  }
+
+  .chronicle-title {
+    font-size: clamp(1.375rem, 2.15vw, 3.25rem);
+  }
+
+  .chronicle-title span {
+    display: inline;
+  }
+
+  .chronicle-title .chronicle-title-end {
+    display: block;
+  }
+
+  .chronicle-body {
+    max-width: 32ch;
+    font-size: clamp(0.95rem, 1.05vw, 1.15rem);
+  }
+
+  .chronicle-art {
+    position: absolute;
+    inset: 0 auto 0 4vw;
+    width: 100%;
+    margin: 0;
+    aspect-ratio: auto;
+  }
+
+  .chronicle-img {
+    object-position: 50% 50%;
+  }
+
+  .chronicle-shade {
+    background:
+      linear-gradient(to right, var(--obsidian) 0%, transparent 24%),
+      linear-gradient(to bottom, var(--obsidian), transparent 10%),
+      linear-gradient(to top, var(--obsidian), transparent 14%);
+  }
+}
+
+/* Reduced motion: the finished frames, standing still. CSS, so it holds before
+   hydration and overrides whatever the scroll timeline writes. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-art,
+  .hero-words,
+  .hero-action,
+  .chronicle-head {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .hero-exit,
+  .hero-light-walk {
+    opacity: 0 !important;
+  }
+
+  .hero-veil,
+  .hero-light--entrance,
+  .hero-mark,
+  .hero-line span,
+  .hero-cta,
+  .hero-scroll {
+    animation: none;
+  }
+
+  .chronicle-cracks {
+    clip-path: none !important;
   }
 }

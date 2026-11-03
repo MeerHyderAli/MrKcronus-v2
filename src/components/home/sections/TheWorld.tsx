@@ -29,6 +29,11 @@ import Section from "./Section";
  * the floor are separate planes in one CSS 3D scene. A single value moves the
  * camera, so scrolling writes one transform per frame. No WebGL.
  *
+ * THE STAGE IS lvh, THE WORDS ARE svh
+ * A phone's address bar hides on scroll. The scene fills the larger height so the
+ * plate never stops short of the screen's edge, and the words stay inside the
+ * smaller one so the bar can never cover them.
+ *
  * ALL DEPTHS ARE IN vmin
  * The arch width and the perspective origin are viewport percentages, so the
  * same camera path frames the same shot at every size. PERSPECTIVE mirrors
@@ -98,6 +103,7 @@ function ArchPlane({
         visibility,
         opacity,
         ...({
+          "--world-arch-depth": depth,
           "--world-arch-widen": widen,
           "--world-wall": wall,
           "--world-haze": haze,
@@ -206,7 +212,7 @@ export default function TheWorld() {
         className="motion-preference-full"
       >
         <div ref={track} className="relative h-[240vh] lg:h-[260vh]">
-          <div className="world-stage sticky top-0 h-svh overflow-hidden bg-obsidian">
+          <div className="world-stage sticky top-0 h-lvh overflow-hidden bg-obsidian">
             <motion.div
               className="absolute inset-0"
               style={{ transform: cameraTransform, transformStyle: "preserve-3d" }}
@@ -302,7 +308,7 @@ export default function TheWorld() {
               style={{ opacity: scrimOpacity }}
             />
 
-            <div className="relative z-10 mx-auto flex h-full w-full max-w-[104rem] items-end px-5 pb-12 md:px-10 lg:items-center lg:px-14 lg:pb-0">
+            <div className="relative z-10 mx-auto flex h-svh w-full max-w-[104rem] items-end px-5 pb-12 md:px-10 lg:items-center lg:px-14 lg:pb-0">
               <div className="max-w-[48rem]">
                 <h2 id="the-world-heading" className="title-statement">
                   <HeadlineLine
