@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1430">
+  <!-- Stand-in, not a design: a pair of sunglasses on wet stone, backlit. Replace with a real image of the same name. -->
+  <defs>
+    <radialGradient id="haze" cx="50%" cy="56%" r="62%">
+      <stop offset="0" stop-color="#9c7d5c"/>
+      <stop offset="0.5" stop-color="#4f3f30"/>
+      <stop offset="1" stop-color="#14100c"/>
+    </radialGradient>
+    <linearGradient id="floor" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#14100c" stop-opacity="0"/>
+      <stop offset="1" stop-color="#050403"/>
+    </linearGradient>
+    <g id="pair">
+      <!-- Temples, folded back behind the lenses -->
+      <path fill="none" stroke="#050403" stroke-width="15" stroke-linecap="round" d="M60 700 C96 690 150 694 214 706 M540 700 C504 690 450 694 386 706"/>
+      <!-- Lenses -->
+      <path fill="#050403" d="M58 692 C110 676 216 676 268 696 C276 742 262 800 226 824 C188 846 124 842 92 812 C66 786 54 736 58 692 Z"/>
+      <path fill="#050403" d="M542 692 C490 676 384 676 332 696 C324 742 338 800 374 824 C412 846 476 842 508 812 C534 786 546 736 542 692 Z"/>
+      <!-- Bridge -->
+      <path fill="none" stroke="#050403" stroke-width="20" d="M262 708 C282 690 318 690 338 708"/>
+      <!-- The light across each lens -->
+      <path fill="none" stroke="#6a5745" stroke-width="10" stroke-linecap="round" d="M104 716 L152 716 M360 716 L408 716"/>
+    </g>
+  </defs>
+  <rect width="600" height="1430" fill="url(#haze)"/>
+  <use href="#pair" transform="translate(30 187) scale(0.9)"/>
+  <!-- Its reflection in the wet stone, as under the figure in the Hero -->
+  <g opacity="0.42">
+    <use href="#pair" transform="translate(30 1751) scale(0.9 -0.9)"/>
+  </g>
+  <rect y="980" width="600" height="450" fill="url(#floor)"/>
+</svg>

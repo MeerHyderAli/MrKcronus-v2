@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1430">
+  <!-- Stand-in, not a design: a long-sleeved shirt on a hanger, backlit. Replace with a real image of the same name. -->
+  <defs>
+    <radialGradient id="haze" cx="50%" cy="46%" r="62%">
+      <stop offset="0" stop-color="#9c7d5c"/>
+      <stop offset="0.5" stop-color="#4f3f30"/>
+      <stop offset="1" stop-color="#14100c"/>
+    </radialGradient>
+    <linearGradient id="cloth" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#1d1712"/>
+      <stop offset="0.5" stop-color="#090705"/>
+      <stop offset="1" stop-color="#1d1712"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="1430" fill="url(#haze)"/>
+  <!-- Hanger hook -->
+  <path fill="none" stroke="#070504" stroke-width="12" stroke-linecap="round" d="M300 330 L300 276 C300 250 334 250 334 226 C334 200 288 196 280 226"/>
+  <!-- Body -->
+  <path fill="url(#cloth)" d="M226 326 L148 366 L140 1120 C210 1166 390 1166 460 1120 L452 366 L374 326 L300 396 Z"/>
+  <!-- Sleeves, hanging -->
+  <path fill="#080605" d="M148 366 C112 392 96 430 90 480 L66 930 L136 944 L164 560 Z"/>
+  <path fill="#080605" d="M452 366 C488 392 504 430 510 480 L534 930 L464 944 L436 560 Z"/>
+  <!-- Cuffs -->
+  <path fill="#040302" d="M64 922 L138 936 L132 996 L60 982 Z"/>
+  <path fill="#040302" d="M536 922 L462 936 L468 996 L540 982 Z"/>
+  <!-- Collar -->
+  <path fill="#040302" d="M226 326 L300 396 L256 446 L206 346 Z"/>
+  <path fill="#040302" d="M374 326 L300 396 L344 446 L394 346 Z"/>
+  <!-- Placket and buttons -->
+  <path fill="none" stroke="#5e4d3b" stroke-width="7" d="M300 400 L300 1150"/>
+  <g fill="#b39a7c">
+    <circle cx="300" cy="500" r="8"/>
+    <circle cx="300" cy="640" r="8"/>
+    <circle cx="300" cy="780" r="8"/>
+    <circle cx="300" cy="920" r="8"/>
+    <circle cx="300" cy="1060" r="8"/>
+  </g>
+</svg>

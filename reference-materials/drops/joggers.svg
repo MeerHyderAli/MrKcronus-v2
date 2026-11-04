@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1430">
+  <!-- Stand-in, not a design: a pair of joggers, backlit. Replace with a real image of the same name. -->
+  <defs>
+    <radialGradient id="haze" cx="50%" cy="46%" r="62%">
+      <stop offset="0" stop-color="#9c7d5c"/>
+      <stop offset="0.5" stop-color="#4f3f30"/>
+      <stop offset="1" stop-color="#14100c"/>
+    </radialGradient>
+    <linearGradient id="cloth" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#1d1712"/>
+      <stop offset="0.5" stop-color="#090705"/>
+      <stop offset="1" stop-color="#1d1712"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="1430" fill="url(#haze)"/>
+  <!-- Legs -->
+  <path fill="url(#cloth)" d="M176 330 C150 470 138 640 150 790 C160 900 178 1000 192 1092 L272 1092 C276 960 286 800 298 640 L302 640 C314 800 324 960 328 1092 L408 1092 C422 1000 440 900 450 790 C462 640 450 470 424 330 Z"/>
+  <!-- Waistband -->
+  <path fill="#050403" d="M170 272 C250 286 350 286 430 272 L436 340 C350 354 250 354 164 340 Z"/>
+  <!-- Cuffs -->
+  <path fill="#050403" d="M186 1088 L278 1088 L272 1172 L196 1172 Z"/>
+  <path fill="#050403" d="M322 1088 L414 1088 L404 1172 L328 1172 Z"/>
+  <!-- Drawstring -->
+  <path fill="none" stroke="#b39a7c" stroke-width="7" stroke-linecap="round" d="M286 342 C282 400 276 440 270 486 M314 342 C318 400 324 440 330 486"/>
+  <!-- Pockets and the light caught along the legs -->
+  <path fill="none" stroke="#6a5745" stroke-width="9" stroke-linecap="round" d="M194 372 L168 520 M406 372 L432 520"/>
+  <path fill="none" stroke="#54442f" stroke-width="10" stroke-linecap="round" d="M178 640 C190 780 204 930 216 1060 M422 640 C410 780 396 930 384 1060"/>
+</svg>

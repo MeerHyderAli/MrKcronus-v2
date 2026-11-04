@@ -757,10 +757,15 @@ category**. Tees are unlocked. Joggers, shirts and sunglasses are locked. It ren
 `/` and at `/archive` from `src/components/home/sections/ArchiveDrops.tsx`, and the
 categories are data at the top of that file.
 
-Each drop is a door. An open one swings open onto what it holds and leads to the Collection.
-A locked one stays shut, sealed with the canonical symbol, and shows nothing behind it:
+**REVISED 2026-11-04, AT CLIENT INSTRUCTION.** Each drop is an arch. An open one parts on a slit
+of light: a line of Ember Gold runs down the dark arch, then opens on what the drop holds, and it
+leads to the Collection. A locked one shows a blurred image of its category under a lock:
 
-- No imagery for a locked category, because none exists and none may be faked.
+- **The blur is baked into the file** by `scripts/prepare-drop-art.mjs`, so a sharp image of an
+  unreleased garment is never published. Do not replace it with a CSS blur.
+- **The current images are stand-ins**, drawn in `reference-materials/drops/`. They show what kind
+  of thing is coming and no particular design. To use a real image, put it there under the same
+  name, delete the SVG and run the script. Never present a stand-in as a product.
 - No dates, promises or links for a locked category.
 - Opening a drop needs a real image and a real destination. It is still not ecommerce.
 

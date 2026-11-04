@@ -71,8 +71,6 @@
   --level-axis: rgba(239, 231, 220, 0.5);
 
   /* ---- The Archive: a shut door, a step above the wall behind it -------- */
-  --drop-leaf: #161412;
-  --drop-leaf-lit: #2c2823;
 
   /* ---- Light-surface ink (Build 12B) ----------------------------------
      Warm darks, not neutral grey and never pure black, so the light surfaces
@@ -1254,19 +1252,14 @@ body {
   height: 26svh;
   overflow: hidden;
   border-radius: 999px 999px 0 0;
-  perspective: 900px;
   background-color: var(--obsidian);
 }
 
-/* The vanishing point sits near the hinge, so the open leaf stays a slim plane
-   rather than a wedge across what it has just revealed. */
 .drop--open .drop-door {
   height: var(--drop-h);
-  perspective: 1400px;
-  perspective-origin: 15% 50%;
 }
 
-/* The rim of the opening, drawn above the door so it stays when the door has gone. */
+/* The rim of the arch, drawn above whatever is inside it. */
 .drop-door::after {
   content: "";
   position: absolute;
@@ -1276,6 +1269,36 @@ body {
   pointer-events: none;
 }
 
+/* AN OPEN DROP. A line of light runs down the dark arch, then parts on what the drop
+   holds. The clip and the two edges share one duration and ease, so the light stays
+   on the edge of the opening all the way out. */
+.drop-opening {
+  position: absolute;
+  inset: 0;
+  display: block;
+  clip-path: inset(0 50% 0 50%);
+  transition: clip-path var(--dur-scene) var(--ease-drape) 550ms;
+}
+
+.is-open .drop-opening {
+  clip-path: inset(0 0 0 0);
+}
+
+/* The room is dark as the slit opens, and comes up with the light. */
+.drop-opening::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--obsidian);
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity var(--dur-scene) var(--ease-drape) 550ms;
+}
+
+.is-open .drop-opening::after {
+  opacity: 0;
+}
+
 /* 88% puts the printed back in the opening: each image holds front and back. */
 .drop-interior {
   object-position: 88% 50%;
@@ -1283,47 +1306,137 @@ body {
   transition: transform var(--dur-image) var(--ease-editorial);
 }
 
+.is-open .drop-interior {
+  animation: drop-settle var(--dur-scene) var(--ease-editorial) 550ms both;
+}
+
 .drop--open a:hover .drop-interior,
 .drop--open a:focus-visible .drop-interior {
   transform: scale(1);
 }
 
-/* A leaf hangs on its left edge, and swings away from the viewer. */
-.drop-leaf {
+/* Each edge is a full-width plane with its line at the centre, so a translate of half
+   its own width carries the line exactly to the rim. */
+.drop-edge {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--drop-leaf);
-  transform-origin: left center;
-  transition: transform var(--dur-firm) var(--ease-drape);
+  display: block;
+  opacity: 0;
+  transform-origin: 50% 0;
+  background-image: linear-gradient(
+    to right,
+    transparent calc(50% - 1.25rem),
+    color-mix(in srgb, var(--gold) 22%, transparent) calc(50% - 0.5px),
+    var(--gold) calc(50% - 0.5px),
+    var(--gold) calc(50% + 0.5px),
+    color-mix(in srgb, var(--gold) 22%, transparent) calc(50% + 0.5px),
+    transparent calc(50% + 1.25rem)
+  );
+  pointer-events: none;
 }
 
-/* Pressed, a locked door gives on its hinge, then settles back. */
-.drop:not(.drop--open):hover .drop-leaf,
-.drop:not(.drop--open):active .drop-leaf {
-  transform: rotateY(5deg);
+.drop-edge--left {
+  --edge-to: -50%;
 }
 
-/* Its far edge catches the light from the room it has opened onto. */
-.drop-leaf--open {
-  background-image: linear-gradient(to right, var(--drop-leaf), var(--drop-leaf-lit));
-  transition: transform var(--dur-scene) var(--ease-editorial) 300ms;
+.drop-edge--right {
+  --edge-to: 50%;
 }
 
-.drop-leaf--open.is-open {
-  transform: rotateY(86deg);
+.is-open .drop-edge {
+  animation:
+    drop-seam 700ms var(--ease-drape) both,
+    drop-edge-out var(--dur-scene) var(--ease-drape) 550ms both,
+    drop-edge-fade 500ms linear 2450ms forwards;
 }
 
-.drop-seal {
-  opacity: 0.22;
-  transition: opacity var(--dur-firm) var(--ease-drape);
+@keyframes drop-seam {
+  from {
+    scale: 1 0;
+    opacity: 0;
+  }
+  to {
+    scale: 1 1;
+    opacity: 1;
+  }
 }
 
-.drop:hover .drop-seal,
-.drop:active .drop-seal {
-  opacity: 0.4;
+@keyframes drop-edge-out {
+  to {
+    translate: var(--edge-to) 0;
+  }
+}
+
+@keyframes drop-edge-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes drop-settle {
+  from {
+    scale: 1.12;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+/* A LOCKED DROP. The blur is baked into the file, so only opacity changes here. Tried,
+   the lock lifts a little and does not give, and the veil lightens. */
+.drop-veiled {
+  opacity: 0.72;
+  transition: opacity var(--dur-image) var(--ease-editorial);
+}
+
+.drop--locked:hover .drop-veiled,
+.drop--locked:active .drop-veiled {
+  opacity: 1;
+}
+
+.drop-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.5rem;
+  height: auto;
+  overflow: visible;
+  translate: -50% -50%;
+  fill: none;
+  stroke: var(--ivory);
+  stroke-width: 1.25;
+}
+
+.drop-lock * {
+  vector-effect: non-scaling-stroke;
+}
+
+.drop-lock-body {
+  fill: color-mix(in srgb, var(--obsidian) 55%, transparent);
+}
+
+.drop-lock-shackle {
+  transition: translate var(--dur-firm) var(--ease-drape);
+}
+
+.drop--locked:hover .drop-lock-shackle,
+.drop--locked:active .drop-lock-shackle {
+  translate: 0 -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop-opening {
+    clip-path: none;
+  }
+
+  .drop-opening::after,
+  .drop-edge {
+    display: none;
+  }
+
+  .is-open .drop-interior {
+    animation: none;
+  }
 }
 
 .drop-name {
@@ -1348,6 +1461,13 @@ body {
   color: var(--surface-muted);
 }
 
+/* Tablets have wider arches, so they stand taller to keep the whole garment in frame. */
+@media (min-width: 48rem) {
+  .drop-door {
+    height: 40svh;
+  }
+}
+
 @media (min-width: 64rem) {
   .drops {
     grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -1369,6 +1489,10 @@ body {
 
   .drop-name {
     font-size: 1rem;
+  }
+
+  .drop-lock {
+    width: 2.25rem;
   }
 }
 
