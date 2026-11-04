@@ -23,7 +23,7 @@ const inter = localFont({
   display: "swap",
 });
 
-const SITE_URL = "https://mrkcronus.com";
+const SITE_URL = "https://www.mrkcronus.com";
 const DESCRIPTION =
   "MR.KCRONUS. A world built through symbols, architecture and form.";
 const SHARE_IMAGE = {
