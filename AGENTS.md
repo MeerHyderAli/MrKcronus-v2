@@ -90,19 +90,25 @@ Inspect actual asset formats before designing decomposition or animation systems
 
 Primary colors:
 
+**REVISED 2026-11-03, AT CLIENT INSTRUCTION.** Measured from the client's Hero and Chronicle
+images. It applies to the whole site except The Collection, which keeps the earlier neutrals
+(`#F5F5F0`, `#5F5F5A`, `#A89B7A`) through overrides on `.collection`.
+
 Obsidian:
 #050505
 
-Ivory:
-#F5F5F0
+Warm Ivory:
+#EFE7DC
 
-Stone:
-#5F5F5A
+Sepia Stone:
+#7B7067
 
-Antique Gold:
-#A89B7A
+Ember Gold:
+#D4A373
 
-Gold must be extremely restrained.
+Ember Gold is the light of the eclipse. Use it for hairlines, one action's border and light.
+Never for fills or running text. Cool grey plates are warmed at display time in `globals.css`,
+and their files stay untouched.
 
 Typography:
 
@@ -186,7 +192,7 @@ presents and introduces; it does not contain the full narrative.
 Approved homepage order:
 
 1. Hero
-2. The World — the colonnade into the plate
+2. The Chronicle — six perspectives, one truth
 3. Level 01 — the timeline, plate and garment
 4. Gateway — the crossing into the Collection  dark → ivory
 5. The Collection — Drop 1, per colour
@@ -230,99 +236,46 @@ controlling a cinematic camera.
 
 ## Hero
 
-Approximately 100–120svh desktop, 85–100svh mobile.
+**REVISED 2026-11-03, AT CLIENT INSTRUCTION — THE ECLIPSE.** `src/components/home/Hero.tsx`,
+built from the client's reference and `reference-materials/hero.png`.
 
-**REVISED IN BUILD 13 PHASE 17, AT CLIENT INSTRUCTION.**
+The particle Threshold is **retired by the client's own instruction**, which replaces the
+earlier "must not be removed again" note. Its code and its beat sheet are preserved, unrendered,
+in `ThresholdHero.tsx`. Do not restore it unless the client asks.
 
-The Hero's **symbol choreography is restored and must not be removed again.**
-An earlier Build 13 phase replaced it with a static split, on the reading that
-the homepage should simply be calmer. That was wrong, and the client corrected
-it: this is the signature motion of the house.
+- **The first screen is complete without scrolling:** wordmark, line and one action. On a phone
+  the picture fills the top 80% and fades into the dark, where the action sits. From lg the hero
+  is `min(48vw, 100svh)`, so the whole picture shows and the Chronicle peeks in.
+- **Not pinned.** Scrolling pushes the camera toward the slit of light, and the scene goes dark.
+- **One entrance, in CSS.** It needs no script and hides nothing from reduced motion.
+- **The words are supplied:** "Time forgets. The archive does not." and "Enter the World".
+- **The crescent on the monolith and the ring on the cloak belong to the supplied image.** They
+  are not the logo. The wordmark over them is the canonical one.
 
-**REVISED 2026-10-31, AT CLIENT INSTRUCTION — THE PARTICLE THRESHOLD.**
-The first screen is no longer void. The client supplied a particle-logo
-reference and approved this opening:
-
-    0.00-0.08  MR.KCRONUS  the wordmark, held in shimmering ivory particles
-    0.08-0.38  THE MORPH   the particles release in a wave, travel through
-                           depth and re-gather as the symbol
-    0.32-0.46  THE SYMBOL  the canonical mark resolves crisp over the particle
-                           symbol; the particles settle away
-
-The particles are a transition only. Their positions are sampled from the
-canonical mask PNGs, so no geometry is redrawn, and the mark that lands is the
-untouched canonical asset. This is the one approved WebGL use and the one
-approved particle system on the site: raw WebGL, no 3D library, the GPU moves
-every particle and scroll supplies one progress value. Reduced motion and
-devices without WebGL get the static threshold, never the particles.
-
-The remaining beats, with the ending revised at the same instruction:
-
-    0.20-0.60  ASSEMBLY    the field expands and turns to frame it
-    0.36-0.62  LIGHT       the page supplies the light the mark needs
-    0.44-0.56  ACTIVATION  the single gold cast
-    0.56-0.86  PASSAGE     the mark dissolves back into particles and the
-                           camera passes through it and the field
-    0.78-1.00  THE DOOR    what lies behind the symbol resolves
-
-The release runs from the centre of the wordmark outward. A scroll hint holds
-the first screen and is gone by p 0.05.
-
-The Hero track is 200vh on compact viewports and 280vh from lg, so it is
-pinned for one viewport of scroll on mobile and 1.8 on desktop. That is still
-nowhere near the retired 760svh crawl.
-
-Still retired, and still correct:
-
-- The **exploded archive plate** beat.
-- The **THE ARCHIVE IS OPEN** statement. The Archive is now drops, and most are locked.
-- The **760svh** duration - seven beats across 660svh was the archive crawl in
-  miniature.
-
-The Hero now establishes:
-
-Antique Gold appears exactly once in the Hero: the activation cast. It is a
-cast OVER the ivory mark, never a replacement, so the canonical geometry is never
-recoloured and the fused core is never split.
-
-The Hero now establishes:
-
-- identity
-- atmosphere
-- fashion
-- visual confidence
-- brand positioning
-- one clear action
-
-It uses the highest-resolution approved standalone visual as a hero / brand
-visual. This is **not** a canonical collection product specification.
+The image is one flat picture. `scripts/prepare-hero-art.mjs` derives the tall phone slice and a
+light layer from its own pixels. Nothing is cut out of it.
 
 The CTA must be a real interactive HTML element.
 
 Never bake interactive text into an image.
 
-The Hero is the strongest motion moment on the page: typography choreography,
-image depth, atmospheric movement, CTA entrance and a controlled scroll
-transition into the Collection.
-
 ---
 
-## The World
+## The Chronicle
 
-**ADDED 2026-11-01, AT CLIENT INSTRUCTION.** `src/components/home/sections/TheWorld.tsx`.
-It supersedes `BrandIntroduction.tsx`, which is preserved and unrendered, and keeps
-that section's plate and approved copy.
+**ADDED 2026-11-03, AT CLIENT INSTRUCTION.** `src/components/home/sections/Chronicle.tsx`, built
+from the client's reference and `reference-materials/chronicle.png`. It supersedes the colonnade,
+`TheWorld.tsx`, which is preserved and unrendered, and keeps the id `the-world`, which is where
+the Hero's action leads.
 
-The figure in the plate wears a print of the stone head on their horizon. The camera
-walks a dark colonnade toward them and withholds the head until the walls clear. A
-desktop frame then holds both heads. A phone's crop cannot, so there the camera pans
-from the print to the head.
+The head arrives with its cracks dark, and the gold runs down them from brow to collar as the
+reader scrolls. `scripts/prepare-hero-art.mjs` splits the supplied image into the head without
+gold and the gold on black, so the finished frame is the client's picture. Not pinned.
 
-Its track is 260vh from lg and 240vh below. See "Pinned tracks" under Level 01.
+The words are supplied. Do not add to them.
 
-The depth is a CSS 3D scene with no WebGL. The arches and the floor are real planes
-around the flat plate, and no part of the plate is lifted out of it. The wet floor is
-a mirrored copy of the plate drawn at runtime, and the plate file is untouched.
+The six-card row in the client's reference is deliberately not here: they asked to change the
+Hero and the Chronicle only, and Level 01 follows directly.
 
 ---
 
@@ -341,14 +294,14 @@ the camera rolls with it and never levels out, and the line runs out at The Unkn
 - **The Sigil** shows the canonical symbol where other entries show a plate, as itself.
 - **The Enemy** lights later and goes dark sooner than the others.
 - **The Fracture's plate** is split at runtime by two clip paths. The file is untouched.
-- **The Architect's garment** shows the correct print from its colourway image, at client
-  instruction (2026-11-02). The other five garments here still come from the board.
+- **The garments** all come from their black colourway images, back view, so every tee shows
+  its correct print (2026-11-02). None comes from the board.
 
 ### Pinned tracks
 
-The Hero, The World and Level 01 are the page's three full pinned tracks. The Mark's
-plate also holds in place while its names scroll past, added at the client's request for
-an exploded-view section (2026-11-02). Do not add another without asking.
+Level 01 is the page's full pinned track, now that the Hero and the Chronicle are not pinned
+(2026-11-03). The Mark's plate also holds in place while its names scroll past, added at the
+client's request for an exploded-view section (2026-11-02). Do not add another without asking.
 
 ---
 
@@ -706,17 +659,16 @@ to **The Fracture**.
 The Collection and Level 01 show the correct 001 print, because they use its PDF image.
 The board is still outstanding.
 
-**The Hero keeps the old visual by client decision (2026-11-02).** Do not swap it for the
-correct print, and do not report it as an open problem. The rule that its alt text names no
-design still holds.
+**The Hero no longer shows this garment (2026-11-03).** It now uses the client's eclipse image,
+so `artifact-architect.png` is not rendered on `/`.
 
 The colourway PDF is authoritative for 001 and has been verified sheet by sheet.
 **Two shipped assets do not match it, and have deliberately not been altered:**
 
 - `public/brand/collection-board.png`, cell (0,0), depicts THE ARCHITECT with a
   cracked clock face, a hooded figure and a ruined city.
-- `public/brand/artifact-architect.png` depicts the same obsolete artwork and is
-  rendered as the Hero brand visual.
+- `public/brand/artifact-architect.png` depicts the same obsolete artwork. Only preserved,
+  unrendered components use it.
 
 Replacing, redrawing, regenerating or cropping approved artwork is prohibited,
 and the colourway PDF is a reference that is never cropped into a production
@@ -729,9 +681,6 @@ Until it is reissued, the following rule holds and is enforced by
 
 - The **data** records what 001 *is*: crescent moon and star, front; cathedral
   corridor, back.
-- The **Hero alt text describes the pixels and names no design**, so the render
-  is described accurately while the accessible name stays silent on canon the
-  corpus cannot support.
 - The **`/story` plate alt may still mention a clock.** `The Architect.jpg` is
   Archive plate artwork, not the 001 print, and it genuinely contains an intact
   cracked clock with a hooded figure framed inside it. The rule above governs the

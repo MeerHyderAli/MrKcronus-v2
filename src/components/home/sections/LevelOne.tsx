@@ -24,7 +24,6 @@ import {
   getUniverseLevel,
   type UniverseEntry,
 } from "@/components/universe/universe";
-import { BoardImage } from "./CollectionSequence";
 import Section from "./Section";
 
 /**
@@ -97,30 +96,13 @@ const SHARD_RIGHT =
   "polygon(53% 0, 100% 0, 100% 100%, 36% 100%, 33% 84%, 40% 70%, 50% 58%, 47% 45%, 55% 30%, 49% 16%)";
 
 /**
- * Where each board row's printed label ends, as a share of the card. The board's
- * rows are not equal cells, so this differs by row. The Enemy's card also catches
- * the rule beside it, which sits further in than the column line.
+ * Every tee comes from its colourway image, in black. The image holds both views,
+ * and object-right frames the back, where the print that carries the story is.
  */
-const ROW_LABEL_END = ["6%", "13.7%", "13%"];
+const GARMENT_COLOUR: HouseColour = "black";
 
-/**
- * Garments shown from a colourway sheet rather than the board, and in which colour.
- * The board's Architect cell has the obsolete clock print, so at the client's
- * instruction this one shows the correct print. The image holds both views, and
- * object-right frames the back, where the print is.
- */
-const COLOURWAY_GARMENTS: Readonly<Record<string, HouseColour>> = { architect: "black" };
-
-function garmentMask(design: CollectionDesign) {
-  return {
-    // A colourway image has no printed label to hide, so its top edge stays whole.
-    "--garment-top": COLOURWAY_GARMENTS[design.slug] ? "-2%" : ROW_LABEL_END[design.cell.row],
-    ...(design.slug === "enemy" ? { "--garment-right": "87%" } : null),
-  } as object;
-}
-
-function garmentAlt(name: string) {
-  return `MR.KCRONUS ${name}: a black short-sleeve tee printed with this design, front view, as presented in the collection board.`;
+function garmentRatio({ stage }: CollectionDesign) {
+  return { aspectRatio: `${stage.width / 2} / ${stage.height}` };
 }
 
 function Garment({
@@ -130,16 +112,12 @@ function Garment({
   design: CollectionDesign;
   loading?: "lazy" | "eager";
 }) {
-  const colour = COLOURWAY_GARMENTS[design.slug];
-  if (!colour) {
-    return <BoardImage design={design} alt={garmentAlt(design.name)} loading={loading} />;
-  }
   return (
     <Image
-      src={getColourwayImage(design.slug, colour).src}
-      alt={`${design.name} tee in ${getColourway(design.slug, colour).name}, back view: ${design.artwork.back}.`}
+      src={getColourwayImage(design.slug, GARMENT_COLOUR).src}
+      alt={`${design.name} tee in ${getColourway(design.slug, GARMENT_COLOUR).name}, back view: ${design.artwork.back}.`}
       fill
-      sizes="(min-width: 64rem) 80vh, 76vw"
+      sizes="(min-width: 64rem) 88vh, 92vw"
       loading={loading}
       className="object-cover object-right"
     />
@@ -275,7 +253,7 @@ function Entry({
         <div className="level-plane level-plane--garment">
           <motion.div
             className="level-garment"
-            style={{ opacity: garmentOpacity, rotateY: garmentTurn, ...garmentMask(design) }}
+            style={{ opacity: garmentOpacity, rotateY: garmentTurn, ...garmentRatio(design) }}
           >
             <Garment design={design} loading={loading} />
           </motion.div>
@@ -288,7 +266,7 @@ function Entry({
       </motion.div>
 
       <div className="level-mark" data-after-break={afterBreak || undefined}>
-        <span className="meta meta-stone">{entry.order}</span>
+        <span className="meta">{entry.order}</span>
       </div>
     </motion.article>
   );
@@ -375,7 +353,7 @@ export default function LevelOne() {
                       <p className="level-line mt-4">{LINES[entry.id]}</p>
                     ) : null}
                     {design ? (
-                      <div className="level-garment mt-8 max-w-[24rem]" style={garmentMask(design)}>
+                      <div className="level-garment mt-8 max-w-[24rem]" style={garmentRatio(design)}>
                         <Garment design={design} />
                       </div>
                     ) : null}
@@ -398,7 +376,7 @@ export default function LevelOne() {
           className="level-track relative"
           style={{ height: `calc(100vh + ${count} * var(--level-step))` }}
         >
-          <div className="level-stage sticky top-0 h-svh overflow-clip bg-obsidian">
+          <div className="level-stage sticky top-0 h-lvh overflow-clip bg-obsidian">
             <motion.div
               className="absolute inset-0"
               style={{ rotateZ: roll, transformStyle: "preserve-3d" }}
