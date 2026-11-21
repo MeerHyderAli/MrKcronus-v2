@@ -51,7 +51,7 @@ export default function Chronicle() {
           <p className="chronicle-body">
             A clothing archive inspired by characters, conflict and the unseen architecture of time.
           </p>
-          <Link href="#collection" className="cta-line">
+          <Link href="#level-01" className="cta-line">
             Explore the Collection
             <svg aria-hidden="true" viewBox="0 0 34 10" className="cta-arrow">
               <path d="M0 5h33M28 1l5 4-5 4" fill="none" stroke="currentColor" strokeWidth="1" />

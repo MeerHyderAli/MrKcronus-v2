@@ -1,10 +1,7 @@
 import Hero from "@/components/home/Hero";
-import Gateway from "@/components/home/sections/Gateway";
 import JoinArchive from "@/components/home/JoinArchive";
 import LevelOne from "@/components/home/sections/LevelOne";
-import TheCollection from "@/components/home/sections/TheCollection";
 import TheMark from "@/components/home/sections/TheMark";
-import ArchiveDrops from "@/components/home/sections/ArchiveDrops";
 import Chronicle from "@/components/home/sections/Chronicle";
 import Philosophy from "@/components/home/sections/Philosophy";
 
@@ -35,12 +32,9 @@ export const metadata = {
  *
  *   1  Hero                 the eclipse               dark   not pinned
  *   2  Chronicle            six perspectives          dark   not pinned
- *   3  LevelOne             THE TIMELINE              dark   one pinned track
- *   -  Gateway              THE CROSSING   dark->ivory (added in Phase 1)
- *   4  TheCollection        Drop 1, per colour        follows the chosen colour
+ *   3  LevelOne             the six records           ivory  not pinned
  *   5  Philosophy           THE CREED                 dark
  *   -  TheMark              the symbol, taken apart   dark
- *   6  ArchiveDrops         the drops, as doors       DARK
  *   7  JoinArchive          the last door, inert form dark
  *   -  Footer
  *
@@ -75,6 +69,17 @@ export const metadata = {
  * Collection as its own room. It is NOT pinned - the Hero and Movement B already
  * own both of this page's pinned tracks - and it enumerates no entry, because
  * the Collection owns the ordered index.
+ *
+ * THE ARCHIVE HAS ITS OWN PAGE (2026-11-21, at client instruction)
+ * ArchiveDrops left this page; it renders at /archive, reached from the navigation.
+ *
+ * LEVEL 01 OPENS THE COLLECTION (2026-11-21, at client instruction)
+ * Level 01 is now the six records from the client's reference, and each opens its
+ * design at /collection/<slug>, with the colour control and the room that changes
+ * with it. So the homepage no longer carries the Collection or the Gateway that
+ * crossed into it. TheCollection.tsx, Gateway.tsx and the pinned timeline,
+ * LevelOneTimeline.tsx, are preserved and unrendered. Much of the history below
+ * describes the earlier arrangement.
  *
  * UNRENDERED, NOT DELETED
  *
@@ -146,14 +151,8 @@ export default function HomePage() {
       {/* ---- 2. The Chronicle: six perspectives, one truth --------------- */}
       <Chronicle />
 
-      {/* ---- 3. Level 01: the timeline, plate and garment ---------------- */}
+      {/* ---- 3. Level 01: the six records, each opens its collection ------- */}
       <LevelOne />
-
-      {/* ---- The gateway: dark to ivory, story into the Collection -------- */}
-      <Gateway />
-
-      {/* ---- 4. The Collection: Drop 1, per colour ---------------------- */}
-      <TheCollection />
 
       {/* ---- 5. What MR.KCRONUS is -------------------------------------- */}
       <Philosophy />
@@ -161,10 +160,7 @@ export default function HomePage() {
       {/* ---- The mark the Creed left, examined part by part -------------- */}
       <TheMark />
 
-      {/* ---- 6. The Archive: drops by category ---------------------------- */}
-      <ArchiveDrops />
-
-      {/* ---- 7. The last door --------------------------------------------- */}
+      {/* ---- 6. The last door --------------------------------------------- */}
       <JoinArchive />
     </>
   );

@@ -30,7 +30,8 @@ import Section from "./Section";
  * real image and destination.
  *
  * NOT ECOMMERCE
- * An open door leads to the Collection on the homepage. No prices, stock or cart.
+ * An open door leads to Level 01, where each record opens its collection. No prices,
+ * stock or cart.
  */
 
 type Drop = {
@@ -44,7 +45,7 @@ const DROPS: readonly Drop[] = [
     slug: "tees",
     name: "Tees",
     open: {
-      href: "/#collection",
+      href: "/#level-01",
       image: {
         src: getColourwayImage("architect", "black").src,
         alt: "The Architect tee in Black, front and back.",

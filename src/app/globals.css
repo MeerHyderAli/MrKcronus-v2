@@ -2837,3 +2837,328 @@ body {
     clip-path: none !important;
   }
 }
+
+/* ==========================================================================
+   LEVEL 01: THE SIX
+   From the client's reference (2026-11-21). Six records on the ivory floor,
+   each a door into its design's collection.
+   ========================================================================== */
+
+.six {
+  padding-block: clamp(5rem, 12svh, 8.5rem) clamp(5.5rem, 13svh, 9.5rem);
+}
+
+.six-kicker,
+.design-kicker {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--gold) 62%, var(--surface-ink));
+}
+
+.six-title {
+  margin-top: 1.25rem;
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(2.25rem, 6.4vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.six-intro {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  line-height: 1.8;
+  color: var(--surface-muted);
+}
+
+.six-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+.six-card {
+  position: relative;
+  display: block;
+  height: 100%;
+  aspect-ratio: 3 / 4.6;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--obsidian);
+  color: var(--ivory);
+}
+
+.six-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(0deg, rgb(5 5 5 / 0.92), transparent 58%);
+  pointer-events: none;
+}
+
+.six-card-img {
+  object-fit: cover;
+  filter: grayscale(0.25) contrast(1.05);
+  transition:
+    scale var(--dur-image) var(--ease-editorial),
+    filter var(--dur-firm) var(--ease-editorial);
+}
+
+.six-card:hover .six-card-img,
+.six-card:focus-visible .six-card-img {
+  scale: 1.055;
+  filter: grayscale(0) contrast(1.1);
+}
+
+.six-card-open {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid rgb(239 231 220 / 0.55);
+  border-radius: 999px;
+  transition:
+    opacity var(--dur-firm) var(--ease-editorial),
+    translate var(--dur-firm) var(--ease-editorial);
+}
+
+.six-card-open svg {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+.six-card-meta {
+  position: absolute;
+  inset: auto 0.75rem 0.875rem;
+  z-index: 2;
+  display: grid;
+  gap: 0.375rem;
+}
+
+.six-card-kicker {
+  font-size: 0.5625rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.six-card-name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(1.0625rem, 2.3vw, 1.9rem);
+  line-height: 1.05;
+  letter-spacing: 0.1em;
+}
+
+.six-card-words {
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(239 231 220 / 0.72);
+}
+
+.six-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--surface-rule);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--surface-muted);
+}
+
+@media (min-width: 48rem) {
+  .six-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.875rem;
+    margin-top: 3.5rem;
+  }
+
+  .six-card-meta {
+    inset: auto 1.5rem 1.5rem;
+  }
+
+  .six-card-kicker,
+  .six-card-words {
+    font-size: 0.625rem;
+  }
+}
+
+/* With a pointer, the arrow waits for the hover. Touch screens always show it. */
+@media (hover: hover) {
+  .six-card-open {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+
+  .six-card:hover .six-card-open,
+  .six-card:focus-visible .six-card-open {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ==========================================================================
+   ONE DESIGN'S COLLECTION
+   The room takes the chosen colour, as the homepage Collection did.
+   ========================================================================== */
+
+.design-room {
+  min-height: 100svh;
+}
+
+.design-back,
+.design-pager-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 44px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--surface-muted);
+  transition: color var(--dur-micro) var(--ease-archive);
+}
+
+.design-back:hover,
+.design-pager-link:hover {
+  color: var(--surface-ink);
+}
+
+.cta-arrow--back {
+  rotate: 180deg;
+}
+
+.design-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: end;
+}
+
+.design-kicker {
+  color: var(--surface-muted);
+}
+
+.design-title {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: 0.06em;
+  text-wrap: balance;
+}
+
+.design-story {
+  margin-top: 1.75rem;
+  max-width: 36rem;
+  line-height: 1.8;
+}
+
+.design-plate {
+  position: relative;
+  width: min(60vw, 17rem);
+  aspect-ratio: 1200 / 1696;
+  overflow: hidden;
+  background-color: var(--obsidian);
+}
+
+.design-pager {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.5rem 3rem;
+  border-top: 1px solid var(--surface-rule);
+}
+
+@media (min-width: 64rem) {
+  .design-head {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+
+  .design-plate {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .six-card-img {
+    transition: none;
+  }
+
+  .six-card:hover .six-card-img,
+  .six-card:focus-visible .six-card-img {
+    scale: none;
+  }
+}
+
+/* Phones: front above back, each pane framing its half of the one image. */
+.design-views {
+  display: grid;
+  gap: 1.25rem;
+  margin-inline: -1.25rem;
+}
+
+.design-view {
+  margin: 0;
+}
+
+.design-view-frame {
+  position: relative;
+  aspect-ratio: var(--view-ratio);
+  overflow: hidden;
+  background-color: var(--surface-vitrine);
+}
+
+.design-view--front .collection-layer {
+  object-position: 0% 50%;
+}
+
+.design-view--back .collection-layer {
+  object-position: 100% 50%;
+}
+
+.design-view-label {
+  margin-top: 0.625rem;
+  padding-inline: 1.25rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--surface-muted);
+}
+
+@media (min-width: 48rem) {
+  .design-views {
+    margin-inline: 0;
+  }
+
+  .design-view--front .design-view-frame {
+    aspect-ratio: var(--full-ratio);
+  }
+
+  .design-view--front .collection-layer {
+    object-position: 50% 50%;
+  }
+
+  .design-view--back,
+  .design-view-label {
+    display: none;
+  }
+}

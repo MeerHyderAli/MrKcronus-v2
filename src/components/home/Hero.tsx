@@ -5,6 +5,7 @@ import { getImageProps } from "next/image";
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import Wordmark from "@/components/brand/Wordmark";
+import { useCompactMotion } from "@/components/motion/motionEnv";
 
 /**
  * HERO — THE ECLIPSE
@@ -81,6 +82,7 @@ const LIGHT = {
 
 export default function Hero() {
   const stage = useRef<HTMLElement>(null);
+  const compact = useCompactMotion();
   // Measured from the page, not the section: the html scroll-padding shifts Motion's
   // native section timeline, and the first screen has to rest at exactly zero.
   const { scrollY } = useScroll();
@@ -102,7 +104,9 @@ export default function Hero() {
       aria-labelledby="hero-heading"
       className="hero"
     >
-      <motion.div className="hero-art" style={{ scale: artScale, y: artY }}>
+      {/* Phones keep the picture still. Its tall slice is enlarged from the source, and a
+          scroll zoom on top softened it and dragged its lower edge across the screen. */}
+      <motion.div className="hero-art" style={compact ? undefined : { scale: artScale, y: artY }}>
         <Art {...BASE} alt={ALT} className="hero-img" first />
         <div aria-hidden="true" className="hero-veil" />
         <Art {...LIGHT} alt="" className="hero-img hero-light hero-light--entrance" />

@@ -193,14 +193,18 @@ Approved homepage order:
 
 1. Hero
 2. The Chronicle — six perspectives, one truth
-3. Level 01 — the timeline, plate and garment
-4. Gateway — the crossing into the Collection  dark → ivory
-5. The Collection — Drop 1, per colour
-6. The Creed — Philosophy.tsx, the brand statement
-7. The Mark — the symbol, taken apart
-8. The Archive — drops by category, as doors
-9. Join the Archive — the last door
-10. Footer
+3. Level 01 — the six records, each opens its collection
+4. The Creed — Philosophy.tsx, the brand statement
+5. The Mark — the symbol, taken apart
+6. Join the Archive — the last door
+7. Footer
+
+**REVISED 2026-11-21, AT CLIENT INSTRUCTION.** The Archive left the homepage, because it has its
+own page: `ArchiveDrops.tsx` renders only at `/archive`, reached from the navigation.
+
+**REVISED 2026-11-21, AT CLIENT INSTRUCTION.** The Gateway and the Collection left the homepage:
+each Level 01 record now opens its own design's collection at `/collection/<slug>`. `Gateway.tsx`
+and `TheCollection.tsx` are preserved and unrendered.
 
 Editorial / Craft, Journal and About left the homepage on 2026-11-01 with this order.
 `EditorialCraft.tsx`, `StoryFragment.tsx` and `AboutSection.tsx` are preserved and
@@ -281,8 +285,27 @@ Hero and the Chronicle only, and Level 01 follows directly.
 
 ## Level 01
 
-**ADDED 2026-11-01, AT CLIENT INSTRUCTION.** `src/components/home/sections/LevelOne.tsx`.
-This is Phase 2: each entry pairs its story plate with the garment that carries it.
+**REVISED 2026-11-21, AT CLIENT INSTRUCTION — THE SIX.** `src/components/home/sections/LevelOne.tsx`
+is now the six records from the client's reference,
+`reference-materials/level-01/MR_KCRONUS_LEVEL_01_COMPLETE_WEBSITE.html`: "Six identities. One
+broken timeline." Six cards, two across on a phone and three from md, on the ivory floor. Not pinned.
+
+- **The words and images are the client's**, in `src/components/collection/levelOneRecords.ts` and
+  `public/brand/level-01/`. Do not add to them.
+- **Each card opens its design** at `/collection/<slug>`, `src/components/collection/DesignRoom.tsx`:
+  the record's story and artwork, then the garment with the five-colour control, and the room takes
+  the chosen colour. It opens on Stone Beige. The record artwork and the garment stay separate
+  registers on that page. It is still not ecommerce: no prices, sizes, stock or cart.
+- **Phones see front above back**, each pane framing its own side of the one colourway image
+  at runtime, so nothing scrolls sideways. From md the whole image shows as supplied. The files
+  are untouched.
+- The Sigil's card shows the compass sigil the client supplied, a symbol and not a figure.
+
+The pinned sideways timeline it replaces is preserved, unrendered, as `LevelOneTimeline.tsx`. The
+notes below describe it.
+
+**ADDED 2026-11-01, AT CLIENT INSTRUCTION.** This is Phase 2: each entry pairs its story plate
+with the garment that carries it.
 
 The artwork already tells this story in print: "I saw the timeline break",
 "Timeline 01: Collapsed", "The next timeline awaits". So the section is that timeline:
@@ -299,9 +322,12 @@ the camera rolls with it and never levels out, and the line runs out at The Unkn
 
 ### Pinned tracks
 
-Level 01 is the page's full pinned track, now that the Hero and the Chronicle are not pinned
-(2026-11-03). The Mark's plate also holds in place while its names scroll past, added at the
-client's request for an exploded-view section (2026-11-02). Do not add another without asking.
+Since 2026-11-21 the homepage has no full pinned track: Level 01 is a grid. The Mark's plate
+still holds in place while its names scroll past, added at the client's request for an
+exploded-view section (2026-11-02). Do not add another without asking.
+
+On phones the Hero's picture no longer zooms or drifts with the scroll (2026-11-21). Its slice is
+enlarged from the source, so the zoom softened it and dragged its lower edge across the screen.
 
 ---
 
@@ -415,7 +441,8 @@ Do not introduce:
 - fake product renders
 
 Designs shown in the Collection are **not links**. Do not imply a product
-route that does not exist.
+route that does not exist. **Revised 2026-11-21:** each Level 01 record links to its design's own
+collection page, `/collection/<slug>`. That page exists and shows colours only.
 
 ---
 
@@ -753,13 +780,13 @@ Do not turn it into:
 ## Archive
 
 **REVISED 2026-11-01, AT CLIENT INSTRUCTION.** The Archive is the house's **drops, one per
-category**. Tees are unlocked. Joggers, shirts and sunglasses are locked. It renders on
-`/` and at `/archive` from `src/components/home/sections/ArchiveDrops.tsx`, and the
+category**. Tees are unlocked. Joggers, shirts and sunglasses are locked. It renders only
+at `/archive` (since 2026-11-21) from `src/components/home/sections/ArchiveDrops.tsx`, and the
 categories are data at the top of that file.
 
 **REVISED 2026-11-04, AT CLIENT INSTRUCTION.** Each drop is an arch. An open one parts on a slit
 of light: a line of Ember Gold runs down the dark arch, then opens on what the drop holds, and it
-leads to the Collection. A locked one shows a blurred image of its category under a lock:
+leads to Level 01, where each record opens its collection. A locked one shows a blurred image of its category under a lock:
 
 - **The blur is baked into the file** by `scripts/prepare-drop-art.mjs`, so a sharp image of an
   unreleased garment is never published. Do not replace it with a CSS blur.
@@ -815,7 +842,7 @@ Names and meanings are printed on `archive-plate-full.png`. Do not add to them. 
 ## Join the Archive
 
 **REVISED 2026-11-01, AT CLIENT INSTRUCTION.** `src/components/home/JoinArchive.tsx`. One lit
-doorway in the dark, after the row of mostly locked doors. A slit of ivory light opens into
+doorway in the dark, directly after The Mark since the Archive left the homepage (2026-11-21). A slit of ivory light opens into
 a full arch on scroll, the form stands inside it, and the light spills across the floor into
 the footer. It is not pinned.
 

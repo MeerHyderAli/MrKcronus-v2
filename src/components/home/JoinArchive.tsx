@@ -8,8 +8,7 @@ import Section from "@/components/home/sections/Section";
 /**
  * JOIN THE ARCHIVE — THE LAST DOOR
  *
- * The visitor has just passed a row of doors, most of them locked. The page ends on
- * one lit doorway in the dark: a slit of ivory light opens into a full arch as the
+ * The page ends on one lit doorway in the dark: a slit of ivory light opens into a full arch as the
  * section arrives, the form stands inside it, and the light spills across the floor
  * into the footer.
  *

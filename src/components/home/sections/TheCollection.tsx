@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
-import type { KeyboardEvent } from "react";
+import { useState } from "react";
 import {
   COLLECTION,
   getColourway,
@@ -11,6 +10,7 @@ import {
   type CollectionDesign,
   type HouseColour,
 } from "@/components/collection/collectionData";
+import ColourControl from "@/components/collection/ColourControl";
 import Reveal from "@/components/motion/Reveal";
 import Section from "./Section";
 
@@ -46,78 +46,6 @@ import Section from "./Section";
 const OPENING_COLOUR: HouseColour = "stone-beige";
 const COLOURS = getDesignColourways(COLLECTION[0].slug);
 const IMAGE_SIZES = "(min-width: 64rem) 75vw, (min-width: 48rem) 100vw, 185vw";
-
-function ColourControl({
-  colour,
-  onChange,
-  onReach,
-}: {
-  colour: HouseColour;
-  onChange: (colour: HouseColour) => void;
-  onReach: () => void;
-}) {
-  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
-  const activeIndex = COLOURS.findIndex((option) => option.colour === colour);
-
-  const selectAt = (index: number) => {
-    onChange(COLOURS[index].colour);
-    buttons.current[index]?.focus();
-  };
-
-  const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
-    const last = COLOURS.length - 1;
-    const next = {
-      ArrowRight: index === last ? 0 : index + 1,
-      ArrowDown: index === last ? 0 : index + 1,
-      ArrowLeft: index === 0 ? last : index - 1,
-      ArrowUp: index === 0 ? last : index - 1,
-      Home: 0,
-      End: last,
-    }[event.key];
-    if (next === undefined) return;
-    event.preventDefault();
-    selectAt(next);
-  };
-
-  return (
-    <div className="collection-bar">
-      <div className="mx-auto flex w-full max-w-[104rem] items-center justify-between gap-4 px-5 md:px-10 lg:px-14">
-        {/* The name in words, so a choice is never carried by the chip alone. */}
-        <p className="collection-active">{COLOURS[activeIndex].name}</p>
-        <div
-          role="radiogroup"
-          aria-label="Colour"
-          className="flex items-center"
-          onPointerEnter={onReach}
-          onTouchStart={onReach}
-          onFocus={onReach}
-        >
-          {COLOURS.map((option, index) => (
-            <button
-              key={option.colour}
-              ref={(element) => {
-                buttons.current[index] = element;
-              }}
-              type="button"
-              role="radio"
-              aria-checked={option.colour === colour}
-              aria-label={option.name}
-              tabIndex={index === activeIndex ? 0 : -1}
-              onClick={() => onChange(option.colour)}
-              onKeyDown={(event) => onKeyDown(event, index)}
-              className="collection-swatch"
-            >
-              <span aria-hidden="true" className="cw-swatch__chip" data-colour={option.colour} />
-              <span aria-hidden="true" className="collection-swatch-name">
-                {option.name}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Design({
   design,
@@ -196,6 +124,7 @@ export default function TheCollection() {
         </header>
 
         <ColourControl
+          options={COLOURS}
           colour={colour}
           onChange={setColour}
           onReach={() => setReached(true)}
