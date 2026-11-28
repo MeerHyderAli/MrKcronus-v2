@@ -1299,9 +1299,24 @@ body {
   opacity: 0;
 }
 
-/* 88% puts the printed back in the opening: each image holds front and back. */
+/* The colourway image holds front and back side by side. This frame keeps the image's
+   own proportions and is wide enough that the back alone, centred about 74% across,
+   fills the arch, so only one tee shows (2026-11-28, at client instruction). */
+.drop--open .drop-door {
+  container-type: size;
+}
+
+.drop-back {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(210cqw, 190cqh);
+  aspect-ratio: 1052 / 560;
+  translate: -74% -50%;
+}
+
 .drop-interior {
-  object-position: 88% 50%;
+  object-position: 50% 50%;
   transform: scale(1.05);
   transition: transform var(--dur-image) var(--ease-editorial);
 }
@@ -3160,5 +3175,38 @@ body {
   .design-view--back,
   .design-view-label {
     display: none;
+  }
+}
+
+/* The Archive of Six poster, above the six cards. The link covers the button and arrow
+   printed near the foot of the picture: 20% to 80% across, 84% to 95% down. */
+.six-poster {
+  position: relative;
+  margin: 2.5rem -1.25rem 0;
+}
+
+.six-poster-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.six-poster-action {
+  position: absolute;
+  left: 20%;
+  top: 84%;
+  width: 60%;
+  height: 11%;
+}
+
+.six-poster-action:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (min-width: 48rem) {
+  .six-poster {
+    width: min(100%, 34rem);
+    margin: 3.5rem auto 0;
   }
 }

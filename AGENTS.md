@@ -195,9 +195,11 @@ Approved homepage order:
 2. The Chronicle — six perspectives, one truth
 3. Level 01 — the six records, each opens its collection
 4. The Creed — Philosophy.tsx, the brand statement
-5. The Mark — the symbol, taken apart
-6. Join the Archive — the last door
-7. Footer
+5. Join the Archive — the last door
+6. Footer
+
+**REVISED 2026-11-27, AT CLIENT INSTRUCTION.** The Mark, the symbol taken apart, moved to
+`/about`, below the statement.
 
 **REVISED 2026-11-21, AT CLIENT INSTRUCTION.** The Archive left the homepage, because it has its
 own page: `ArchiveDrops.tsx` renders only at `/archive`, reached from the navigation.
@@ -299,7 +301,13 @@ broken timeline." Six cards, two across on a phone and three from md, on the ivo
 - **Phones see front above back**, each pane framing its own side of the one colourway image
   at runtime, so nothing scrolls sideways. From md the whole image shows as supplied. The files
   are untouched.
-- The Sigil's card shows the compass sigil the client supplied, a symbol and not a figure.
+- The Sigil's card shows the reissued spiral sigil the client supplied on 2026-11-27, a symbol
+  and not a figure.
+- **The Architect's and the Unknown's cards show the designs themselves** (2026-11-27), not
+  the tee boards.
+- **The Archive of Six poster** sits between the intro and the cards (2026-11-28, at client
+  instruction), `public/brand/level-01/archive-of-six.webp`. Its "Enter the Archive" button is
+  printed on the picture, so a real link to `/archive` covers it.
 
 The pinned sideways timeline it replaces is preserved, unrendered, as `LevelOneTimeline.tsx`. The
 notes below describe it.
@@ -672,7 +680,10 @@ The supplied colourway PDFs are final and authoritative for Drop 1. Preserve the
 supplied designs without reinterpretation, redesign, or AI-generated replacement.
 
 - THE ARCHITECT `001` - crescent moon and star, front; cathedral corridor, back.
-- THE SIGIL `002` - wordmark, front; gold compass sigil, back.
+- THE SIGIL `002` - small gold four-pointed star, front; gold spiral sigil around a lit star,
+  back. **Reissued by the client on 2026-11-27** ("Timeline 02: The Sigil"). The earlier
+  wordmark and compass-sigil sheets are superseded. Only Black prints a poetic name, Obsidian
+  Realm, and the labels read `COLOUR 01` to `COLOUR 05`.
 - THE WITNESS `003` - eye artwork, front; illustrated character, back.
 - THE FRACTURE `004` - wordmark, front; shattered clock and city, back.
 - THE ENEMY `005` - wordmark, front; beaked-mask figure, back.
@@ -830,7 +841,7 @@ Do not fabricate extensive lore.
 ## The Mark
 
 **ADDED 2026-11-02, AT CLIENT INSTRUCTION.** `src/components/home/sections/TheMark.tsx`. The
-exploded view, directly after The Creed. The flat mark resolves into the metal plate, then the
+exploded view. Since 2026-11-27 it renders on `/about`, not the homepage. The flat mark resolves into the metal plate, then the
 camera examines it part by part, and it ends on the whole mark.
 
 The plate is one flat image, so its parts light up and fill the frame but never move apart.
@@ -842,7 +853,7 @@ Names and meanings are printed on `archive-plate-full.png`. Do not add to them. 
 ## Join the Archive
 
 **REVISED 2026-11-01, AT CLIENT INSTRUCTION.** `src/components/home/JoinArchive.tsx`. One lit
-doorway in the dark, directly after The Mark since the Archive left the homepage (2026-11-21). A slit of ivory light opens into
+doorway in the dark, directly after The Creed since the Archive and The Mark left the homepage. A slit of ivory light opens into
 a full arch on scroll, the form stands inside it, and the light spills across the floor into
 the footer. It is not pinned.
 

@@ -48,7 +48,7 @@ const DROPS: readonly Drop[] = [
       href: "/#level-01",
       image: {
         src: getColourwayImage("architect", "black").src,
-        alt: "The Architect tee in Black, front and back.",
+        alt: "The Architect tee in Black, from the back: a cathedral corridor print.",
       },
       note: `Drop 1. ${COLLECTION.length} designs.`,
     },
@@ -74,13 +74,16 @@ function OpenDrop({ name, open }: { name: string; open: NonNullable<Drop["open"]
       <Link href={open.href} className="block">
         <span ref={door} className={`drop-door${reached ? " is-open" : ""}`}>
           <span className="drop-opening">
-            <Image
-              src={open.image.src}
-              alt={open.image.alt}
-              fill
-              sizes="(min-width: 64rem) 50vw, 100vw"
-              className="drop-interior object-cover"
-            />
+            {/* The image holds front and back; only the printed back shows in the arch. */}
+            <span className="drop-back">
+              <Image
+                src={open.image.src}
+                alt={open.image.alt}
+                fill
+                sizes="(min-width: 64rem) 100vw, 210vw"
+                className="drop-interior object-cover"
+              />
+            </span>
           </span>
           <span aria-hidden="true" className="drop-edge drop-edge--left" />
           <span aria-hidden="true" className="drop-edge drop-edge--right" />

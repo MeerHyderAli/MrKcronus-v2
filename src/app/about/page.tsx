@@ -1,4 +1,5 @@
 import { routeMetadata } from "@/app/routeMetadata";
+import TheMark from "@/components/home/sections/TheMark";
 
 export const metadata = routeMetadata(
   "About",
@@ -24,6 +25,7 @@ export const metadata = routeMetadata(
  */
 export default function AboutPage() {
   return (
+    <>
     <section
       aria-labelledby="about-heading"
       className="mx-auto min-h-[70svh] max-w-[104rem] px-5 py-24 md:px-10 md:py-32 lg:px-14"
@@ -38,5 +40,9 @@ export default function AboutPage() {
         A world built through symbols, architecture and form.
       </p>
     </section>
+
+    {/* The symbol, taken apart. Moved here from the homepage on 2026-11-27. */}
+    <TheMark />
+    </>
   );
 }

@@ -1,7 +1,6 @@
 import Hero from "@/components/home/Hero";
 import JoinArchive from "@/components/home/JoinArchive";
 import LevelOne from "@/components/home/sections/LevelOne";
-import TheMark from "@/components/home/sections/TheMark";
 import Chronicle from "@/components/home/sections/Chronicle";
 import Philosophy from "@/components/home/sections/Philosophy";
 
@@ -34,7 +33,6 @@ export const metadata = {
  *   2  Chronicle            six perspectives          dark   not pinned
  *   3  LevelOne             the six records           ivory  not pinned
  *   5  Philosophy           THE CREED                 dark
- *   -  TheMark              the symbol, taken apart   dark
  *   7  JoinArchive          the last door, inert form dark
  *   -  Footer
  *
@@ -69,6 +67,8 @@ export const metadata = {
  * Collection as its own room. It is NOT pinned - the Hero and Movement B already
  * own both of this page's pinned tracks - and it enumerates no entry, because
  * the Collection owns the ordered index.
+ *
+ * THE MARK MOVED TO /about (2026-11-27, at client instruction)
  *
  * THE ARCHIVE HAS ITS OWN PAGE (2026-11-21, at client instruction)
  * ArchiveDrops left this page; it renders at /archive, reached from the navigation.
@@ -156,9 +156,6 @@ export default function HomePage() {
 
       {/* ---- 5. What MR.KCRONUS is -------------------------------------- */}
       <Philosophy />
-
-      {/* ---- The mark the Creed left, examined part by part -------------- */}
-      <TheMark />
 
       {/* ---- 6. The last door --------------------------------------------- */}
       <JoinArchive />

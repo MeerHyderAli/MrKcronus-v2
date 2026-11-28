@@ -35,6 +35,22 @@ export default function LevelOne() {
           </p>
         </Reveal>
 
+        {/* The client's poster, added 2026-11-28. Its button is printed on the picture, so a
+            real link sits over it: the picture shows it, the link does it. */}
+        <Reveal pattern="rise" className="six-poster">
+          <Image
+            src="/brand/level-01/archive-of-six.webp"
+            alt="Six cloaked figures, each marked with a gold sign, stand on wet stone steps before a ruined arch and a dark planet split by a line of light. MR.KCRONUS. The Archive of Six. Six perspectives. One timeline."
+            width={1086}
+            height={1448}
+            sizes="(min-width: 48rem) 34rem, 100vw"
+            className="six-poster-img"
+          />
+          <Link href="/archive" className="six-poster-action">
+            <span className="sr-only">Enter the Archive</span>
+          </Link>
+        </Reveal>
+
         <ol className="six-grid">
           {COLLECTION.map((design) => {
             const record = getLevelOneRecord(design.slug);

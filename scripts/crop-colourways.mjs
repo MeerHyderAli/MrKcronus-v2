@@ -31,10 +31,6 @@ const B = "dark-chocolate-brown";
 const N = "midnight-navy";
 const S = "stone-beige";
 
-const SIGIL_TITLE = [240, 270, 285, 314, "light"];
-/** The paragraph beside the front garment, up to where that garment's body starts. */
-const sigilParagraph = (right) => [[240, 420, right, 600, "light"], SIGIL_TITLE];
-
 const DESIGNS = {
   architect: {
     sheets: [O, B, N, S, K],
@@ -43,16 +39,13 @@ const DESIGNS = {
       [O]: { rect: [236, 58, 1288, 618], wipe: [[216, 40, 366, 98, "light"]] },
     },
   },
+  // Reissued by the client on 2026-11-27. The sheet's type sits wholly left of the
+  // garments, so the rect leaves it out and nothing needs wiping.
   sigil: {
     sheets: [K, O, B, N, S],
-    rect: [262, 28, 1460, 628],
-    overrides: {
-      [K]: { wipe: sigilParagraph(340) },
-      [O]: { wipe: sigilParagraph(368) },
-      [B]: { wipe: sigilParagraph(362) },
-      [N]: { wipe: [...sigilParagraph(340), [240, 360, 274, 420, "light"]] },
-      [S]: { wipe: sigilParagraph(366) },
-    },
+    rect: [326, 36, 1470, 668],
+    // Matches `revision` in collectionData.ts, so caches see a new path.
+    revision: 2,
   },
   witness: {
     sheets: [K, O, B, N, S],
@@ -171,7 +164,7 @@ for (const [slug, design] of Object.entries(DESIGNS)) {
     await sharp(data, { raw: { width: info.width, height: info.height, channels: info.channels } })
       .extract({ left, top, width, height })
       .jpeg({ quality: 92, chromaSubsampling: "4:4:4" })
-      .toFile(join(out, `${slug}--${colour}.jpg`));
+      .toFile(join(out, `${slug}--${colour}${design.revision ? `.r${design.revision}` : ""}.jpg`));
     sizes[slug] = `${width}x${height}`;
   }
 }

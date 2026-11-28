@@ -1,6 +1,9 @@
 /**
  * LEVEL 01 — THE SIX RECORDS
  *
+ * The Architect's, the Sigil's and the Unknown's images were replaced with the designs
+ * themselves on 2026-11-27, at client instruction.
+ *
  * Added 2026-11-21 at client instruction, from their Level 01 reference,
  * reference-materials/level-01/MR_KCRONUS_LEVEL_01_COMPLETE_WEBSITE.html. Every word
  * and image here is copied from that file. Do not add to them.
@@ -16,7 +19,7 @@ export type LevelOneRecord = {
   words: string;
   /** The record's paragraph, from the reference's open record. */
   story: string;
-  image: { src: string; alt: string; width: number; height: number };
+  image: { src: string; alt: string };
 };
 
 const record = (
@@ -25,9 +28,11 @@ const record = (
   words: string,
   story: string,
   alt: string,
+  /** A new file name when an image is replaced, so caches cannot serve the old one. */
+  file = slug,
 ): [string, LevelOneRecord] => [
   slug,
-  { kicker, words, story, image: { src: `/brand/level-01/${slug}.webp`, alt, width: 1200, height: 1696 } },
+  { kicker, words, story, image: { src: `/brand/level-01/${file}.webp`, alt } },
 ];
 
 export const LEVEL_ONE_RECORDS: Readonly<Record<string, LevelOneRecord>> = Object.fromEntries([
@@ -36,14 +41,16 @@ export const LEVEL_ONE_RECORDS: Readonly<Record<string, LevelOneRecord>> = Objec
     "I / VI · The Builder",
     "Design · Order · Creation",
     "The one who builds. A vision beyond time, between order and chaos. The Architect discovers that the world was never designed as it appears.",
-    "The Architect tee, front and back, with details of its prints.",
+    "A hooded figure climbs stone steps through a corridor of arches toward the light, under a dark moon and a falling star.",
+    "architect-design",
   ),
   record(
     "sigil",
     "II / VI · The Connector",
     "Power · Control · Balance",
     "The symbol is not decoration. It is a key. The Sigil discovers the hidden connections between the six records, and the existence of a seventh mark.",
-    "A gold compass sigil on black, under the MR.KCRONUS name. Control the time. Control the game.",
+    "A gold spiral sigil around a lit star, ringed by orbits and small planets on a single vertical line.",
+    "sigil-design",
   ),
   record(
     "witness",
@@ -71,7 +78,8 @@ export const LEVEL_ONE_RECORDS: Readonly<Record<string, LevelOneRecord>> = Objec
     "VI / VI · The Unseen",
     "Hide · Seek · Transcend",
     "Not everything that disappears is lost. The Unknown exists between timelines and knows the Archive was never meant to contain only one.",
-    "The Unknown tee, front and back, with details of its prints.",
+    "A hooded figure seen from behind, rising out of smoke beneath a crescent moon split by a line of light.",
+    "unknown-design",
   ),
 ]);
 

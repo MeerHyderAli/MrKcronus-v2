@@ -189,6 +189,11 @@ export type CollectionDesign = {
   artwork: { front: string; back: string };
   /** Pixel size of this design's colourway images. The same for all five. */
   stage: { width: number; height: number };
+  /**
+   * Bumped when the client reissues a design's sheets. It goes into the image file
+   * names, because image caches key on the path and would keep serving the old print.
+   */
+  revision?: number;
   /** Exactly five intended colour options. */
   variants: readonly ColourwayVariant[];
 };
@@ -254,22 +259,25 @@ export const COLLECTION: readonly CollectionDesign[] = [
     order: "02",
     name: "THE SIGIL",
     slug: "sigil",
-    stage: { width: 1198, height: 600 },
+    stage: { width: 1144, height: 632 },
+    revision: 2,
     code: "002",
     drop: DROP_1,
     mask: "mask-horizontal",
     cell: { row: 0, col: 1 },
     entrance: "opens from the centre outward, symmetric",
+    // Reissued by the client on 2026-11-27 ("Timeline 02: The Sigil"). Only Black
+    // carries a poetic name; the other sheets print the colour's own name.
     artwork: {
-      front: "wordmark",
-      back: "gold compass sigil",
+      front: "small gold four-pointed star",
+      back: "gold spiral sigil around a lit star",
     },
     variants: [
-      { ...BLACK, id: "sigil--black", sourceName: "OBSIDIAN REALM", sourceLabel: "COLOUR 1" },
-      { ...OLIVE, id: "sigil--deep-olive", sourceName: "VERDANT SANCTUM", sourceLabel: "COLOUR 2" },
-      { ...CHOCOLATE, id: "sigil--dark-chocolate-brown", sourceName: "CHOCOLATE CITADEL", sourceLabel: "COLOUR 3" },
-      { ...NAVY, id: "sigil--midnight-navy", sourceName: "MIDNIGHT CHAMBER", sourceLabel: "COLOUR 4" },
-      { ...SAND, id: "sigil--stone-beige", sourceName: "STONE BEIGE", sourceLabel: "COLOUR 5" },
+      { ...BLACK, id: "sigil--black", sourceName: "OBSIDIAN REALM", sourceLabel: "COLOUR 01" },
+      { ...OLIVE, id: "sigil--deep-olive", sourceLabel: "COLOUR 02" },
+      { ...CHOCOLATE, id: "sigil--dark-chocolate-brown", sourceLabel: "COLOUR 03" },
+      { ...NAVY, id: "sigil--midnight-navy", sourceLabel: "COLOUR 04" },
+      { ...SAND, id: "sigil--stone-beige", sourceLabel: "COLOUR 05" },
     ],
   },
   {
@@ -383,7 +391,8 @@ export function getDesignColourways(slug: string): readonly ColourwayVariant[] {
 /** The front-and-back image of one design in one colour. */
 export function getColourwayImage(slug: string, colour: HouseColour) {
   const { id } = getColourway(slug, colour);
-  return { src: `/brand/colourways/${id}.jpg`, ...getCollectionDesign(slug).stage };
+  const { stage, revision } = getCollectionDesign(slug);
+  return { src: `/brand/colourways/${id}${revision ? `.r${revision}` : ""}.jpg`, ...stage };
 }
 
 /**
